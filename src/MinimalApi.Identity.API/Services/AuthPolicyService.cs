@@ -21,7 +21,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 {
     public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync()
     {
-        var query = await dbContext.AuthPolicies.AsNoTracking().ToListAsync();
+        var query = await dbContext.Set<AuthPolicy>().AsNoTracking().ToListAsync();
 
         if (query.Count == 0)
         {
@@ -47,7 +47,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
             IsActive = true
         };
 
-        dbContext.AuthPolicies.Add(authPolicy);
+        dbContext.Set<AuthPolicy>().Add(authPolicy);
         await dbContext.SaveChangesAsync();
 
         return MessageApi.PolicyCreated;
@@ -55,7 +55,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model)
     {
-        var authPolicy = await dbContext.AuthPolicies.AsNoTracking()
+        var authPolicy = await dbContext.Set<AuthPolicy>().AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == model.Id && x.PolicyName == model.PolicyName)
             ?? throw new NotFoundPolicyException(MessageApi.PolicyNotFound);
 
@@ -64,7 +64,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
             throw new BadRequestPolicyException(MessageApi.PolicyNotDeleted);
         }
 
-        dbContext.AuthPolicies.Remove(authPolicy);
+        dbContext.Set<AuthPolicy>().Remove(authPolicy);
         await dbContext.SaveChangesAsync();
 
         return MessageApi.PolicyDeleted;
@@ -72,7 +72,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<List<AuthPolicy>> GetAllAuthPoliciesAsync(Expression<Func<AuthPolicy, bool>> filter = null!)
     {
-        var query = dbContext.AuthPolicies.AsNoTracking();
+        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
 
         if (filter != null)
         {
@@ -173,7 +173,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     private async Task<bool> CheckPolicyExistAsync(CreatePolicyModel model)
     {
-        return await dbContext.AuthPolicies.AsNoTracking()
+        return await dbContext.Set<AuthPolicy>().AsNoTracking()
             .AnyAsync(x => x.PolicyName.Equals(model.PolicyName, StringComparison.InvariantCultureIgnoreCase)
             || x.PolicyPermissions.SequenceEqual(model.PolicyPermissions));
     }

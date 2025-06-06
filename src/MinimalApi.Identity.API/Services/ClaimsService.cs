@@ -17,7 +17,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 {
     public async Task<List<ClaimResponseModel>> GetAllClaimsAsync()
     {
-        var query = await dbContext.ClaimTypes.AsNoTracking().ToListAsync();
+        var query = await dbContext.Set<ClaimType>().AsNoTracking().ToListAsync();
 
         if (query.Count == 0)
         {
@@ -46,7 +46,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
             Default = false
         };
 
-        dbContext.ClaimTypes.Add(claimType);
+        dbContext.Set<ClaimType>().Add(claimType);
         await dbContext.SaveChangesAsync();
 
         return MessageApi.ClaimCreated;
@@ -57,7 +57,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         var user = await userManager.FindByIdAsync(model.UserId.ToString())
             ?? throw new NotFoundUserException(MessageApi.UserNotFound);
 
-        var claim = await dbContext.ClaimTypes.AsNoTracking().FirstOrDefaultAsync(c
+        var claim = await dbContext.Set<ClaimType>().AsNoTracking().FirstOrDefaultAsync(c
             => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
             && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase))
             ?? throw new NotFoundClaimException(MessageApi.ClaimNotFound);
@@ -94,7 +94,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
     public async Task<string> DeleteClaimAsync(DeleteClaimModel model)
     {
-        var claim = await dbContext.ClaimTypes.FirstOrDefaultAsync(c
+        var claim = await dbContext.Set<ClaimType>().FirstOrDefaultAsync(c
             => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
             && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase))
             ?? throw new NotFoundClaimException(MessageApi.ClaimNotFound);
@@ -112,7 +112,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
             throw new BadRequestClaimException(MessageApi.ClaimNotDeleted);
         }
 
-        dbContext.ClaimTypes.Remove(claim);
+        dbContext.Set<ClaimType>().Remove(claim);
         await dbContext.SaveChangesAsync();
 
         return MessageApi.ClaimDeleted;
@@ -122,7 +122,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         => !string.IsNullOrWhiteSpace(claimType) && Enum.TryParse<ClaimsType>(claimType, true, out _);
 
     private async Task<bool> CheckClaimExistAsync(CreateClaimModel model)
-        => await dbContext.ClaimTypes.AnyAsync(c
+        => await dbContext.Set<ClaimType>().AnyAsync(c
             => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
             && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase));
 }

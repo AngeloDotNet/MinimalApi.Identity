@@ -8,7 +8,7 @@ public class EmailSavingService(MinimalApiAuthDbContext dbContext) : IEmailSavin
 {
     public async Task SaveEmailAsync(EmailSending email)
     {
-        dbContext.EmailSendings.Add(email);
+        dbContext.Set<EmailSending>().Add(email);
         await dbContext.SaveChangesAsync();
     }
 }
