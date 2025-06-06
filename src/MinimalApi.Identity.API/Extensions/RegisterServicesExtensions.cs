@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
@@ -142,16 +141,19 @@ public static class RegisterServicesExtensions
     public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
         => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
 
+    //TODO: Code cleanup - remove this method if not needed
     internal static IServiceCollection AddMinimalApiDbContext<TDbContext>(this IServiceCollection services, string dbConnString,
         string migrationAssembly) where TDbContext : DbContext
     {
-        services.AddDbContext<TDbContext>(options =>
-            options.UseSqlServer(dbConnString, opt =>
+        services.AddDbContext<TDbContext>(options => options
+            .UseSqlServer(dbConnString, opt =>
             {
                 opt.MigrationsAssembly(migrationAssembly);
                 opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
                 opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             })
+        //.EnableSensitiveDataLogging(true)
+        //.EnableDetailedErrors(true)
         );
 
         return services;
@@ -217,9 +219,12 @@ public static class RegisterServicesExtensions
         return services;
     }
 
+    //TODO: Code cleanup - remove this method if not needed
     internal static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
-    {
-        services.Configure(configureOptions);
-        return services;
-    }
+        => services.Configure(configureOptions);
+
+    //{
+    //    return services.Configure(configureOptions);
+    //    //return services;
+    //}
 }
