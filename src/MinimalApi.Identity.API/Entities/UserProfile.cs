@@ -2,7 +2,7 @@
 
 namespace MinimalApi.Identity.API.Entities;
 
-public partial class UserProfile : BaseEntity
+public partial class UserProfile : BaseEntity, IEntity
 {
     public UserProfile(int userId, string firstName, string lastName)
     {

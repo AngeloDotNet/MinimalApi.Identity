@@ -2,7 +2,7 @@
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class License : BaseEntity
+public class License : BaseEntity, IEntity
 {
     public string Name { get; set; } = null!;
     public DateOnly ExpirationDate { get; set; }

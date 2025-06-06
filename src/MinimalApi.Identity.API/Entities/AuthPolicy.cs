@@ -2,7 +2,7 @@
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class AuthPolicy : BaseEntity
+public class AuthPolicy : BaseEntity, IEntity
 {
     public string PolicyName { get; set; } = null!;
     public string PolicyDescription { get; set; } = null!;

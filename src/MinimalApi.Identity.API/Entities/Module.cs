@@ -2,7 +2,7 @@
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class Module : BaseEntity
+public class Module : BaseEntity, IEntity
 {
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;

@@ -1,6 +1,8 @@
-﻿namespace MinimalApi.Identity.API.Entities;
+﻿using MinimalApi.Identity.API.Entities.Common;
 
-public class UserModule
+namespace MinimalApi.Identity.API.Entities;
+
+public class UserModule : IEntity
 {
     public int UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;

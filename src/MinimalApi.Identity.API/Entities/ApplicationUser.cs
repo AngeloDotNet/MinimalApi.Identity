@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MinimalApi.Identity.API.Entities.Common;
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class ApplicationUser : IdentityUser<int>
+public class ApplicationUser : IdentityUser<int>, IEntity
 {
     public string RefreshToken { get; set; } = null!;
     public DateTime? RefreshTokenExpirationDate { get; set; }

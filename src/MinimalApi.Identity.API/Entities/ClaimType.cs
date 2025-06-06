@@ -2,7 +2,7 @@
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class ClaimType : BaseEntity
+public class ClaimType : BaseEntity, IEntity
 {
     public string Type { get; set; } = null!;
     public string Value { get; set; } = null!;

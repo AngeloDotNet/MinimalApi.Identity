@@ -3,7 +3,7 @@ using MinimalApi.Identity.API.Enums;
 
 namespace MinimalApi.Identity.API.Entities;
 
-public class EmailSending : BaseEntity
+public class EmailSending : BaseEntity, IEntity
 {
     public EmailSendingType EmailSendingType { get; set; }
     public string EmailTo { get; set; } = null!;
