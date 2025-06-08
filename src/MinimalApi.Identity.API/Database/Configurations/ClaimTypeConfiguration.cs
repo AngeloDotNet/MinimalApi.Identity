@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Database.Configurations;
 
