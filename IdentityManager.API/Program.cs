@@ -1,6 +1,6 @@
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
+using MinimalApi.Identity.Core.Enums;
 
 namespace IdentityManager.API;
 
