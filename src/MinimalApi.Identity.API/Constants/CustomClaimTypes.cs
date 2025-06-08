@@ -1,4 +1,4 @@
-﻿using MinimalApi.Identity.API.Enums;
+﻿using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Constants;
 
