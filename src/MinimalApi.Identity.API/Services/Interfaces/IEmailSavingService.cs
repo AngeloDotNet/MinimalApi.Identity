@@ -1,4 +1,4 @@
-﻿using MinimalApi.Identity.API.Entities;
+﻿using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
-using MinimalApi.Identity.API.Entities;
 using MinimalApi.Identity.API.Models;
+using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services.Interfaces;
 
