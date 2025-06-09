@@ -24,7 +24,8 @@ public static class UsersExtensions
         return claimValue;
     }
 
-    public static string GetClaimValue(this IPrincipal user, string claimType) => ((ClaimsPrincipal)user).FindFirst(claimType)?.Value!;
+    public static string GetClaimValue(this IPrincipal user, string claimType)
+        => ((ClaimsPrincipal)user).FindFirst(claimType)?.Value!;
 
     public static bool IsAuthenticated(this ClaimsPrincipal principal)
     {
@@ -38,5 +39,6 @@ public static class UsersExtensions
         return userIsAuthenticated;
     }
 
-    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor) => httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor)
+        => httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
 }

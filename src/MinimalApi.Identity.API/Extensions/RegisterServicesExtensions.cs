@@ -20,14 +20,14 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Authorization.Handlers;
 using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Filters;
 using MinimalApi.Identity.API.HostedServices;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Common.Extensions.Interfaces;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Extensions;
 
@@ -141,7 +141,6 @@ public static class RegisterServicesExtensions
     public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
         => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
 
-    //TODO: Code cleanup - remove this method if not needed
     internal static IServiceCollection AddMinimalApiDbContext<TDbContext>(this IServiceCollection services, string dbConnString,
         string migrationAssembly) where TDbContext : DbContext
     {
@@ -152,8 +151,6 @@ public static class RegisterServicesExtensions
                 opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
                 opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             })
-        //.EnableSensitiveDataLogging(true)
-        //.EnableDetailedErrors(true)
         );
 
         return services;
@@ -219,12 +216,6 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    //TODO: Code cleanup - remove this method if not needed
     internal static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
         => services.Configure(configureOptions);
-
-    //{
-    //    return services.Configure(configureOptions);
-    //    //return services;
-    //}
 }
