@@ -1,6 +1,6 @@
 ﻿using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Entities;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services;
 

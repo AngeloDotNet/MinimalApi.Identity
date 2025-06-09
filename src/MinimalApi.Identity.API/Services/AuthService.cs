@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Exceptions.Users;
@@ -17,6 +15,8 @@ using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Services;
 

@@ -1,10 +1,10 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Services;
 

@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Entities;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Mapping;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -20,12 +20,14 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
             .Select(profile => ProfileMapper.FromEntity(profile))
             .ToListAsync();
 
-        if (profiles.Count == 0)
-        {
-            throw new NotFoundProfileException(MessageApi.ProfilesNotFound);
-        }
+        //if (profiles.Count == 0)
+        //{
+        //    throw new NotFoundProfileException(MessageApi.ProfilesNotFound);
+        //}
 
-        return profiles;
+        //return profiles;
+
+        return profiles.Count == 0 ? throw new NotFoundProfileException(MessageApi.ProfilesNotFound) : profiles;
     }
 
     public async Task<UserProfileModel> GetProfileAsync(int userId)

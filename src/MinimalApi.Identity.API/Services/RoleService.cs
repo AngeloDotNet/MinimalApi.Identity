@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Entities;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -19,12 +19,14 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             .Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
             .ToListAsync();
 
-        if (roles.Count == 0)
-        {
-            throw new NotFoundRoleException(MessageApi.RolesNotFound);
-        }
+        //if (roles.Count == 0)
+        //{
+        //    throw new NotFoundRoleException(MessageApi.RolesNotFound);
+        //}
 
-        return roles;
+        //return roles;
+
+        return roles.Count == 0 ? throw new NotFoundRoleException(MessageApi.RolesNotFound) : roles;
     }
 
     public async Task<string> CreateRoleAsync(CreateRoleModel model)

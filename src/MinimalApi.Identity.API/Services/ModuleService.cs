@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Entities;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -20,12 +20,14 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
             .Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
             .ToListAsync();
 
-        if (result.Count == 0)
-        {
-            throw new NotFoundModuleException(MessageApi.ModulesNotFound);
-        }
+        //if (result.Count == 0)
+        //{
+        //    throw new NotFoundModuleException(MessageApi.ModulesNotFound);
+        //}
 
-        return result;
+        //return result;
+
+        return result.Count == 0 ? throw new NotFoundModuleException(MessageApi.ModulesNotFound) : result;
     }
 
     public async Task<string> CreateModuleAsync(CreateModuleModel model)

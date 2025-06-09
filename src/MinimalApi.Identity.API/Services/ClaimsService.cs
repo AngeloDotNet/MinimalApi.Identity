@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -19,12 +19,15 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         var query = await dbContext.Set<ClaimType>().AsNoTracking().ToListAsync();
 
-        if (query.Count == 0)
-        {
-            throw new NotFoundClaimException(MessageApi.ClaimsNotFound);
-        }
+        //if (query.Count == 0)
+        //{
+        //    throw new NotFoundClaimException(MessageApi.ClaimsNotFound);
+        //}
 
-        return query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
+        //return query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
+
+        return query.Count == 0 ? throw new NotFoundClaimException(MessageApi.ClaimsNotFound)
+            : query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
     }
 
     public async Task<string> CreateClaimAsync(CreateClaimModel model)

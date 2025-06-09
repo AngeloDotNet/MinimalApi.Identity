@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Entities;
-using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 
 namespace MinimalApi.Identity.API.Services;
 
