@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,16 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Authorization.Handlers;
 using MinimalApi.Identity.API.Database;
 using MinimalApi.Identity.API.Filters;
-using MinimalApi.Identity.API.HostedServices;
 using MinimalApi.Identity.API.Options;
-using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Common.Extensions.Interfaces;
 using MinimalApi.Identity.Core.Entities;
@@ -33,7 +28,7 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterServices<TMigrations>(this IServiceCollection services, IConfiguration configuration,
+    public static IServiceCollection AddRegisterDefaultServices<TMigrations>(this IServiceCollection services, IConfiguration configuration,
         string dbConnString, ErrorResponseFormat formatErrorResponse) where TMigrations : class
     {
         var apiValidationOptions = ServicesExtensions.AddOptionValidate<ApiValidationOptions>(services, "ApiValidationOptions");
@@ -44,6 +39,7 @@ public static class RegisterServicesExtensions
         var userOptions = ServicesExtensions.AddOptionValidate<UsersOptions>(services, "UsersOptions");
 
         services.AddRegisterExtensionsMethod<TMigrations>(configuration, dbConnString, formatErrorResponse, jwtOptions, identityOptions);
+        services.AddServicesToDependencyInjection();
 
         return services;
     }
@@ -61,14 +57,11 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<MinimalApiAuthDbContext>(jwtOptions)
             .AddMinimalApiIdentityOptionsServices(identityOptions)
 
-            .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
-
-            .AddRegisterTransientService<IAuthService>("Service")
-
-            .AddScoped<SignInManager<ApplicationUser>>()
-            .AddScoped<IAuthorizationHandler, PermissionHandler>()
-
-            .AddHostedService<AuthorizationPolicyUpdater>()
+            //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+            //.AddRegisterTransientService<IAuthService>("Service")
+            //.AddScoped<SignInManager<ApplicationUser>>()
+            //.AddScoped<IAuthorizationHandler, PermissionHandler>()
+            //.AddHostedService<AuthorizationPolicyUpdater>()
 
             .ConfigureValidation(options => options.ErrorResponseFormat = formatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>()
