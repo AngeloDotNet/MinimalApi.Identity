@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Extensions;
-using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
-using MinimalApi.Identity.Common.Extensions.Interfaces;
+using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Licenses.Models;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
