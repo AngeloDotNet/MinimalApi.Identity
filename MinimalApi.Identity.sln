@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityManager.API", "Iden
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Core", "src\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj", "{357FC207-FFFA-4C41-AF9F-22B03C087B32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Licenses", "src\MinimalApi.Identity.Licenses\MinimalApi.Identity.Licenses.csproj", "{4311B0AD-D044-4EF2-A58D-47FEE842E06C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{357FC207-FFFA-4C41-AF9F-22B03C087B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{357FC207-FFFA-4C41-AF9F-22B03C087B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{357FC207-FFFA-4C41-AF9F-22B03C087B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
