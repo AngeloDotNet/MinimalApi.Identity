@@ -2,6 +2,7 @@ using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Licenses.Services.Interfaces;
 
 namespace IdentityManager.API;
 
@@ -19,16 +20,16 @@ public class Program
         //...
 
         //If you need to register additional services(transient, scoped, singleton) in dependency injection,
-        //you can use the related extension methods exposed by the library.
+        //you can use the related extension methods exposed by the library. This will register all services that
+        //end with "Service" in the dependency injection container as transient services.
 
-        //This will register all services that end with "Service" in the dependency injection container as transient services.
-        builder.Services.AddRegisterTransientService([typeof(IAccountService)], "Service");
-
-        //NOTE: Service has already been used within the library to register the necessary services, it is recommended to use a different nomenclature.
+        //NOTE: Service has already been used within the library to register the necessary services, it is recommended
+        //to use a different nomenclature.
 
         //The library also exposes these extension methods to register Scoped and Singleton lifecycles
         //- Scoped lifecycle => builder.Services.AddRegisterScopedService<IAuthService>("Service");
         //- Singleton lifecycle => builder.Services.AddRegisterSingletonService<IAuthService>("Service");
+        builder.Services.AddRegisterTransientService([typeof(IAccountService), typeof(ILicenseService)], "Service");
 
         builder.Services.AddRegisterDefaultServices<Program>(builder.Configuration, authConnection, formatErrorResponse);
         builder.Services.AddAuthorization(options =>
@@ -49,7 +50,8 @@ public class Program
 
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger().UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", builder.Environment.ApplicationName));
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", builder.Environment.ApplicationName));
         }
 
         app.UseStatusCodePages();
