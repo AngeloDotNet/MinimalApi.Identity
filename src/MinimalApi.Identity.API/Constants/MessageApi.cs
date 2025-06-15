@@ -39,16 +39,7 @@ public static class MessageApi
     public const string ProfileNotEnabled = "Profile not enabled";
     public const string ProfilesNotFound = "Profiles not found";
 
-    public const string LicenseCreated = "License created successfully";
-    public const string LicenseNotFound = "License not found";
-    public const string LicenseAssigned = "License assigned successfully";
-    public const string LicenseCanceled = "License removed successfully";
-    public const string LicensesNotFound = "Licenses not found";
-    public const string LicenseDeleted = "License deleted successfully";
-    public const string LicenseNotDeleted = "License not deleted, it is not possible to delete a license assigned to a user";
-    public const string LicenseNotAssignable = "You cannot assign more than one license to a user. Please check which license the user owns.";
     public const string LicenseExpired = "License expired. Without a valid license you cannot use the software.";
-    public const string LicenseAlreadyExist = "License already exists";
 
     public const string ModuleCreated = "Module created successfully";
     public const string ModuleNotFound = "Module not found";
