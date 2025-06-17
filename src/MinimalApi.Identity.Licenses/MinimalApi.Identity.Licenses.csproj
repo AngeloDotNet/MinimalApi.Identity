@@ -4,10 +4,32 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Authors>Angelo Pirola</Authors>
+    <Company>Angelo Pirola</Company>
+    <Product>MinimalApi.Identity.Licenses</Product>
+    <Title>MinimalApi.Identity.Licenses</Title>
+    <Description>A custom implementation of Asp Net Core Identity</Description>
+    <PackageId>MinimalApi.Identity.Licenses</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
+    <PackageIcon>identityLibrary.png</PackageIcon>
+    <PackageTags>csharp dotnet net8 open source custom implementation aspnet core identity minimal api</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
+    <RepositoryBranch>main</RepositoryBranch>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="..\..\identityLibrary.png">
+          <Pack>True</Pack>
+          <PackagePath></PackagePath>
+      </None>
+      <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
     
   <ItemGroup>
