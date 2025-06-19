@@ -17,7 +17,6 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,9 +28,8 @@
           <Pack>True</Pack>
           <PackagePath></PackagePath>
       </None>
-      <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-    
+
   <ItemGroup>
     <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
   </ItemGroup>
