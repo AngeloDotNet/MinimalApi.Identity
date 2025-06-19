@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
+using MinimalApi.Identity.Core.Options;
 
 namespace MinimalApi.Identity.API.Validator;
 
