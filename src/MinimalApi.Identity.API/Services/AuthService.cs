@@ -17,13 +17,13 @@ using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 
 public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOptions> iOptions, IOptions<UsersOptions> uOptions,
     UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender,
-    IHttpContextAccessor httpContextAccessor, ILicenseService licenseService, IModuleService moduleService, IProfileService profileService)
-    : IAuthService
+    IHttpContextAccessor httpContextAccessor, IModuleService moduleService, IProfileService profileService) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
@@ -67,11 +67,6 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         if (lastDateChangePassword == null || checkLastDateChangePassword)
         {
             throw new BadRequestProfileException(MessageApi.UserForcedChangePassword);
-        }
-
-        if (await licenseService.CheckUserLicenseExpiredAsync(user))
-        {
-            throw new BadRequestLicenseException(MessageApi.LicenseExpired);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -335,12 +330,10 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     {
         var customClaims = new List<Claim>();
         var userProfile = new List<Claim>();
-        Claim? userClaimLicense = null;
         var userClaimModules = new List<Claim>();
 
         var task = new List<Task> {
             Task.Run(async () => userProfile = await profileService.GetClaimUserProfileAsync(user)),
-            Task.Run(async () => userClaimLicense = await licenseService.GetClaimLicenseUserAsync(user)),
             Task.Run(async () => userClaimModules = await moduleService.GetClaimsModuleUserAsync(user))
         };
 
@@ -349,11 +342,6 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         if (userProfile != null)
         {
             customClaims.AddRange(userProfile);
-        }
-
-        if (userClaimLicense != null)
-        {
-            customClaims.Add(userClaimLicense);
         }
 
         if (userClaimModules?.Count > 0)

@@ -8,6 +8,7 @@ using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 

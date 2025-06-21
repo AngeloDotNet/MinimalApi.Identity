@@ -5,13 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Database;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.BusinessLayer.Authorization.Requirement;
+using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 
 namespace MinimalApi.Identity.API.Services;
