@@ -16,11 +16,6 @@ public record class UserProfileModel(int UserId, string Email, string FirstName,
     public string FullName => $"{FirstName} {LastName}";
 }
 
-public record class CreateLicenseModel(string Name, DateOnly ExpirationDate);
-public record class AssignLicenseModel(int UserId, int LicenseId);
-public record class RevokeLicenseModel(int UserId, int LicenseId);
-public record class DeleteLicenseModel(int LicenseId);
-
 public record class CreateModuleModel(string Name, string Description);
 public record class AssignModuleModel(int UserId, int ModuleId);
 public record class RevokeModuleModel(int UserId, int ModuleId);
