@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MailKit.Security;
-using MinimalApi.Identity.API.Validator.Attribute;
+using MinimalApi.Identity.Core.Validator.Attribute;
 
 namespace MinimalApi.Identity.API.Options;
 
