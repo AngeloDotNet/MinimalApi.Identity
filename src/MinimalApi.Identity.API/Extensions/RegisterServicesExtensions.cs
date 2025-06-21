@@ -1,36 +1,41 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Database;
-using MinimalApi.Identity.API.Filters;
+using MinimalApi.Identity.API.Authorization.Handlers;
+using MinimalApi.Identity.API.Configurations;
+using MinimalApi.Identity.API.HostedServices;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Validator;
-using MinimalApi.Identity.Common.Extensions.Interfaces;
+using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Options;
 
 namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TMigrations>(this IServiceCollection services, IConfiguration configuration,
-        string dbConnString, ErrorResponseFormat formatErrorResponse) where TMigrations : class
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext, TMigrations>(this IServiceCollection services, Action<DefaultServicesConfiguration> configure)
+        where TDbContext : DbContext
+        where TMigrations : class
     {
+        var configuration = new DefaultServicesConfiguration(services);
+        configure.Invoke(configuration);
+
         var apiValidationOptions = ServicesExtensions.AddOptionValidate<ApiValidationOptions>(services, "ApiValidationOptions");
         var hostedServiceOptions = ServicesExtensions.AddOptionValidate<HostedServiceOptions>(services, "HostedServiceOptions");
         var jwtOptions = ServicesExtensions.AddOptionValidate<JwtOptions>(services, "JwtOptions");
@@ -38,33 +43,18 @@ public static class RegisterServicesExtensions
         var smtpOptions = ServicesExtensions.AddOptionValidate<SmtpOptions>(services, "SmtpOptions");
         var userOptions = ServicesExtensions.AddOptionValidate<UsersOptions>(services, "UsersOptions");
 
-        services.AddRegisterExtensionsMethod<TMigrations>(configuration, dbConnString, formatErrorResponse, jwtOptions, identityOptions);
-        services.AddServicesToDependencyInjection();
-
-        return services;
-    }
-
-    internal static IServiceCollection AddRegisterExtensionsMethod<TMigrations>(this IServiceCollection services,
-        IConfiguration configuration, string dbConnString, ErrorResponseFormat formatErrorResponse, JwtOptions jwtOptions,
-        NetIdentityOptions identityOptions) where TMigrations : class
-    {
         services
             .AddProblemDetails()
             .AddHttpContextAccessor()
             .AddSwaggerConfiguration()
 
-            .AddMinimalApiDbContext<MinimalApiAuthDbContext>(dbConnString, typeof(TMigrations).Assembly.FullName!)
-            .AddMinimalApiIdentityServices<MinimalApiAuthDbContext>(jwtOptions)
+            .AddMinimalApiDbContext<TDbContext>(configuration.DatabaseConnectionString, typeof(TMigrations).Assembly.FullName!)
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddMinimalApiIdentityOptionsServices(identityOptions)
 
-            //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
-            //.AddRegisterTransientService<IAuthService>("Service")
-            //.AddScoped<SignInManager<ApplicationUser>>()
-            //.AddScoped<IAuthorizationHandler, PermissionHandler>()
-            //.AddHostedService<AuthorizationPolicyUpdater>()
-
-            .ConfigureValidation(options => options.ErrorResponseFormat = formatErrorResponse)
+            .ConfigureValidation(options => options.ErrorResponseFormat = configuration.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>()
+
             .Configure<JsonOptions>(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -75,7 +65,13 @@ public static class RegisterServicesExtensions
                 options.JsonSerializerOptions.WriteIndented = true;
             })
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-            .Configure<KestrelServerOptions>(configuration.GetSection("Kestrel"));
+            .Configure<KestrelServerOptions>(configuration.Configure.GetSection("Kestrel"));
+
+        services
+            .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+            .AddScoped<SignInManager<ApplicationUser>>()
+            .AddScoped<IAuthorizationHandler, PermissionHandler>()
+            .AddHostedService<AuthorizationPolicyUpdater>();
 
         return services;
     }
@@ -128,12 +124,6 @@ public static class RegisterServicesExtensions
             });
     }
 
-    public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder) where T : class
-        => builder.AddEndpointFilter<ValidatorFilter<T>>().ProducesValidationProblem();
-
-    public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
-        => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
-
     internal static IServiceCollection AddMinimalApiDbContext<TDbContext>(this IServiceCollection services, string dbConnString,
         string migrationAssembly) where TDbContext : DbContext
     {
@@ -149,16 +139,19 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext>(this IServiceCollection services, JwtOptions jwtOptions)
+    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions jwtOptions)
         where TDbContext : DbContext
+        where TEntityUser : class
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey));
 
-        services.AddIdentity<ApplicationUser, ApplicationRole>()
+        services
+            .AddIdentity<TEntityUser, ApplicationRole>()
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
@@ -208,7 +201,4 @@ public static class RegisterServicesExtensions
 
         return services;
     }
-
-    internal static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
-        => services.Configure(configureOptions);
 }
