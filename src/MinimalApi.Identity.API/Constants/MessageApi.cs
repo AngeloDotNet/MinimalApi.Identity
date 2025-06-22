@@ -39,8 +39,6 @@ public static class MessageApi
     public const string ProfileNotEnabled = "Profile not enabled";
     public const string ProfilesNotFound = "Profiles not found";
 
-    public const string LicenseExpired = "License expired. Without a valid license you cannot use the software.";
-
     public const string ModuleCreated = "Module created successfully";
     public const string ModuleNotFound = "Module not found";
     public const string ModuleAssigned = "Module assigned successfully";
