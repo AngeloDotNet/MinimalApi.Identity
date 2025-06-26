@@ -46,5 +46,5 @@ jobs:
           EDITORCONFIG_FILE_NAME: '.editorconfig'
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_CSHARP: true
-          DEFAULT_BRANCH: master
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
