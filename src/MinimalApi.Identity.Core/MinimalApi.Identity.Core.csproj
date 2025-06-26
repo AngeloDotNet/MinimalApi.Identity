@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
     <Authors>Angelo Pirola</Authors>
     <Company>Angelo Pirola</Company>
-    <Product>MinimalApi.Identity.Core</Product>
-    <Title>MinimalApi.Identity.Core</Title>
+    <Product>Modular.Identity.Core</Product>
+    <Title>v.Identity.Core</Title>
     <Description>A custom implementation of Asp Net Core Identity</Description>
-    <PackageId>MinimalApi.Identity.Core</PackageId>
+    <PackageId>Modular.Identity.Core</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
     <PackageIcon>identityLibrary.png</PackageIcon>
