@@ -10,8 +10,8 @@ env:
   NET_VERSION: '8.x'
   PROJECT_NAME: src/MinimalApi.Identity.Licenses
   PROJECT_FILE: MinimalApi.Identity.Licenses.csproj
-  TAG_NAME: Modular.Identity.Licenses
-  RELEASE_NAME: Modular.Identity.Licenses
+  TAG_NAME: Identity.Module.Licenses
+  RELEASE_NAME: Identity.Module.Licenses
   
 jobs:
   build:
