@@ -1,6 +1,15 @@
-﻿# Packages MinimalApi Identity API
+﻿# .NET Modular Dynamic Identity Manager
 
+<!--
 Library for dynamically managing users, roles, claims, modules and license, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+-->
+Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+
+### 🚀 Getting Started
+
+Coming soon stay tuned
+
+<!--
 
 > [!IMPORTANT]
 > **This library is still under development of new implementations.**
@@ -22,10 +31,10 @@ Library for dynamically managing users, roles, claims, modules and license, usin
 
 ### 🛠️ Installation
 
-The library is available on NuGet, just search for _MinimalApi.Identity.API_ in the Package Manager GUI or run the following command in the .NET CLI:
+The library is available on NuGet, just search for _Identity.Module.API_ in the Package Manager GUI or run the following command in the .NET CLI:
 
 ```shell
-dotnet add package MinimalApi.Identity.API
+dotnet add package Identity.Module.API
 ```
 
 ### 🚀 Configuration
@@ -214,3 +223,5 @@ Don't forget that if you find this project useful, put a ⭐ on GitHub to show y
 ### 🤝 Contributing
 
 The project is constantly evolving. Contributions are always welcome. Feel free to report issues and pull requests on the repository.
+
+-->
