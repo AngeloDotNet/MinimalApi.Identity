@@ -8,12 +8,13 @@
     <Company>Angelo Pirola</Company>
     <Product>Identity.Module.Licenses</Product>
     <Title>Identity.Module.Licenses</Title>
-    <Description>A custom implementation of Asp Net Core Identity</Description>
+    <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
+    access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
     <PackageId>Identity.Module.Licenses</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
     <PackageIcon>identityLibrary.png</PackageIcon>
-    <PackageTags>csharp dotnet net8 open source custom implementation aspnet core identity minimal api</PackageTags>
+    <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
