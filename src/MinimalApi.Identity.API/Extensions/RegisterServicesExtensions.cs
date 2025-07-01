@@ -19,6 +19,7 @@ using MinimalApi.Identity.API.Authorization.Handlers;
 using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.HostedServices;
 using MinimalApi.Identity.API.Options;
+using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
@@ -66,6 +67,13 @@ public static class RegisterServicesExtensions
             })
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(configuration.Configure.GetSection("Kestrel"));
+
+        services.AddRegisterServices(options =>
+        {
+            options.Interfaces = [typeof(IAccountService)];
+            options.StringEndsWith = "Service";
+            options.Lifetime = ServiceLifetime.Transient;
+        });
 
         services
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
