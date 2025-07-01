@@ -1,8 +1,6 @@
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
-using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
-using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Licenses.DependencyInjection;
 using MinimalApi.Identity.Licenses.Endpoints;
@@ -25,13 +23,6 @@ public class Program
         //Service has already been used within the library to register the necessary services, it is recommended
         //to use a different nomenclature. If you need to register services in the dependency injection container,
         //you can use this extension method, changing the lifetime property as needed.
-        builder.Services.AddRegisterServices(options =>
-        {
-            options.Interfaces = [typeof(IAccountService)];
-            options.StringEndsWith = "Service";
-            options.Lifetime = ServiceLifetime.Transient; // or ServiceLifetime.Scoped, ServiceLifetime.Singleton
-        });
-
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext, Program>(options =>
         {
             options.Configure = builder.Configuration;
