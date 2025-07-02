@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>Angelo Pirola</Authors>
+    <Company>Angelo Pirola</Company>
+    <Product>MinimalApi.Identity.EmailManager</Product>
+    <Title>Identity.Module.EmailManager</Title>
+    <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
+    access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
+    <PackageId>Identity.Module.EmailManager</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
+    <PackageIcon>identityLibrary.png</PackageIcon>
+    <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
+    <RepositoryBranch>main</RepositoryBranch>
+</PropertyGroup>
+
+<ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+</ItemGroup>
+
+<ItemGroup>
+    <PackageReference Include="MailKit" Version="4.13.0" />
+</ItemGroup>    
+
+<ItemGroup>
+    <None Include="..\..\identityLibrary.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+    </None>
+</ItemGroup>
+
+<ItemGroup>
+    <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
+</ItemGroup>
+
+</Project>
