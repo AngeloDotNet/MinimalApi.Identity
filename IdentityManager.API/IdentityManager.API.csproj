@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\MinimalApi.Identity.API\MinimalApi.Identity.API.csproj" />
+    <ProjectReference Include="..\src\MinimalApi.Identity.EmailManager\MinimalApi.Identity.EmailManager.csproj" />
     <ProjectReference Include="..\src\MinimalApi.Identity.Licenses\MinimalApi.Identity.Licenses.csproj" />
   </ItemGroup>
 
