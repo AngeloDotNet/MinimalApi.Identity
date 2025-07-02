@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Core", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Licenses", "src\MinimalApi.Identity.Licenses\MinimalApi.Identity.Licenses.csproj", "{4311B0AD-D044-4EF2-A58D-47FEE842E06C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.EmailManager", "src\MinimalApi.Identity.EmailManager\MinimalApi.Identity.EmailManager.csproj", "{814A2C0F-F8DF-4BEA-B289-FBBB96005388}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4311B0AD-D044-4EF2-A58D-47FEE842E06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{814A2C0F-F8DF-4BEA-B289-FBBB96005388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{814A2C0F-F8DF-4BEA-B289-FBBB96005388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{814A2C0F-F8DF-4BEA-B289-FBBB96005388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{814A2C0F-F8DF-4BEA-B289-FBBB96005388}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
