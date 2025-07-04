@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -37,12 +38,29 @@ public static class RegisterServicesExtensions
         var configuration = new DefaultServicesConfiguration(services);
         configure.Invoke(configuration);
 
-        var apiValidationOptions = ServicesExtensions.AddOptionValidate<ApiValidationOptions>(services, "ApiValidationOptions");
-        var hostedServiceOptions = ServicesExtensions.AddOptionValidate<HostedServiceOptions>(services, "HostedServiceOptions");
-        var jwtOptions = ServicesExtensions.AddOptionValidate<JwtOptions>(services, "JwtOptions");
-        var identityOptions = ServicesExtensions.AddOptionValidate<NetIdentityOptions>(services, "NetIdentityOptions");
-        var smtpOptions = ServicesExtensions.AddOptionValidate<SmtpOptions>(services, "SmtpOptions");
-        var userOptions = ServicesExtensions.AddOptionValidate<UsersOptions>(services, "UsersOptions");
+        var apiValidationOptions = configuration.Configure.GetSection("ApiValidationOptions").Get<ApiValidationOptions>()
+            ?? throw new ArgumentNullException("ApiValidationOptions", "api validation options not found");
+        //var apiValidationOptions = ServicesExtensions.AddOptionValidate<ApiValidationOptions>(services, "ApiValidationOptions"); //TODO: code cleanup
+
+        var hostedServiceOptions = configuration.Configure.GetSection("HostedServiceOptions").Get<HostedServiceOptions>()
+            ?? throw new ArgumentNullException("HostedServiceOptions", "hosted service options not found");
+        //var hostedServiceOptions = ServicesExtensions.AddOptionValidate<HostedServiceOptions>(services, "HostedServiceOptions"); //TODO: code cleanup
+
+        var jwtOptions = configuration.Configure.GetSection("JwtOptions").Get<JwtOptions>()
+            ?? throw new ArgumentNullException("JwtOptions", "JWT options not found");
+        //var jwtOptions = ServicesExtensions.AddOptionValidate<JwtOptions>(services, "JwtOptions"); //TODO: code cleanup
+
+        var identityOptions = configuration.Configure.GetSection("NetIdentityOptions").Get<NetIdentityOptions>()
+            ?? throw new ArgumentNullException("NetIdentityOptions", "Identity options not found");
+        //var identityOptions = ServicesExtensions.AddOptionValidate<NetIdentityOptions>(services, "NetIdentityOptions"); //TODO: code cleanup
+
+        var smtpOptions = configuration.Configure.GetSection("SmtpOptions").Get<SmtpOptions>()
+            ?? throw new ArgumentNullException("SmtpOptions", "SMTP options not found");
+        //var smtpOptions = ServicesExtensions.AddOptionValidate<SmtpOptions>(services, "SmtpOptions"); //TODO: code cleanup
+
+        var userOptions = configuration.Configure.GetSection("UsersOptions").Get<UsersOptions>()
+            ?? throw new ArgumentNullException("UsersOptions", "Users options not found");
+        //var userOptions = ServicesExtensions.AddOptionValidate<UsersOptions>(services, "UsersOptions"); //TODO: code cleanup
 
         services
             .AddProblemDetails()
