@@ -6,6 +6,7 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class ServicesExtensions
 {
+    //TODO: code cleanup
     public static TOptions AddOptionValidate<TOptions>(this IServiceCollection services, string sectionName) where TOptions : class
     {
         services.AddOptions<TOptions>().BindConfiguration(sectionName).ValidateDataAnnotations().ValidateOnStart();
