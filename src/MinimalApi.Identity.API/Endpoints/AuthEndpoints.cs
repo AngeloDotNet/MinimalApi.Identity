@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
@@ -129,6 +128,24 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Forgot password";
 
             opt.Response(StatusCodes.Status200OK).Description = "Password reset link sent successfully";
+            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            return opt;
+        });
+
+        apiGroup.MapPost(EndpointsApi.EndpointsResetPassword, async ([FromServices] IAuthService authService,
+            [FromBody] ResetPasswordModel inputModel, [FromRoute] string code) =>
+        {
+            return await authService.ResetPasswordAsync(inputModel, code);
+        })
+        .Produces<Ok<string>>(StatusCodes.Status200OK)
+        .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
+        .WithValidation<ResetPasswordModel>()
+        .WithOpenApi(opt =>
+        {
+            opt.Description = "Reset password";
+            opt.Summary = "Reset password";
+
+            opt.Response(StatusCodes.Status200OK).Description = "Your password has been reset.";
             opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
             return opt;
         });
