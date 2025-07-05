@@ -11,7 +11,6 @@ Coming soon stay tuned
 ### 🏗️ ToDo
 
 - [ ] Move email sending logic to a hosted services
-- [ ] Add endpoint for password change (Reset Password)
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
 - [ ] Replacing exceptions with implementation of operation results 
