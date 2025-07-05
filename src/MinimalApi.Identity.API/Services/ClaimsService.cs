@@ -19,13 +19,6 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         var query = await dbContext.Set<ClaimType>().AsNoTracking().ToListAsync();
 
-        //if (query.Count == 0)
-        //{
-        //    throw new NotFoundClaimException(MessageApi.ClaimsNotFound);
-        //}
-
-        //return query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
-
         return query.Count == 0 ? throw new NotFoundClaimException(MessageApi.ClaimsNotFound)
             : query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
     }
