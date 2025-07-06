@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Identity.Module.API" Version="2.0.36" />
+    <PackageReference Include="Identity.Module.Licenses" Version="1.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -15,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\MinimalApi.Identity.API\MinimalApi.Identity.API.csproj" />
+    <!--<ProjectReference Include="..\src\MinimalApi.Identity.API\MinimalApi.Identity.API.csproj" />-->
     <ProjectReference Include="..\src\MinimalApi.Identity.EmailManager\MinimalApi.Identity.EmailManager.csproj" />
-    <ProjectReference Include="..\src\MinimalApi.Identity.Licenses\MinimalApi.Identity.Licenses.csproj" />
+    <!--<ProjectReference Include="..\src\MinimalApi.Identity.Licenses\MinimalApi.Identity.Licenses.csproj" />-->
   </ItemGroup>
 
 </Project>
