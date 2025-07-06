@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
@@ -10,6 +9,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -27,7 +27,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         if (!CheckClaimTypeIsValid(model.Type))
         {
-            throw new BadRequestClaimException(MessageApi.ClaimTypeInvalid);
+            throw new BadRequestException(MessageApi.ClaimTypeInvalid);
         }
 
         if (await CheckClaimExistAsync(model))
@@ -62,12 +62,12 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (userHasClaim.Any(c => c.Type == model.Type && c.Value == model.Value))
         {
-            throw new BadRequestClaimException(MessageApi.ClaimAlreadyAssigned);
+            throw new BadRequestException(MessageApi.ClaimAlreadyAssigned);
         }
 
         var result = await userManager.AddClaimAsync(user, new Claim(model.Type, model.Value));
 
-        return result.Succeeded ? MessageApi.ClaimAssigned : throw new BadRequestClaimException(MessageApi.ClaimNotAssigned);
+        return result.Succeeded ? MessageApi.ClaimAssigned : throw new BadRequestException(MessageApi.ClaimNotAssigned);
     }
 
     public async Task<string> RevokeClaimAsync(RevokeClaimModel model)
@@ -79,13 +79,13 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (!userHasClaim.Any(c => c.Type == model.Type && c.Value == model.Value))
         {
-            throw new BadRequestClaimException(MessageApi.ClaimNotAssigned);
+            throw new BadRequestException(MessageApi.ClaimNotAssigned);
         }
 
         var claimRemove = new Claim(model.Type, model.Value);
         var result = await userManager.RemoveClaimAsync(user, claimRemove);
 
-        return result.Succeeded ? MessageApi.ClaimRevoked : throw new BadRequestClaimException(MessageApi.ClaimNotRevoked);
+        return result.Succeeded ? MessageApi.ClaimRevoked : throw new BadRequestException(MessageApi.ClaimNotRevoked);
     }
 
     public async Task<string> DeleteClaimAsync(DeleteClaimModel model)
@@ -97,7 +97,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (claim.Default)
         {
-            throw new BadRequestClaimException(MessageApi.ClaimNotDeleted);
+            throw new BadRequestException(MessageApi.ClaimNotDeleted);
         }
 
         var isClaimAssigned = await dbContext.Users.AnyAsync(user
@@ -105,7 +105,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (isClaimAssigned)
         {
-            throw new BadRequestClaimException(MessageApi.ClaimNotDeleted);
+            throw new BadRequestException(MessageApi.ClaimNotDeleted);
         }
 
         dbContext.Set<ClaimType>().Remove(claim);
