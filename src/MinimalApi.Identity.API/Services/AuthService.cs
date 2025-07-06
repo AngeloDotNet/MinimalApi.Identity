@@ -58,7 +58,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
         if (!profileUser.IsEnabled)
         {
-            throw new BadRequestProfileException(MessageApi.UserNotEnableLogin);
+            throw new BadRequestException(MessageApi.UserNotEnableLogin);
         }
 
         var lastDateChangePassword = profileUser.LastDateChangePassword;
@@ -66,7 +66,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
         if (lastDateChangePassword == null || checkLastDateChangePassword)
         {
-            throw new BadRequestProfileException(MessageApi.UserForcedChangePassword);
+            throw new BadRequestException(MessageApi.UserForcedChangePassword);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -123,7 +123,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
             if (!claimsAssignResult.Succeeded)
             {
-                throw new BadRequestClaimException(MessageApi.ClaimsNotAssigned);
+                throw new BadRequestException(MessageApi.ClaimsNotAssigned);
             }
 
             var userId = await userManager.GetUserIdAsync(user);
