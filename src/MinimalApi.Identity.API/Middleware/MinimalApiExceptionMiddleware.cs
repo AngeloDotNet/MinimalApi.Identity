@@ -109,10 +109,6 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
 
             BadRequestException or
-            BadRequestClaimException or
-            BadRequestModuleException or
-            BadRequestPolicyException or
-            BadRequestProfileException or
             BadRequestRoleException or
             BadRequestUserException => HttpStatusCode.BadRequest,
 
@@ -147,10 +143,6 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             ArgumentNullException argumentNullException => argumentNullException.Message,
 
             BadRequestException badRequestException => badRequestException.Message,
-            BadRequestClaimException badRequestClaimException => badRequestClaimException.Message,
-            BadRequestModuleException badRequestModuleException => badRequestModuleException.Message,
-            BadRequestPolicyException badRequestPolicyException => badRequestPolicyException.Message,
-            BadRequestProfileException badRequestProfileException => badRequestProfileException.Message,
             BadRequestRoleException badRequestRoleException => badRequestRoleException.Message,
             BadRequestUserException badRequestUserException => badRequestUserException.Message,
 
