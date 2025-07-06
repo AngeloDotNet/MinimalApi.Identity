@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -55,7 +55,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (userHasModule)
         {
-            throw new BadRequestModuleException(MessageApi.ModuleNotAssignable);
+            throw new BadRequestException(MessageApi.ModuleNotAssignable);
         }
 
         var userModule = new UserModule
@@ -89,7 +89,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (await dbContext.Set<UserModule>().AnyAsync(ul => ul.ModuleId == model.ModuleId))
         {
-            throw new BadRequestModuleException(MessageApi.ModuleNotDeleted);
+            throw new BadRequestException(MessageApi.ModuleNotDeleted);
         }
 
         dbContext.Set<Module>().Remove(module);
