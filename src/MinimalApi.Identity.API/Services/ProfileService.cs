@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Mapping;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -59,7 +59,7 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
         dbContext.Set<UserProfile>().Update(profile);
         var result = await dbContext.SaveChangesAsync();
 
-        return result > 0 ? MessageApi.ProfileUpdated : throw new BadRequestProfileException(MessageApi.ProfileNotUpdated);
+        return result > 0 ? MessageApi.ProfileUpdated : throw new BadRequestException(MessageApi.ProfileNotUpdated);
     }
 
     public async Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user)
@@ -94,6 +94,6 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
         var result = await dbContext.SaveChangesAsync();
 
         return result > 0 ? (model.IsEnabled ? MessageApi.ProfileEnabled : MessageApi.ProfileDisabled)
-            : throw new BadRequestProfileException(model.IsEnabled ? MessageApi.ProfileNotEnabled : MessageApi.ProfileNotDisabled);
+            : throw new BadRequestException(model.IsEnabled ? MessageApi.ProfileNotEnabled : MessageApi.ProfileNotDisabled);
     }
 }
