@@ -35,9 +35,4 @@
         <PackagePath></PackagePath>
     </None>
 </ItemGroup>
-
-<!--<ItemGroup>
-    <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
-</ItemGroup>-->
-
 </Project>
