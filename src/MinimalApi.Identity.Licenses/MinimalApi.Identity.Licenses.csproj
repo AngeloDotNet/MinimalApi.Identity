@@ -34,8 +34,4 @@
   <ItemGroup>
     <PackageReference Include="Identity.Module.Core" Version="1.0.14" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
-  </ItemGroup>-->
 </Project>
