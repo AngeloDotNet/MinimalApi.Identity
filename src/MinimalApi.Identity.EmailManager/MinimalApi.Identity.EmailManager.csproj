@@ -26,6 +26,7 @@
 
 <ItemGroup>
     <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="Identity.Module.Core" Version="1.0.14" />
 </ItemGroup>    
 
 <ItemGroup>
@@ -35,8 +36,8 @@
     </None>
 </ItemGroup>
 
-<ItemGroup>
+<!--<ItemGroup>
     <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
-</ItemGroup>
+</ItemGroup>-->
 
 </Project>
