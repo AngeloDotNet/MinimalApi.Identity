@@ -1,5 +1,10 @@
 name: Publish Identity.Module.API on NuGet
 
+permissions:
+  contents: read
+  packages: write
+  actions: write
+  
 on:
   push:
     branches: [ main ]
@@ -43,7 +48,6 @@ jobs:
         path: ${{ env.PROJECT_NAME }}
 
     - name: Package
-      #run: dotnet pack -c Release -o . '${{ env.PROJECT_NAME }}/${{ env.PROJECT_FILE }}' -p:Version=${{ steps.gitversion.outputs.SemVer }}
       run: dotnet pack -c Release -o . '${{ env.PROJECT_NAME }}/${{ env.PROJECT_FILE }}'
 
     - name: Publish on NuGet
@@ -61,5 +65,6 @@ jobs:
       with:
           tag_name: ${{ env.TAG_NAME }}_v${{ steps.nbgv.outputs.NuGetPackageVersion }}
           release_name: ${{ env.RELEASE_NAME }} ${{ steps.nbgv.outputs.NuGetPackageVersion }}
+          body: Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
           draft: false
           prerelease: false
