@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
