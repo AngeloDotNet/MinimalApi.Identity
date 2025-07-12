@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
-using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Exceptions;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -33,7 +33,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
     {
         if (await roleManager.RoleExistsAsync(model.Role))
         {
-            throw new ConflictRoleException(MessageApi.RoleExists);
+            throw new ConflictException(MessageApi.RoleExists);
         }
 
         var newRole = new ApplicationRole
