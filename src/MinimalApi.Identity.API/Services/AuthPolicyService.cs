@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -35,7 +34,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
     {
         if (await CheckPolicyExistAsync(model))
         {
-            throw new ConflictPolicyException(MessageApi.PolicyAlreadyExist);
+            throw new ConflictException(MessageApi.PolicyAlreadyExist);
         }
 
         var authPolicy = new AuthPolicy
