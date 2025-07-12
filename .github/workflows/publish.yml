@@ -1,9 +1,4 @@
 name: Publish Identity.Module.API on NuGet
-
-permissions:
-  contents: read
-  packages: write
-  actions: write
   
 on:
   push:
