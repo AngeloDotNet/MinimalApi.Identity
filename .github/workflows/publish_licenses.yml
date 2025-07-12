@@ -1,5 +1,5 @@
 name: Publish Identity.Module.Licenses on NuGet
-
+  
 on:
   push:
     branches: [ main ]
