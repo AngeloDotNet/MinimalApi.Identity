@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -32,7 +31,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
         if (await CheckClaimExistAsync(model))
         {
-            throw new ConflictClaimException(MessageApi.ClaimAlreadyExist);
+            throw new ConflictException(MessageApi.ClaimAlreadyExist);
         }
 
         var claimType = new ClaimType
