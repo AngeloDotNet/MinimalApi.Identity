@@ -11,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
-using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Exceptions.Users;
 using MinimalApi.Identity.Core.Enums;
@@ -108,15 +107,9 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         {
             ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
 
-            BadRequestException or
-            BadRequestRoleException or
-            BadRequestUserException => HttpStatusCode.BadRequest,
+            BadRequestException or BadRequestRoleException or BadRequestUserException => HttpStatusCode.BadRequest,
 
-            ConflictException or
-            ConflictClaimException or
-            ConflictPolicyException or
-            ConflictModuleException or
-            ConflictRoleException => HttpStatusCode.Conflict,
+            ConflictException => HttpStatusCode.Conflict,
 
             NotFoundException or
             NotFoundActivePoliciesException or
@@ -147,10 +140,6 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             BadRequestUserException badRequestUserException => badRequestUserException.Message,
 
             ConflictException conflictException => conflictException.Message,
-            ConflictClaimException conflictClaimException => conflictClaimException.Message,
-            ConflictModuleException conflictModuleException => conflictModuleException.Message,
-            ConflictPolicyException conflictPolicyException => conflictPolicyException.Message,
-            ConflictRoleException conflictRoleException => conflictRoleException.Message,
 
             NotFoundException notFoundLicenseException => notFoundLicenseException.Message,
             NotFoundActivePoliciesException notFoundActivePoliciesException => notFoundActivePoliciesException.Message,
