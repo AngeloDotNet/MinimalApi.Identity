@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Constants;
-using MinimalApi.Identity.API.Exceptions.Conflict;
 using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -27,7 +26,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         if (await CheckModuleExistAsync(model))
         {
-            throw new ConflictModuleException(MessageApi.ModuleAlreadyExist);
+            throw new ConflictException(MessageApi.ModuleAlreadyExist);
         }
 
         var module = new Module
