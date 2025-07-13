@@ -7,6 +7,7 @@ using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Licenses.DependencyInjection;
+using MinimalApi.Identity.Licenses.Extensions;
 using MinimalApi.Identity.Licenses.Models;
 using MinimalApi.Identity.Licenses.Services.Interfaces;
 
@@ -16,8 +17,13 @@ public class LicenseService(MinimalApiAuthDbContext dbContext, UserManager<Appli
 {
     public async Task<List<LicenseResponseModel>> GetAllLicensesAsync()
     {
+        //var licenses = await dbContext.Set<License>()
+        //    .Select(l => new LicenseResponseModel(l.Id, l.Name, l.ExpirationDate))
+        //    .ToListAsync();
+
         var licenses = await dbContext.Set<License>()
-            .Select(l => new LicenseResponseModel(l.Id, l.Name, l.ExpirationDate))
+            .AsNoTracking()
+            .ToLicenseResponseModel()
             .ToListAsync();
 
         return licenses.Count == 0 ? [] : licenses;
@@ -100,10 +106,16 @@ public class LicenseService(MinimalApiAuthDbContext dbContext, UserManager<Appli
 
     public async Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user)
     {
+        //var result = await dbContext.Set<UserLicense>()
+        //    .AsNoTracking()
+        //    .Include(ul => ul.License)
+        //    .FirstOrDefaultAsync(ul => ul.UserId == user.Id);
+
         var result = await dbContext.Set<UserLicense>()
             .AsNoTracking()
-            .Include(ul => ul.License)
-            .FirstOrDefaultAsync(ul => ul.UserId == user.Id);
+            .Where(ul => ul.UserId == user.Id)
+            .ToUserLicense()
+            .FirstOrDefaultAsync();
 
         return result != null ? new Claim(LicenseExtensions.License, result.License.Name) : null!;
     }
@@ -117,7 +129,5 @@ public class LicenseService(MinimalApiAuthDbContext dbContext, UserManager<Appli
     }
 
     private async Task<bool> CheckLicenseExistAsync(CreateLicenseModel model)
-    {
-        return await dbContext.Set<License>().AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase));
-    }
+        => await dbContext.Set<License>().AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase));
 }
