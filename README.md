@@ -2,7 +2,6 @@
 
 [![Lint Code Base](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/linter.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/linter.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/master/LICENSE)
-
 [![Publish Identity.Module.API on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish.yml)
 [![Publish Identity.Module.Core on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_core.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_core.yml)
 [![Publish Identity.Module.Licenses on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_licenses.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_licenses.yml)
