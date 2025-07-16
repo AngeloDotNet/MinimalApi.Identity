@@ -35,12 +35,12 @@ public static class LicenseExtensions
     {
         services
             .AddRegisterServices(options =>
-               {
-                   options.Interfaces = [typeof(ILicenseService)];
-                   options.StringEndsWith = "Service";
-                   options.Lifetime = ServiceLifetime.Transient;
-               })
-               .ConfigureFluentValidation<AssignLicenseValidator>();
+            {
+                options.Interfaces = [typeof(ILicenseService)];
+                options.StringEndsWith = "Service";
+                options.Lifetime = ServiceLifetime.Transient;
+            })
+            .ConfigureFluentValidation<AssignLicenseValidator>();
 
         return services;
     }
