@@ -17,10 +17,6 @@ public class LicenseService(MinimalApiAuthDbContext dbContext, UserManager<Appli
 {
     public async Task<List<LicenseResponseModel>> GetAllLicensesAsync()
     {
-        //var licenses = await dbContext.Set<License>()
-        //    .Select(l => new LicenseResponseModel(l.Id, l.Name, l.ExpirationDate))
-        //    .ToListAsync();
-
         var licenses = await dbContext.Set<License>()
             .AsNoTracking()
             .ToLicenseResponseModel()
@@ -106,11 +102,6 @@ public class LicenseService(MinimalApiAuthDbContext dbContext, UserManager<Appli
 
     public async Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user)
     {
-        //var result = await dbContext.Set<UserLicense>()
-        //    .AsNoTracking()
-        //    .Include(ul => ul.License)
-        //    .FirstOrDefaultAsync(ul => ul.UserId == user.Id);
-
         var result = await dbContext.Set<UserLicense>()
             .AsNoTracking()
             .Where(ul => ul.UserId == user.Id)
