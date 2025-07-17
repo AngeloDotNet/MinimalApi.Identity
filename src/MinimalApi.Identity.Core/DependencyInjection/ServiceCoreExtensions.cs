@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.Core.Configurations;
+using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Filters;
 using MinimalApi.Identity.Core.Options;
 
@@ -12,7 +13,10 @@ namespace MinimalApi.Identity.Core.DependencyInjection;
 
 public static class ServiceCoreExtensions
 {
+    public const string Permission = nameof(ClaimsType.Permission);
+
     public const string UserNotFound = "User not found";
+    public const string UserLockedOut = "This account has been locked out, please try again later";
 
     public static RouteHandlerBuilder ProducesDefaultProblem(this RouteHandlerBuilder builder, params int[] statusCodes)
     {
