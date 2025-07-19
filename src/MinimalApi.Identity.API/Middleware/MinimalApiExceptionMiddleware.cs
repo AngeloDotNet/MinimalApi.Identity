@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.NotFound;
-using MinimalApi.Identity.API.Exceptions.Users;
+using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Options;
@@ -106,23 +106,13 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         => exception switch
         {
             ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
-
             BadRequestException or BadRequestRoleException or BadRequestUserException => HttpStatusCode.BadRequest,
-
             ConflictException => HttpStatusCode.Conflict,
 
-            NotFoundException or
-            NotFoundActivePoliciesException or
-            NotFoundClaimException or
-            NotFoundModuleException or
-            NotFoundPolicyException or
-            NotFoundProfileException or
-            NotFoundRoleException or
-            NotFoundUserException => HttpStatusCode.NotFound,
+            NotFoundException or NotFoundClaimException or NotFoundModuleException or NotFoundProfileException or
+            NotFoundRoleException or NotFoundUserException => HttpStatusCode.NotFound,
 
-            UserIsLockedException or
-            UserTokenIsInvalidException or
-            UserUnknownException or
+            UserIsLockedException or UserTokenIsInvalidException or UserUnknownException or
             UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
 
             ValidationModelException => HttpStatusCode.UnprocessableEntity,
@@ -142,15 +132,13 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             ConflictException conflictException => conflictException.Message,
 
             NotFoundException notFoundLicenseException => notFoundLicenseException.Message,
-            NotFoundActivePoliciesException notFoundActivePoliciesException => notFoundActivePoliciesException.Message,
             NotFoundClaimException notFoundClaimException => notFoundClaimException.Message,
             NotFoundModuleException notFoundModuleException => notFoundModuleException.Message,
-            NotFoundPolicyException notFoundPolicyException => notFoundPolicyException.Message,
             NotFoundProfileException notFoundProfileException => notFoundProfileException.Message,
             NotFoundRoleException notFoundRoleException => notFoundRoleException.Message,
             NotFoundUserException notFoundUserException => notFoundUserException.Message,
 
-            UserIsLockedException => MessageApi.UserLockedOut,
+            UserIsLockedException => ServiceCoreExtensions.UserLockedOut,
             UserTokenIsInvalidException userTokenIsInvalidException => userTokenIsInvalidException.Message,
             UserUnknownException => MessageApi.UserNotAuthenticated,
             UserWithoutPermissionsException => MessageApi.UserNotHavePermission,
