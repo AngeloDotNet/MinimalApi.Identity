@@ -30,6 +30,3 @@ public record class CreateClaimModel(string Type, string Value);
 public record class AssignClaimModel(int UserId, string Type, string Value);
 public record class RevokeClaimModel(int UserId, string Type, string Value);
 public record class DeleteClaimModel(string Type, string Value);
-
-public record class CreatePolicyModel(string PolicyName, string PolicyDescription, string[] PolicyPermissions);
-public record class DeletePolicyModel(int Id, string PolicyName);
