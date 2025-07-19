@@ -10,14 +10,14 @@ using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Exceptions.NotFound;
-using MinimalApi.Identity.API.Exceptions.Users;
-using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
+using MinimalApi.Identity.Core.Extensions;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -39,7 +39,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
             return signInResult switch
             {
                 { IsNotAllowed: true } => throw new BadRequestUserException(MessageApi.UserNotAllowedLogin),
-                { IsLockedOut: true } => throw new UserIsLockedException(MessageApi.UserLockedOut),
+                { IsLockedOut: true } => throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut),
                 { RequiresTwoFactor: true } => throw new BadRequestUserException(MessageApi.RequiredTwoFactor),
                 _ => throw new BadRequestUserException(MessageApi.InvalidCredentials)
             };
@@ -180,7 +180,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
-            throw new UserIsLockedException(MessageApi.UserLockedOut);
+            throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -332,7 +332,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     private async Task<IdentityResult> AddClaimsToAdminUserAsync(ApplicationUser user)
     {
         var claims = Enum.GetValues<Permissions>()
-            .Select(claim => new Claim(CustomClaimTypes.Permission, claim.ToString()))
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
             .ToList();
 
         return await userManager.AddClaimsAsync(user, claims);
@@ -342,7 +342,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     {
         var claims = Enum.GetValues<Permissions>()
             .Where(claim => claim.ToString().Contains("profilo", StringComparison.InvariantCultureIgnoreCase))
-            .Select(claim => new Claim(CustomClaimTypes.Permission, claim.ToString()))
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
             .ToList();
 
         return await userManager.AddClaimsAsync(user, claims);
