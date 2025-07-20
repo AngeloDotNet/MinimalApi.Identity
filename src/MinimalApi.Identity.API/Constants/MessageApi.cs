@@ -20,7 +20,6 @@ public static class MessageApi
     public const string UserCreated = "User created successfully";
     public const string UserNotAllowedLogin = "User is not allowed to sign in";
     public const string UserLogOut = "User logged out";
-    public const string UserLockedOut = "This account has been locked out, please try again later";
     public const string UserNotEmailConfirmed = "User is not email confirmed";
     public const string UserIdTokenRequired = "UserId and Token are required";
     public const string UserIdEmailTokenRequired = "UserId, Email and Token are required";
@@ -73,12 +72,6 @@ public static class MessageApi
     public const string ClaimsNotFound = "Claims not found";
     public const string ClaimsNotAssigned = "Claims not assigned";
     public const string ClaimAlreadyExist = "Claim already exists";
-
-    public const string PolicyNotFound = "Policy not found";
-    public const string PolicyAlreadyExist = "Policy already exists";
-    public const string PolicyCreated = "Policy created successfully";
-    public const string PolicyNotDeleted = "Policy not deleted, it is not possible to delete a policy created by default";
-    public const string PolicyDeleted = "Policy deleted successfully";
 
     //Message exceptions
     public const string UserNotAuthenticated = "User is not authenticated";
