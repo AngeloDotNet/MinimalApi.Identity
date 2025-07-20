@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ public static class LicenzeEndpoints
                 return opt;
             });
 
-        apiGroup.MapGet(LicenseExtensions.EndpointsStringEmpty, async ([FromServices] ILicenseService licenseService) =>
+        apiGroup.MapGet(LicenseExtensions.EndpointsStringEmpty, [AllowAnonymous] async ([FromServices] ILicenseService licenseService) =>
         {
             return await licenseService.GetAllLicensesAsync();
         })
@@ -44,10 +45,10 @@ public static class LicenzeEndpoints
             return opt;
         });
 
-        apiGroup.MapPost(LicenseExtensions.EndpointsCreateLicense, async ([FromServices] ILicenseService licenseService,
-            [FromBody] CreateLicenseModel inputModel) =>
+        apiGroup.MapPost(LicenseExtensions.EndpointsCreateLicense, async ([FromBody] CreateLicenseModel inputModel,
+            [FromServices] ILicenseService licenseService, HttpContext httpContext) =>
         {
-            return await licenseService.CreateLicenseAsync(inputModel);
+            return await licenseService.CreateLicenseAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
@@ -64,10 +65,10 @@ public static class LicenzeEndpoints
             return opt;
         });
 
-        apiGroup.MapPost(LicenseExtensions.EndpointsAssignLicense, async ([FromServices] ILicenseService licenseService,
-            [FromBody] AssignLicenseModel inputModel) =>
+        apiGroup.MapPost(LicenseExtensions.EndpointsAssignLicense, async ([FromBody] AssignLicenseModel inputModel,
+            [FromServices] ILicenseService licenseService, HttpContext httpContext) =>
         {
-            return await licenseService.AssignLicenseAsync(inputModel);
+            return await licenseService.AssignLicenseAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -85,10 +86,10 @@ public static class LicenzeEndpoints
             return opt;
         });
 
-        apiGroup.MapDelete(LicenseExtensions.EndpointsRevokeLicense, async ([FromServices] ILicenseService licenseService,
-            [FromBody] RevokeLicenseModel inputModel) =>
+        apiGroup.MapDelete(LicenseExtensions.EndpointsRevokeLicense, async ([FromBody] RevokeLicenseModel inputModel,
+            [FromServices] ILicenseService licenseService, HttpContext httpContext) =>
         {
-            return await licenseService.RevokeLicenseAsync(inputModel);
+            return await licenseService.RevokeLicenseAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -106,10 +107,10 @@ public static class LicenzeEndpoints
             return opt;
         });
 
-        apiGroup.MapDelete(LicenseExtensions.EndpointsDeleteLicense, async ([FromServices] ILicenseService licenseService,
-            [FromBody] DeleteLicenseModel inputModel) =>
+        apiGroup.MapDelete(LicenseExtensions.EndpointsDeleteLicense, async ([FromBody] DeleteLicenseModel inputModel,
+            [FromServices] ILicenseService licenseService, HttpContext httpContext) =>
         {
-            return await licenseService.DeleteLicenseAsync(inputModel);
+            return await licenseService.DeleteLicenseAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
