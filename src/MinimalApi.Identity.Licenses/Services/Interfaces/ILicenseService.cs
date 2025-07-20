@@ -7,10 +7,10 @@ namespace MinimalApi.Identity.Licenses.Services.Interfaces;
 public interface ILicenseService
 {
     Task<List<LicenseResponseModel>> GetAllLicensesAsync();
-    Task<string> CreateLicenseAsync(CreateLicenseModel model);
-    Task<string> AssignLicenseAsync(AssignLicenseModel model);
-    Task<string> RevokeLicenseAsync(RevokeLicenseModel model);
-    Task<string> DeleteLicenseAsync(DeleteLicenseModel model);
+    Task<string> CreateLicenseAsync(CreateLicenseModel model, CancellationToken cancellationToken);
+    Task<string> AssignLicenseAsync(AssignLicenseModel model, CancellationToken cancellationToken);
+    Task<string> RevokeLicenseAsync(RevokeLicenseModel model, CancellationToken cancellationToken);
+    Task<string> DeleteLicenseAsync(DeleteLicenseModel model, CancellationToken cancellationToken);
     Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user);
     Task<bool> CheckUserLicenseExpiredAsync(ApplicationUser user);
 }
