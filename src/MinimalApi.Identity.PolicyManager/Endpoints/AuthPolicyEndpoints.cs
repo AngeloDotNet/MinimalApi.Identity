@@ -6,16 +6,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
-using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Models;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 
 namespace MinimalApi.Identity.PolicyManager.Endpoints;
 
-public class AuthPolicyEndpoints : IEndpointRouteHandlerBuilder
+public static class AuthPolicyEndpoints
 {
-    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapPolicyEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
             .MapGroup(PolicyExtensions.EndpointsAuthPolicyGroup)
@@ -86,5 +85,7 @@ public class AuthPolicyEndpoints : IEndpointRouteHandlerBuilder
 
             return opt;
         });
+
+        return apiGroup;
     }
 }
