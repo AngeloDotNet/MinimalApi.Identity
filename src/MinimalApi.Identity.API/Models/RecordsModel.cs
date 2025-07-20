@@ -1,4 +1,6 @@
-﻿namespace MinimalApi.Identity.API.Models;
+﻿using MinimalApi.Identity.Core.Enums;
+
+namespace MinimalApi.Identity.API.Models;
 
 public record class RegisterModel(string Firstname, string Lastname, string Username, string Email, string Password);
 public record class LoginModel(string Username, string Password, bool RememberMe);
@@ -30,3 +32,6 @@ public record class CreateClaimModel(string Type, string Value);
 public record class AssignClaimModel(int UserId, string Type, string Value);
 public record class RevokeClaimModel(int UserId, string Type, string Value);
 public record class DeleteClaimModel(string Type, string Value);
+
+public record class MailKitSenderModel(string emailTo, string emailSubject, string emailMessage, EmailSendingType emailSendingType);
+public record class SavingEmailModel(string emailTo, string emailSubject, string emailMessage, EmailSendingType emailSendingType, bool sent, string? errorMessage, string? errorDetails);
