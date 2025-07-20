@@ -25,6 +25,7 @@ using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.HostedServices;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
@@ -62,8 +63,13 @@ public static class RegisterServicesExtensions
             .AddProblemDetails()
             .AddHttpContextAccessor()
             .AddSwaggerConfiguration()
-
-            .AddMinimalApiDbContext<TDbContext>(configuration.DatabaseConnectionString, typeof(TMigrations).Assembly.FullName!)
+            .AddDatabaseContext<TDbContext>(options =>
+            {
+                options.Configure = configuration.Configure;
+                options.MigrationsAssembly = typeof(TMigrations).Assembly.FullName!;
+                options.DatabaseType = configuration.Configure.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")
+                    ?? throw new ArgumentNullException("DatabaseType", "Database type not found");
+            })
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
             {
                 options.JWTOptions = jwtOptions;
@@ -83,12 +89,14 @@ public static class RegisterServicesExtensions
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(configuration.Configure.GetSection("Kestrel"));
 
-        services.AddRegisterServices(options =>
-        {
-            options.Interfaces = [typeof(IAccountService), typeof(IAuthPolicyService)];
-            options.StringEndsWith = "Service";
-            options.Lifetime = ServiceLifetime.Transient;
-        });
+        services
+            .AddRegisterServices(options =>
+            {
+                options.Interfaces = [typeof(IAccountService), typeof(IAuthPolicyService)];
+                options.StringEndsWith = "Service";
+                options.Lifetime = ServiceLifetime.Transient;
+            })
+            .PolicyManagerRegistrationService(); //Register PolicyManager package services
 
         services
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
@@ -102,13 +110,7 @@ public static class RegisterServicesExtensions
     public static void UseMapEndpoints(this WebApplication app)
     {
         app.MapEndpoints();
-        app.MapPolicyEndpoints();
-    }
-
-    public static string GetDatabaseConnString(this IConfiguration configuration, string sectionName)
-    {
-        return configuration.GetConnectionString(sectionName)
-            ?? throw new ArgumentNullException(nameof(sectionName), "Connection string not found");
+        app.MapPolicyEndpoints(); //Register PolicyManager package endpoints
     }
 
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
@@ -157,24 +159,28 @@ public static class RegisterServicesExtensions
             });
     }
 
-    internal static IServiceCollection AddMinimalApiDbContext<TDbContext>(this IServiceCollection services, string dbConnString,
-        string migrationAssembly) where TDbContext : DbContext
+    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, Action<DatabaseServiceConfiguration> configure)
+        where TDbContext : DbContext
     {
-        services.AddDbContext<TDbContext>(options => options
-            .UseSqlServer(dbConnString, opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            })
-        );
+        var configuration = new DatabaseServiceConfiguration(services);
+        configure.Invoke(configuration);
+
+        if (configuration.DatabaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+        {
+            services.AddDbContext<TDbContext>(options
+                => options.UseSqlServer(configuration.Configure.GetConnectionString("SQLServer"), opt =>
+                {
+                    opt.MigrationsAssembly(configuration.MigrationsAssembly);
+                    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                }));
+        }
 
         return services;
     }
 
-    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, Action<IdentityServicesConfiguration> configure)
-        where TDbContext : DbContext
-        where TEntityUser : class
+    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services,
+        Action<IdentityServicesConfiguration> configure) where TDbContext : DbContext where TEntityUser : class
     {
         var configuration = new IdentityServicesConfiguration(services);
         configure.Invoke(configuration);
