@@ -16,16 +16,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Authorization.Handlers;
 using MinimalApi.Identity.API.Configurations;
-using MinimalApi.Identity.API.HostedServices;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
+using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.PolicyManager.Endpoints;
+using MinimalApi.Identity.PolicyManager.HostedServices;
+using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 
 namespace MinimalApi.Identity.API.Extensions;
 
@@ -62,12 +64,13 @@ public static class RegisterServicesExtensions
             .AddSwaggerConfiguration()
 
             .AddMinimalApiDbContext<TDbContext>(configuration.DatabaseConnectionString, typeof(TMigrations).Assembly.FullName!)
-            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
-            .AddMinimalApiIdentityOptionsServices(identityOptions)
-
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
+            {
+                options.JWTOptions = jwtOptions;
+                options.IdentityOptions = identityOptions;
+            })
             .ConfigureValidation(options => options.ErrorResponseFormat = configuration.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>()
-
             .Configure<JsonOptions>(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -82,7 +85,7 @@ public static class RegisterServicesExtensions
 
         services.AddRegisterServices(options =>
         {
-            options.Interfaces = [typeof(IAccountService)];
+            options.Interfaces = [typeof(IAccountService), typeof(IAuthPolicyService)];
             options.StringEndsWith = "Service";
             options.Lifetime = ServiceLifetime.Transient;
         });
@@ -96,7 +99,17 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static void UseMapEndpoints(this WebApplication app) => app.MapEndpoints();
+    public static void UseMapEndpoints(this WebApplication app)
+    {
+        app.MapEndpoints();
+        app.MapPolicyEndpoints();
+    }
+
+    public static string GetDatabaseConnString(this IConfiguration configuration, string sectionName)
+    {
+        return configuration.GetConnectionString(sectionName)
+            ?? throw new ArgumentNullException(nameof(sectionName), "Connection string not found");
+    }
 
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
@@ -159,11 +172,12 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions jwtOptions)
+    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, Action<IdentityServicesConfiguration> configure)
         where TDbContext : DbContext
         where TEntityUser : class
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey));
+        var configuration = new IdentityServicesConfiguration(services);
+        configure.Invoke(configuration);
 
         services
             .AddIdentity<TEntityUser, ApplicationRole>()
@@ -179,43 +193,36 @@ public static class RegisterServicesExtensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = jwtOptions.Issuer,
+                    ValidIssuer = configuration.JWTOptions.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = jwtOptions.Audience,
+                    ValidAudience = configuration.JWTOptions.Audience,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = key,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.JWTOptions.SecurityKey)),
                     RequireExpirationTime = true,
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
-        return services;
-    }
-
-    internal static IServiceCollection AddMinimalApiIdentityOptionsServices(this IServiceCollection services, NetIdentityOptions identityOptions)
-    {
         services.Configure<IdentityOptions>(options =>
         {
-            options.User.RequireUniqueEmail = identityOptions.RequireUniqueEmail;
-
+            options.User.RequireUniqueEmail = configuration.IdentityOptions.RequireUniqueEmail;
             options.Password = new PasswordOptions
             {
-                RequireDigit = identityOptions.RequireDigit,
-                RequiredLength = identityOptions.RequiredLength,
-                RequireUppercase = identityOptions.RequireUppercase,
-                RequireLowercase = identityOptions.RequireLowercase,
-                RequireNonAlphanumeric = identityOptions.RequireNonAlphanumeric,
-                RequiredUniqueChars = identityOptions.RequiredUniqueChars
+                RequireDigit = configuration.IdentityOptions.RequireDigit,
+                RequiredLength = configuration.IdentityOptions.RequiredLength,
+                RequireUppercase = configuration.IdentityOptions.RequireUppercase,
+                RequireLowercase = configuration.IdentityOptions.RequireLowercase,
+                RequireNonAlphanumeric = configuration.IdentityOptions.RequireNonAlphanumeric,
+                RequiredUniqueChars = configuration.IdentityOptions.RequiredUniqueChars
             };
 
-            options.SignIn.RequireConfirmedEmail = identityOptions.RequireConfirmedEmail;
-
+            options.SignIn.RequireConfirmedEmail = configuration.IdentityOptions.RequireConfirmedEmail;
             options.Lockout = new LockoutOptions
             {
-                MaxFailedAccessAttempts = identityOptions.MaxFailedAccessAttempts,
-                AllowedForNewUsers = identityOptions.AllowedForNewUsers,
-                DefaultLockoutTimeSpan = identityOptions.DefaultLockoutTimeSpan
+                MaxFailedAccessAttempts = configuration.IdentityOptions.MaxFailedAccessAttempts,
+                AllowedForNewUsers = configuration.IdentityOptions.AllowedForNewUsers,
+                DefaultLockoutTimeSpan = configuration.IdentityOptions.DefaultLockoutTimeSpan
             };
         });
 
