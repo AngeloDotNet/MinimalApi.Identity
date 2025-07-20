@@ -11,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
-using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
@@ -109,8 +108,7 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             BadRequestException or BadRequestRoleException or BadRequestUserException => HttpStatusCode.BadRequest,
             ConflictException => HttpStatusCode.Conflict,
 
-            NotFoundException or NotFoundClaimException or NotFoundModuleException or NotFoundProfileException or
-            NotFoundRoleException or NotFoundUserException => HttpStatusCode.NotFound,
+            NotFoundException => HttpStatusCode.NotFound,
 
             UserIsLockedException or UserTokenIsInvalidException or UserUnknownException or
             UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
@@ -131,12 +129,7 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
             ConflictException conflictException => conflictException.Message,
 
-            NotFoundException notFoundLicenseException => notFoundLicenseException.Message,
-            NotFoundClaimException notFoundClaimException => notFoundClaimException.Message,
-            NotFoundModuleException notFoundModuleException => notFoundModuleException.Message,
-            NotFoundProfileException notFoundProfileException => notFoundProfileException.Message,
-            NotFoundRoleException notFoundRoleException => notFoundRoleException.Message,
-            NotFoundUserException notFoundUserException => notFoundUserException.Message,
+            NotFoundException notFoundException => notFoundException.Message,
 
             UserIsLockedException => ServiceCoreExtensions.UserLockedOut,
             UserTokenIsInvalidException userTokenIsInvalidException => userTokenIsInvalidException.Message,
