@@ -1,12 +1,7 @@
 ﻿# .NET Modular Dynamic Identity Manager
 
-[![Lint Code Base](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/linter.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/linter.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/master/LICENSE)
-[![Publish Identity.Module.API on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish.yml)
-[![Publish Identity.Module.Core on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_core.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_core.yml)
-[![Publish Identity.Module.Licenses on NuGet](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_licenses.yml/badge.svg?branch=main)](https://github.com/AngeloDotNet/MinimalApi.Identity/actions/workflows/publish_licenses.yml)
-
 Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+
 
 
 ### 🛠️ Installation
@@ -21,8 +16,30 @@ dotnet add package Identity.Module.API
 
 Coming soon stay tuned
 
+### 📦 Packages
+
+Main packages:
+
+|Package Name|Version|Downloads|
+|------------|-------|---------|
+|[Identity.Module.API](https://www.nuget.org/packages/Identity.Module.API)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.API)](https://www.nuget.org/packages/Identity.Module.API)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Api)](https://www.nuget.org/packages/Identity.Module.Api/)|
+
+Optional packages:
+
+|Package Name|Version|Downloads|
+|------------|-------|---------|
+|[Identity.Module.Licenses](https://www.nuget.org/packages/Identity.Module.Licenses)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses/)|
+
+Dependencies Packages:
+
+|Package Name|Version|Downloads|
+|------------|-------|---------|
+|[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core/)|
+|[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager/)|
+
 ### 🏗️ ToDo
 
+- [ ] Add CancellationToken to API and PolicyManager modules
 - [ ] Move email sending logic to a hosted services
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
