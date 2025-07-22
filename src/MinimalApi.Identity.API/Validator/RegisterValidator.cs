@@ -14,6 +14,7 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
     {
         var identityOptions = iOptions.Value;
         var validationOptions = vOptions.Value;
+        requiredUniqueChars = identityOptions.RequiredUniqueChars;
 
         RuleFor(x => x.Firstname)
             .NotEmpty().WithMessage("First name is required")
@@ -34,8 +35,6 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
             .NotEmpty().WithMessage("Email is required")
             .EmailAddress().WithMessage("Email is not valid");
 
-        requiredUniqueChars = identityOptions.RequiredUniqueChars;
-
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required")
             .MinimumLength(identityOptions.RequiredLength).WithMessage($"Password must be at least {identityOptions.RequiredLength} characters")
@@ -45,23 +44,11 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
             .Must(ContainAtLeastUniqueCharacters).WithMessage($"Password must contain at least {requiredUniqueChars} unique characters.");
     }
 
-    private bool ContainAtLeastTwoUppercaseLetters(string password)
-    {
-        return password.Count(char.IsUpper) >= 0;
-    }
+    private static bool ContainAtLeastTwoUppercaseLetters(string password) => password.Any(char.IsUpper);
 
-    private bool ContainAtLeastOneLowercaseLetter(string password)
-    {
-        return password.Count(char.IsLower) >= 0;
-    }
+    private static bool ContainAtLeastOneLowercaseLetter(string password) => password.Any(char.IsLower);
 
-    private bool ContainAtLeastOneNonAlphanumericCharacter(string password)
-    {
-        return password.Any(ch => !char.IsLetterOrDigit(ch));
-    }
+    private static bool ContainAtLeastOneNonAlphanumericCharacter(string password) => password.Any(ch => !char.IsLetterOrDigit(ch));
 
-    private bool ContainAtLeastUniqueCharacters(string password)
-    {
-        return password.Distinct().Count() >= requiredUniqueChars;
-    }
+    private static bool ContainAtLeastUniqueCharacters(string password) => password.Distinct().Count() >= requiredUniqueChars;
 }
