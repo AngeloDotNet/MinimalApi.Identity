@@ -9,12 +9,9 @@ public class TimeSpanRangeAttribute(string min, string max) : ValidationAttribut
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is TimeSpan timeSpanValue)
+        if (value is TimeSpan timeSpanValue && (timeSpanValue < min || timeSpanValue > max))
         {
-            if (timeSpanValue < min || timeSpanValue > max)
-            {
-                return new ValidationResult(ErrorMessage ?? $"The field {validationContext.DisplayName} must be between {min} and {max}.");
-            }
+            return new ValidationResult(ErrorMessage ?? $"The field {validationContext.DisplayName} must be between {min} and {max}.");
         }
 
         return ValidationResult.Success!;
