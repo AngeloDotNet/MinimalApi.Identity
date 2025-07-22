@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
-using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -46,7 +45,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         }
 
         var user = await userManager.FindByNameAsync(model.Username)
-            ?? throw new NotFoundUserException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessageApi.UserNotFound);
 
         if (!user.EmailConfirmed)
         {
@@ -54,7 +53,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         }
 
         var profileUser = await profileService.GetProfileAsync(user.Id)
-            ?? throw new NotFoundProfileException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundException(MessageApi.ProfileNotFound);
 
         if (!profileUser.IsEnabled)
         {
@@ -226,7 +225,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
     {
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundUserException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessageApi.UserNotFound);
 
         if (!await userManager.IsEmailConfirmedAsync(user))
         {
@@ -251,7 +250,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         }
 
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundUserException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessageApi.UserNotFound);
 
         var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password);
 
