@@ -31,7 +31,7 @@ public static class UsersExtensions
     {
         var userIsAuthenticated = principal.Identity?.IsAuthenticated ?? false;
 
-        if (userIsAuthenticated == false)
+        if (!userIsAuthenticated)
         {
             throw new UserUnknownException("User is not authenticated");
         }
