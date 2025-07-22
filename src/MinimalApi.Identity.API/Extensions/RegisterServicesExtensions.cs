@@ -41,23 +41,37 @@ public static class RegisterServicesExtensions
         var configuration = new DefaultServicesConfiguration(services);
         configure.Invoke(configuration);
 
-        var apiValidationOptions = configuration.Configure.GetSection("ApiValidationOptions").Get<ApiValidationOptions>()
-            ?? throw new ArgumentNullException("ApiValidationOptions", "api validation options not found");
+        var apiValidationOptions = configuration.Configure.GetSection("ApiValidationOptions").Get<ApiValidationOptions>()!;
+        var hostedServiceOptions = configuration.Configure.GetSection("HostedServiceOptions").Get<HostedServiceOptions>()!;
+        var jwtOptions = configuration.Configure.GetSection("JwtOptions").Get<JwtOptions>()!;
+        var identityOptions = configuration.Configure.GetSection("NetIdentityOptions").Get<NetIdentityOptions>()!;
+        var smtpOptions = configuration.Configure.GetSection("SmtpOptions").Get<SmtpOptions>()!;
+        var userOptions = configuration.Configure.GetSection("UsersOptions").Get<UsersOptions>();
 
-        var hostedServiceOptions = configuration.Configure.GetSection("HostedServiceOptions").Get<HostedServiceOptions>()
-            ?? throw new ArgumentNullException("HostedServiceOptions", "hosted service options not found");
-
-        var jwtOptions = configuration.Configure.GetSection("JwtOptions").Get<JwtOptions>()
-            ?? throw new ArgumentNullException("JwtOptions", "JWT options not found");
-
-        var identityOptions = configuration.Configure.GetSection("NetIdentityOptions").Get<NetIdentityOptions>()
-            ?? throw new ArgumentNullException("NetIdentityOptions", "Identity options not found");
-
-        var smtpOptions = configuration.Configure.GetSection("SmtpOptions").Get<SmtpOptions>()
-            ?? throw new ArgumentNullException("SmtpOptions", "SMTP options not found");
-
-        var userOptions = configuration.Configure.GetSection("UsersOptions").Get<UsersOptions>()
-            ?? throw new ArgumentNullException("UsersOptions", "Users options not found");
+        if (apiValidationOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "ApiValidationOptions cannot be null.");
+        }
+        else if (hostedServiceOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "HostedServiceOptions cannot be null.");
+        }
+        else if (jwtOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "JwtOptions cannot be null.");
+        }
+        else if (identityOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "NetIdentityOptions cannot be null.");
+        }
+        else if (smtpOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "SmtpOptions cannot be null.");
+        }
+        else if (userOptions is null)
+        {
+            throw new ArgumentNullException(nameof(configure), "UsersOptions cannot be null.");
+        }
 
         services
             .AddProblemDetails()
@@ -67,8 +81,7 @@ public static class RegisterServicesExtensions
             {
                 options.Configure = configuration.Configure;
                 options.MigrationsAssembly = typeof(TMigrations).Assembly.FullName!;
-                options.DatabaseType = configuration.Configure.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")
-                    ?? throw new ArgumentNullException("DatabaseType", "Database type not found");
+                options.DatabaseType = configuration.Configure.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")!;
             })
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
             {
