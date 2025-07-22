@@ -12,8 +12,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var authConnection = builder.Configuration.GetDatabaseConnString("DefaultConnection");
-        var formatErrorResponse = ErrorResponseFormat.List; // or ErrorResponseFormat.Default
 
         builder.Services.AddCors(options => options.AddPolicy("cors", builder
             => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
@@ -26,12 +24,10 @@ public class Program
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext, Program>(options =>
         {
             options.Configure = builder.Configuration;
-            options.DatabaseConnectionString = authConnection;
-            options.FormatErrorResponse = formatErrorResponse;
+            options.FormatErrorResponse = ErrorResponseFormat.List; // or ErrorResponseFormat.Default
         });
 
-        // Register license services if the feature Licenses is enabled otherwise comment or remove the line below
-        builder.Services.LicenseRegistrationService();
+        builder.Services.LicenseRegistrationService(); //Register licensing services if this feature is needed, otherwise just comment out this line.
         builder.Services.AddAuthorization(options =>
         {
             // Here you can add additional authorization policies
@@ -68,8 +64,7 @@ public class Program
         app.UseAuthorization();
 
         app.UseMapEndpoints();
-        // Register license endpoints if the feature Licenses is enabled otherwise comment or remove the line below
-        app.MapLicenseEndpoints();
+        app.MapLicenseEndpoints(); //Register licensing services if this feature is needed, otherwise just comment out this line.
 
         app.Run();
     }
