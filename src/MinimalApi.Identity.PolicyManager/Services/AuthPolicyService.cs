@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.Core.Authorization;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
@@ -17,9 +18,9 @@ namespace MinimalApi.Identity.API.Services;
 public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPolicyService> logger,
     IServiceProvider serviceProvider) : IAuthPolicyService
 {
-    public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync()
+    public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(CancellationToken cancellationToken)
     {
-        var query = await dbContext.Set<AuthPolicy>().AsNoTracking().ToListAsync();
+        var query = await dbContext.Set<AuthPolicy>().AsNoTracking().ToListAsync(cancellationToken);
 
         if (query.Count == 0)
         {
@@ -29,7 +30,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         return query.Select(p => new PolicyResponseModel(p.Id, p.PolicyName, p.PolicyDescription, p.PolicyPermissions)).ToList();
     }
 
-    public async Task<string> CreatePolicyAsync(CreatePolicyModel model)
+    public async Task<string> CreatePolicyAsync(CreatePolicyModel model, CancellationToken cancellationToken)
     {
         if (await CheckPolicyExistAsync(model))
         {
@@ -46,15 +47,15 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         };
 
         dbContext.Set<AuthPolicy>().Add(authPolicy);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return PolicyExtensions.PolicyCreated;
     }
 
-    public async Task<string> DeletePolicyAsync(DeletePolicyModel model)
+    public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
     {
         var authPolicy = await dbContext.Set<AuthPolicy>().AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == model.Id && x.PolicyName == model.PolicyName)
+            .FirstOrDefaultAsync(x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
             ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
 
         if (authPolicy.IsDefault)
@@ -63,7 +64,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         }
 
         dbContext.Set<AuthPolicy>().Remove(authPolicy);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return PolicyExtensions.PolicyDeleted;
     }
@@ -92,7 +93,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
             if (listPolicy.Count == 0)
             {
-                logger.LogWarning("No active policies found in the database.");
+                logger.LogWarning(ConstantsConfiguration.NoActivePoliciesFound);
                 throw new NotFoundException();
             }
 
@@ -115,7 +116,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         }
         catch (NotFoundException ex)
         {
-            logger.LogWarning(ex, "No active policies found in the database.");
+            logger.LogWarning(ex, ConstantsConfiguration.NoActivePoliciesFound);
             return false;
         }
         catch (Exception ex)
@@ -137,7 +138,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
             if (listPolicy.Count == 0)
             {
-                logger.LogWarning("No active policies found in the database.");
+                logger.LogWarning(ConstantsConfiguration.NoActivePoliciesFound);
                 throw new NotFoundException();
             }
 
@@ -159,7 +160,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         }
         catch (NotFoundException ex)
         {
-            logger.LogWarning(ex, "No active policies found in the database.");
+            logger.LogWarning(ex, ConstantsConfiguration.NoActivePoliciesFound);
             return false;
         }
         catch (Exception ex)
