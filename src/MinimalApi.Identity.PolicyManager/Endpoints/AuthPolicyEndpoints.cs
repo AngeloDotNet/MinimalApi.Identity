@@ -25,9 +25,10 @@ public static class AuthPolicyEndpoints
                 return opt;
             });
 
-        apiGroup.MapGet(PolicyExtensions.EndpointsStringEmpty, async ([FromServices] IAuthPolicyService authPolicyService) =>
+        apiGroup.MapGet(PolicyExtensions.EndpointsStringEmpty, async ([FromServices] IAuthPolicyService authPolicyService,
+            HttpContext httpContext) =>
         {
-            return await authPolicyService.GetAllPoliciesAsync();
+            return await authPolicyService.GetAllPoliciesAsync(httpContext.RequestAborted);
         })
         .Produces<Ok<List<PolicyResponseModel>>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -45,9 +46,9 @@ public static class AuthPolicyEndpoints
         });
 
         apiGroup.MapPost(PolicyExtensions.EndpointsCreateAuthPolicy, async ([FromServices] IAuthPolicyService authPolicyService,
-            [FromBody] CreatePolicyModel inputModel) =>
+            [FromBody] CreatePolicyModel inputModel, HttpContext httpContext) =>
         {
-            return await authPolicyService.CreatePolicyAsync(inputModel);
+            return await authPolicyService.CreatePolicyAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
@@ -66,9 +67,9 @@ public static class AuthPolicyEndpoints
         });
 
         apiGroup.MapDelete(PolicyExtensions.EndpointsDeleteAuthPolicy, async ([FromServices] IAuthPolicyService authPolicyService,
-            [FromBody] DeletePolicyModel inputModel) =>
+            [FromBody] DeletePolicyModel inputModel, HttpContext httpContext) =>
         {
-            return await authPolicyService.DeletePolicyAsync(inputModel);
+            return await authPolicyService.DeletePolicyAsync(inputModel, httpContext.RequestAborted);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
