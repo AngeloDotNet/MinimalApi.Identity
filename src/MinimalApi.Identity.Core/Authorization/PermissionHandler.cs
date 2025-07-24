@@ -25,26 +25,20 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
 
             if (utente == null || user == null)
             {
-                var message = $"User {nameUser} not found";
-
-                logger.LogWarning(message);
-                throw new UserUnknownException(message);
+                logger.LogWarning($"User {nameUser} not found");
+                throw new UserUnknownException($"User {nameUser} not found");
             }
 
             if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
             {
-                var message = ServiceCoreExtensions.UserLockedOut;
-
-                logger.LogWarning(message);
-                throw new UserIsLockedException(message);
+                logger.LogWarning(ServiceCoreExtensions.UserLockedOut);
+                throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut);
             }
 
             if (securityStamp != utente.SecurityStamp)
             {
-                var message = $"User {nameUser} security stamp is invalid";
-
-                logger.LogWarning(message);
-                throw new UserTokenIsInvalidException(message);
+                logger.LogWarning($"User {nameUser} security stamp is invalid");
+                throw new UserTokenIsInvalidException($"User {nameUser} security stamp is invalid");
             }
 
             foreach (var permissionRequirement in permissionsRequirements)
@@ -55,10 +49,8 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 }
                 else
                 {
-                    var message = $"User {nameUser} does not have the required permissions";
-
-                    logger.LogWarning(message);
-                    throw new UserWithoutPermissionsException(message);
+                    logger.LogWarning($"User {nameUser} does not have the required permissions");
+                    throw new UserWithoutPermissionsException($"User {nameUser} does not have the required permissions");
                 }
             }
         }
