@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+<PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -18,20 +18,20 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
-  </PropertyGroup>
+</PropertyGroup>
 
-  <ItemGroup>
+<ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+</ItemGroup>
 
-  <ItemGroup>
-      <None Include="..\..\identityLibrary.png">
-          <Pack>True</Pack>
-          <PackagePath></PackagePath>
-      </None>
-  </ItemGroup>
+<ItemGroup>
+    <None Include="..\..\identityLibrary.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+    </None>
+</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Identity.Module.Core" Version="1.0.24" />
-  </ItemGroup>
+<ItemGroup>
+    <PackageReference Include="Identity.Module.Core" Version="1.0.25" />
+</ItemGroup>
 </Project>
