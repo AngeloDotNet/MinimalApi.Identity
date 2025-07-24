@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace MinimalApi.Identity.Core.Validator.Attribute;
 
 public class TimeSpanRangeAttribute(string min, string max) : ValidationAttribute
 {
-    private readonly TimeSpan min = TimeSpan.Parse(min);
-    private readonly TimeSpan max = TimeSpan.Parse(max);
+    private readonly TimeSpan min = TimeSpan.Parse(min, CultureInfo.InvariantCulture);
+    private readonly TimeSpan max = TimeSpan.Parse(max, CultureInfo.InvariantCulture);
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
