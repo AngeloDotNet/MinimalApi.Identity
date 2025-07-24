@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
@@ -39,8 +40,8 @@ public static class AuthPolicyEndpoints
             opt.Summary = "Get all authorization policy";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claims retrieved successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -60,8 +61,8 @@ public static class AuthPolicyEndpoints
             opt.Summary = "Add authorization policy";
 
             opt.Response(StatusCodes.Status200OK).Description = "Policy added successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });
@@ -81,8 +82,8 @@ public static class AuthPolicyEndpoints
             opt.Summary = "Delete authorization policy";
 
             opt.Response(StatusCodes.Status200OK).Description = "Policy deleted successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });
