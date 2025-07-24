@@ -8,4 +8,5 @@ public static class ConstantsConfiguration
     public static string NotFound => "Not Found";
     public static string BadRequest => "Bad Request";
     public static string Unauthorized => "Unauthorized";
+    public static string Conflict => "Conflict";
 }
