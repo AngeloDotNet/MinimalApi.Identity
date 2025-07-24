@@ -51,6 +51,6 @@ public class AuthorizationPolicyUpdater(IServiceProvider serviceProvider, ILogge
     public void Dispose()
     {
         timer?.Dispose();
-        GC.SuppressFinalize(this); //TODO: Check
+        GC.SuppressFinalize(this);
     }
 }
