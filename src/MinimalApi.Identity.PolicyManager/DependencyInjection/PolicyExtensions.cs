@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 using MinimalApi.Identity.PolicyManager.Validator;
 
@@ -34,5 +38,23 @@ public static class PolicyExtensions
             .ConfigureFluentValidation<CreatePolicyValidator>();
 
         return services;
+    }
+
+    public static IQueryable<AuthPolicy> GetPolicies(MinimalApiAuthDbContext dbContext, Expression<Func<AuthPolicy, bool>> filter = null!,
+        Expression<Func<AuthPolicy, object>> orderBy = null!)
+    {
+        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (orderBy != null)
+        {
+            query = query.OrderBy(orderBy);
+        }
+
+        return query;
     }
 }
