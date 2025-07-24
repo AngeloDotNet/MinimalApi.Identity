@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Licenses.DependencyInjection;
@@ -26,9 +27,10 @@ public static class LicenzeEndpoints
                 return opt;
             });
 
-        apiGroup.MapGet(LicenseExtensions.EndpointsStringEmpty, [AllowAnonymous] async ([FromServices] ILicenseService licenseService) =>
+        apiGroup.MapGet(LicenseExtensions.EndpointsStringEmpty, [AllowAnonymous] async ([FromServices] ILicenseService licenseService,
+            HttpContext httpContext) =>
         {
-            return await licenseService.GetAllLicensesAsync();
+            return await licenseService.GetAllLicensesAsync(httpContext.RequestAborted);
         })
         .Produces<Ok<List<LicenseResponseModel>>>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -39,8 +41,8 @@ public static class LicenzeEndpoints
             opt.Summary = "Get all licenses";
 
             opt.Response(StatusCodes.Status200OK).Description = "Licenses retrieved successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -60,7 +62,7 @@ public static class LicenzeEndpoints
             opt.Summary = "Create a new license";
 
             opt.Response(StatusCodes.Status200OK).Description = "License created successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });
@@ -80,8 +82,8 @@ public static class LicenzeEndpoints
             opt.Summary = "Assign a license to a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "License assigned successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -101,8 +103,8 @@ public static class LicenzeEndpoints
             opt.Summary = "Revoke a license from a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "License revoked successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -122,9 +124,9 @@ public static class LicenzeEndpoints
             opt.Description = "Delete license";
 
             opt.Response(StatusCodes.Status200OK).Description = "License deleted successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
