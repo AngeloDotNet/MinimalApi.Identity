@@ -20,7 +20,8 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 {
     public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(CancellationToken cancellationToken)
     {
-        var query = await dbContext.Set<AuthPolicy>().AsNoTracking().ToListAsync(cancellationToken);
+        var query = await PolicyExtensions.GetPolicies(dbContext).ToListAsync(cancellationToken);
+        //var query = await dbContext.Set<AuthPolicy>().AsNoTracking().ToListAsync(cancellationToken);
 
         if (query.Count == 0)
         {
@@ -54,9 +55,10 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
     {
-        var authPolicy = await dbContext.Set<AuthPolicy>().AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
-            ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
+        //var authPolicy = await dbContext.Set<AuthPolicy>().AsNoTracking()
+        //.Where(x => x.Id == model.Id && x.PolicyName == model.PolicyName)
+        var authPolicy = await PolicyExtensions.GetPolicies(dbContext, x => x.Id == model.Id && x.PolicyName == model.PolicyName)
+            .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
 
         if (authPolicy.IsDefault)
         {
@@ -71,7 +73,8 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<List<AuthPolicy>> GetAllAuthPoliciesAsync(Expression<Func<AuthPolicy, bool>> filter = null!)
     {
-        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+        //var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+        var query = PolicyExtensions.GetPolicies(dbContext);
 
         if (filter != null)
         {
@@ -87,8 +90,9 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var authorizationPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
-            var listPolicy = await authorizationPolicyService.GetAllAuthPoliciesAsync(x => x.IsActive);
+            //var authorizationPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
+            //var listPolicy = await authorizationPolicyService.GetAllAuthPoliciesAsync(x => x.IsActive);
+            var listPolicy = await GetAllAuthPoliciesAsync(x => x.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
@@ -132,8 +136,9 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var authorizationPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
-            var listPolicy = await authorizationPolicyService.GetAllAuthPoliciesAsync(x => x.IsActive);
+            //var authorizationPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
+            //var listPolicy = await authorizationPolicyService.GetAllAuthPoliciesAsync(x => x.IsActive);
+            var listPolicy = await GetAllAuthPoliciesAsync(x => x.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
