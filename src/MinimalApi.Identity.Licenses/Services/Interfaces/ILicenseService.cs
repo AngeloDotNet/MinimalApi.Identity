@@ -11,6 +11,6 @@ public interface ILicenseService
     Task<string> AssignLicenseAsync(AssignLicenseModel model, CancellationToken cancellationToken);
     Task<string> RevokeLicenseAsync(RevokeLicenseModel model, CancellationToken cancellationToken);
     Task<string> DeleteLicenseAsync(DeleteLicenseModel model, CancellationToken cancellationToken);
-    Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user);
-    Task<bool> CheckUserLicenseExpiredAsync(ApplicationUser user);
+    Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user, CancellationToken cancellationToken);
+    Task<bool> CheckUserLicenseExpiredAsync(ApplicationUser user, CancellationToken cancellationToken);
 }
