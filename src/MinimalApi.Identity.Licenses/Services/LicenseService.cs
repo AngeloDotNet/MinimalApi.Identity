@@ -13,12 +13,12 @@ namespace MinimalApi.Identity.Licenses.Services;
 
 public class LicenseService(MinimalApiAuthDbContext dbContext) : ILicenseService
 {
-    public async Task<List<LicenseResponseModel>> GetAllLicensesAsync()
+    public async Task<List<LicenseResponseModel>> GetAllLicensesAsync(CancellationToken cancellationToken)
     {
         var licenses = await dbContext.Set<License>()
             .AsNoTracking()
             .ToLicenseResponseModel()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return licenses.Count == 0 ? [] : licenses;
     }
@@ -45,6 +45,7 @@ public class LicenseService(MinimalApiAuthDbContext dbContext) : ILicenseService
     public async Task<string> AssignLicenseAsync(AssignLicenseModel model, CancellationToken cancellationToken)
     {
         var userHasLicense = await dbContext.Set<UserLicense>()
+            .AsNoTracking()
             .AnyAsync(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId, cancellationToken);
 
         if (userHasLicense)
@@ -67,7 +68,8 @@ public class LicenseService(MinimalApiAuthDbContext dbContext) : ILicenseService
     public async Task<string> RevokeLicenseAsync(RevokeLicenseModel model, CancellationToken cancellationToken)
     {
         var userLicense = await dbContext.Set<UserLicense>()
-            .SingleOrDefaultAsync(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId, cancellationToken)
             ?? throw new NotFoundException(LicenseExtensions.LicenseNotFound);
 
         dbContext.Set<UserLicense>().Remove(userLicense);
@@ -78,10 +80,10 @@ public class LicenseService(MinimalApiAuthDbContext dbContext) : ILicenseService
 
     public async Task<string> DeleteLicenseAsync(DeleteLicenseModel model, CancellationToken cancellationToken)
     {
-        var license = await dbContext.Set<License>().FindAsync(model.LicenseId)
+        var license = await dbContext.Set<License>().FindAsync(model.LicenseId, cancellationToken)
             ?? throw new NotFoundException(LicenseExtensions.LicenseNotFound);
 
-        if (await dbContext.Set<UserLicense>().AnyAsync(ul => ul.LicenseId == model.LicenseId, cancellationToken))
+        if (await dbContext.Set<UserLicense>().AsNoTracking().AnyAsync(ul => ul.LicenseId == model.LicenseId, cancellationToken))
         {
             throw new BadRequestException(LicenseExtensions.LicenseNotDeleted);
         }
@@ -113,5 +115,6 @@ public class LicenseService(MinimalApiAuthDbContext dbContext) : ILicenseService
 
     private async Task<bool> CheckLicenseExistAsync(CreateLicenseModel model, CancellationToken cancellationToken)
         => await dbContext.Set<License>()
+            .AsNoTracking()
             .AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
 }
