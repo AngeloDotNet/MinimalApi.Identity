@@ -37,8 +37,8 @@ Dependencies Packages:
 
 ### 🏗️ ToDo
 
-- [ ] Add CancellationToken to API
-- [ ] Move email sending logic to a hosted services
+- [ ] Add CancellationToken to API endpoints
+- [ ] Move email sending logic (with improvements) to a hosted service
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Replacing the hosted service authorization policy updater using Coravel jobs
