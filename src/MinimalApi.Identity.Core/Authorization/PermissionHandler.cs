@@ -25,7 +25,7 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
 
             if (utente == null || user == null)
             {
-                logger.LogWarning($"User {nameUser} not found");
+                logger.LogWarning("User {nameUser} not found", nameUser);
                 throw new UserUnknownException($"User {nameUser} not found");
             }
 
@@ -37,7 +37,7 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
 
             if (securityStamp != utente.SecurityStamp)
             {
-                logger.LogWarning($"User {nameUser} security stamp is invalid");
+                logger.LogWarning("User {nameUser} security stamp is invalid", nameUser);
                 throw new UserTokenIsInvalidException($"User {nameUser} security stamp is invalid");
             }
 
@@ -49,7 +49,7 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 }
                 else
                 {
-                    logger.LogWarning($"User {nameUser} does not have the required permissions");
+                    logger.LogWarning("User {nameUser} does not have the required permissions", nameUser);
                     throw new UserWithoutPermissionsException($"User {nameUser} does not have the required permissions");
                 }
             }
