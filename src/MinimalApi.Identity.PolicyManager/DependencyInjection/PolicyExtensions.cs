@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.PolicyManager.Mapping;
+using MinimalApi.Identity.PolicyManager.Models;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 using MinimalApi.Identity.PolicyManager.Validator;
 
@@ -40,8 +42,8 @@ public static class PolicyExtensions
         return services;
     }
 
-    public static IQueryable<AuthPolicy> GetPolicies(MinimalApiAuthDbContext dbContext, Expression<Func<AuthPolicy, bool>> filter = null!,
-        Expression<Func<AuthPolicy, object>> orderBy = null!)
+    public static async Task<List<PolicyResponseModel>> GetPoliciesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken,
+        Expression<Func<AuthPolicy, bool>> filter = null!)
     {
         var query = dbContext.Set<AuthPolicy>().AsNoTracking();
 
@@ -50,11 +52,19 @@ public static class PolicyExtensions
             query = query.Where(filter);
         }
 
-        if (orderBy != null)
+        return await query.ToModel().ToListAsync(cancellationToken);
+    }
+
+    public static async Task<PolicyDetailsResponseModel> GetPolicyAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken,
+        Expression<Func<AuthPolicy, bool>> filter = null!)
+    {
+        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+
+        if (filter != null)
         {
-            query = query.OrderBy(orderBy);
+            query = query.Where(filter);
         }
 
-        return query;
+        return await query.ToDetailsModel().FirstOrDefaultAsync(cancellationToken);
     }
 }
