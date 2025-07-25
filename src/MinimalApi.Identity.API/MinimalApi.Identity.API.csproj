@@ -1,47 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <Authors>Angelo Pirola</Authors>
-        <Company>Angelo Pirola</Company>
-        <Product>Identity.Module.API</Product>
-        <Title>Identity.Module.API</Title>
-        <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
-        access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
-        <PackageId>Identity.Module.API</PackageId>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
-        <PackageIcon>identityLibrary.png</PackageIcon>
-        <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
-        <RepositoryBranch>main</RepositoryBranch>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-    </PropertyGroup>
+<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>Angelo Pirola</Authors>
+    <Company>Angelo Pirola</Company>
+    <Product>Identity.Module.API</Product>
+    <Title>Identity.Module.API</Title>
+    <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
+    access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
+    <PackageId>Identity.Module.API</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
+    <PackageIcon>identityLibrary.png</PackageIcon>
+    <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
+    <RepositoryBranch>main</RepositoryBranch>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+</PropertyGroup>
 
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
+<ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+</ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="1.0.21" />
-        <PackageReference Include="Identity.Module.PolicyManager" Version="1.0.10" />
-        <PackageReference Include="MailKit" Version="4.13.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
-    </ItemGroup>
+<ItemGroup>
+    <PackageReference Include="Identity.Module.Core" Version="1.0.28" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="1.0.23" />
+    <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+</ItemGroup>
 
-    <ItemGroup>
-        <None Include="..\..\identityLibrary.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
+<ItemGroup>
+    <None Include="..\..\identityLibrary.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+</ItemGroup>
 </Project>    
