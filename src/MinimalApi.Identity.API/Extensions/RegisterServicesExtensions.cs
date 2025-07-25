@@ -21,6 +21,8 @@ using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Core.Authorization;
+using MinimalApi.Identity.Core.Configurations;
+using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Extensions;
@@ -34,44 +36,28 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext, TMigrations>(this IServiceCollection services, Action<DefaultServicesConfiguration> configure)
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext, TMigrations>(this IServiceCollection services,
+        Action<DefaultServicesConfiguration> configure)
         where TDbContext : DbContext
         where TMigrations : class
     {
         var configuration = new DefaultServicesConfiguration(services);
-        configure.Invoke(configuration);
+        configure(configuration);
 
-        var apiValidationOptions = configuration.Configure.GetSection("ApiValidationOptions").Get<ApiValidationOptions>()!;
-        var hostedServiceOptions = configuration.Configure.GetSection("HostedServiceOptions").Get<HostedServiceOptions>()!;
-        var jwtOptions = configuration.Configure.GetSection("JwtOptions").Get<JwtOptions>()!;
-        var identityOptions = configuration.Configure.GetSection("NetIdentityOptions").Get<NetIdentityOptions>()!;
-        var smtpOptions = configuration.Configure.GetSection("SmtpOptions").Get<SmtpOptions>()!;
-        var userOptions = configuration.Configure.GetSection("UsersOptions").Get<UsersOptions>();
+        var config = configuration.Configure;
+        var apiValidationOptions = config.GetSection(nameof(ApiValidationOptions)).Get<ApiValidationOptions>();
+        var hostedServiceOptions = config.GetSection(nameof(HostedServiceOptions)).Get<HostedServiceOptions>();
+        var jwtOptions = config.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+        var identityOptions = config.GetSection(nameof(NetIdentityOptions)).Get<NetIdentityOptions>();
+        var smtpOptions = config.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>();
+        var userOptions = config.GetSection(nameof(UsersOptions)).Get<UsersOptions>();
 
-        if (apiValidationOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "ApiValidationOptions cannot be null.");
-        }
-        else if (hostedServiceOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "HostedServiceOptions cannot be null.");
-        }
-        else if (jwtOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "JwtOptions cannot be null.");
-        }
-        else if (identityOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "NetIdentityOptions cannot be null.");
-        }
-        else if (smtpOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "SmtpOptions cannot be null.");
-        }
-        else if (userOptions is null)
-        {
-            throw new ArgumentNullException(nameof(configure), "UsersOptions cannot be null.");
-        }
+        ArgumentNullException.ThrowIfNull(apiValidationOptions, nameof(apiValidationOptions));
+        ArgumentNullException.ThrowIfNull(hostedServiceOptions, nameof(hostedServiceOptions));
+        ArgumentNullException.ThrowIfNull(jwtOptions, nameof(jwtOptions));
+        ArgumentNullException.ThrowIfNull(identityOptions, nameof(identityOptions));
+        ArgumentNullException.ThrowIfNull(smtpOptions, nameof(smtpOptions));
+        ArgumentNullException.ThrowIfNull(userOptions, nameof(userOptions));
 
         services
             .AddProblemDetails()
@@ -88,19 +74,9 @@ public static class RegisterServicesExtensions
                 options.JWTOptions = jwtOptions;
                 options.IdentityOptions = identityOptions;
             })
+            .AddOptionsConfiguration(configuration.Configure)
             .ConfigureValidation(options => options.ErrorResponseFormat = configuration.FormatErrorResponse)
-            .ConfigureFluentValidation<LoginValidator>()
-            .Configure<JsonOptions>(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-                options.JsonSerializerOptions.WriteIndented = true;
-            })
-            .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-            .Configure<KestrelServerOptions>(configuration.Configure.GetSection("Kestrel"));
+            .ConfigureFluentValidation<LoginValidator>();
 
         services
             .AddRegisterServices(options =>
@@ -112,6 +88,7 @@ public static class RegisterServicesExtensions
             .PolicyManagerRegistrationService(); //Register PolicyManager package services
 
         services
+            .AddTransient<AuthOptions>()
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
             .AddScoped<IAuthorizationHandler, PermissionHandler>()
@@ -140,12 +117,12 @@ public static class RegisterServicesExtensions
                     {
                         Name = "Angelo Pirola",
                         Email = "angelo@aepserver.it",
-                        Url = new Uri("https://angelo.aepserver.it/")
+                        Url = new Uri(ConstantsConfiguration.WebSiteDev)
                     },
                     License = new OpenApiLicense
                     {
                         Name = "License MIT",
-                        Url = new Uri("https://opensource.org/licenses/MIT")
+                        Url = new Uri(ConstantsConfiguration.LicenseMIT)
                     },
                 };
                 options.SwaggerDoc("v1", openApiInfo);
@@ -190,6 +167,14 @@ public static class RegisterServicesExtensions
         }
 
         return services;
+    }
+
+    public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
+
+        await dbContext.Database.MigrateAsync();
     }
 
     internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services,
@@ -244,6 +229,26 @@ public static class RegisterServicesExtensions
                 DefaultLockoutTimeSpan = configuration.IdentityOptions.DefaultLockoutTimeSpan
             };
         });
+
+        return services;
+    }
+
+    internal static IServiceCollection AddOptionsConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        services
+            .Configure<JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.WriteIndented = true;
+            })
+            .Configure<NetIdentityOptions>(configuration.GetSection("NetIdentityOptions"))
+            .Configure<ApiValidationOptions>(configuration.GetSection("ApiValidationOptions"))
+            .Configure<RouteOptions>(options => options.LowercaseUrls = true)
+            .Configure<KestrelServerOptions>(configuration.GetSection("Kestrel"));
 
         return services;
     }
