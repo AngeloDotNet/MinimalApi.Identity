@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.PolicyManager.Models;
+﻿using MinimalApi.Identity.PolicyManager.Models;
 
 namespace MinimalApi.Identity.PolicyManager.Services.Interfaces;
 
@@ -11,5 +9,4 @@ public interface IAuthPolicyService
     Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken);
     Task<bool> GenerateAuthPoliciesAsync();
     Task<bool> UpdateAuthPoliciesAsync();
-    Task<List<AuthPolicy>> GetAllAuthPoliciesAsync(Expression<Func<AuthPolicy, bool>> filter = null!);
 }
