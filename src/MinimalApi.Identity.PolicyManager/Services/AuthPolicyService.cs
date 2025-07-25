@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,6 +9,7 @@ using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
+using MinimalApi.Identity.PolicyManager.Mapping;
 using MinimalApi.Identity.PolicyManager.Models;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 
@@ -20,19 +20,19 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 {
     public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(CancellationToken cancellationToken)
     {
-        var query = await PolicyExtensions.GetPolicies(dbContext).ToListAsync(cancellationToken);
+        var query = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken);
 
         if (query.Count == 0)
         {
             throw new NotFoundException(PolicyExtensions.PolicyNotFound);
         }
 
-        return query.Select(p => new PolicyResponseModel(p.Id, p.PolicyName, p.PolicyDescription, p.PolicyPermissions)).ToList();
+        return query.ToList();
     }
 
     public async Task<string> CreatePolicyAsync(CreatePolicyModel model, CancellationToken cancellationToken)
     {
-        if (await CheckPolicyExistAsync(model))
+        if (await CheckPolicyExistAsync(model.PolicyName))
         {
             throw new ConflictException(PolicyExtensions.PolicyAlreadyExist);
         }
@@ -54,31 +54,20 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
     {
-        var authPolicy = await PolicyExtensions.GetPolicies(dbContext, x => x.Id == model.Id
-        && x.PolicyName == model.PolicyName).FirstOrDefaultAsync(cancellationToken)
-        ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
+        var authPolicy = await PolicyExtensions.GetPolicyAsync(dbContext, cancellationToken,
+            x => x.Id == model.Id && x.PolicyName == model.PolicyName) ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
 
         if (authPolicy.IsDefault)
         {
             throw new BadRequestException(PolicyExtensions.PolicyNotDeleted);
         }
 
-        dbContext.Set<AuthPolicy>().Remove(authPolicy);
+        var entityPolicy = authPolicy.ToEntityModel();
+
+        dbContext.Set<AuthPolicy>().Remove(entityPolicy);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return PolicyExtensions.PolicyDeleted;
-    }
-
-    public async Task<List<AuthPolicy>> GetAllAuthPoliciesAsync(Expression<Func<AuthPolicy, bool>> filter = null!)
-    {
-        var query = PolicyExtensions.GetPolicies(dbContext);
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-        return await query.OrderBy(x => x.Id).ToListAsync();
     }
 
     public async Task<bool> GenerateAuthPoliciesAsync()
@@ -87,7 +76,8 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var listPolicy = await GetAllAuthPoliciesAsync(x => x.IsActive);
+            var cancellationToken = scope.ServiceProvider.GetRequiredService<CancellationToken>();
+            var listPolicy = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken, p => p.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
@@ -131,7 +121,8 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var listPolicy = await GetAllAuthPoliciesAsync(x => x.IsActive);
+            var cancellationToken = scope.ServiceProvider.GetRequiredService<CancellationToken>();
+            var listPolicy = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken, p => p.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
@@ -168,10 +159,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         }
     }
 
-    private async Task<bool> CheckPolicyExistAsync(CreatePolicyModel model)
-    {
-        return await dbContext.Set<AuthPolicy>().AsNoTracking()
-            .AnyAsync(x => x.PolicyName.Equals(model.PolicyName, StringComparison.InvariantCultureIgnoreCase)
-            || x.PolicyPermissions.SequenceEqual(model.PolicyPermissions));
-    }
+    private async Task<bool> CheckPolicyExistAsync(string policyName)
+        => await dbContext.Set<AuthPolicy>().AsNoTracking()
+                    .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
 }
