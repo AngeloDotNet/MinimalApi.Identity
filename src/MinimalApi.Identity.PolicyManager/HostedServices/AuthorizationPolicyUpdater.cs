@@ -8,7 +8,7 @@ using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 namespace MinimalApi.Identity.PolicyManager.HostedServices;
 
 public class AuthorizationPolicyUpdater(IServiceProvider serviceProvider, ILogger<AuthorizationPolicyUpdater> logger,
-    IOptions<HostedServiceOptions> hostedOptions) : IHostedService, IDisposable
+    IOptions<HostedServiceOptions> hostedOptions) : IHostedService
 {
     private Timer? timer;
     private readonly HostedServiceOptions options = hostedOptions.Value;
@@ -46,11 +46,5 @@ public class AuthorizationPolicyUpdater(IServiceProvider serviceProvider, ILogge
     {
         timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        timer?.Dispose();
-        GC.SuppressFinalize(this);
     }
 }
