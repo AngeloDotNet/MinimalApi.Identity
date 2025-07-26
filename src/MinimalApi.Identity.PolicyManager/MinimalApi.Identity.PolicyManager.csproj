@@ -32,6 +32,7 @@
 </ItemGroup>
 
 <ItemGroup>
-    <PackageReference Include="Identity.Module.Core" Version="1.0.25" />
+    <PackageReference Include="Identity.Module.Core" Version="1.0.28" />
 </ItemGroup>
+
 </Project>
