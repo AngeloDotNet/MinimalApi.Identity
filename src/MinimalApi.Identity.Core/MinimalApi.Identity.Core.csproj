@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+<PropertyGroup>
+<TargetFramework>net8.0</TargetFramework>
+<ImplicitUsings>enable</ImplicitUsings>
+<Nullable>enable</Nullable>
     <Authors>Angelo Pirola</Authors>
     <Company>Angelo Pirola</Company>
     <Product>Identity.Module.Core</Product>
@@ -18,24 +18,23 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
-  </PropertyGroup>
+</PropertyGroup>
 
-  <ItemGroup>
+<ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+</ItemGroup>
 
-  <ItemGroup>
+<ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
     <PackageReference Include="Scrutor" Version="6.1.0" />
-  </ItemGroup>
+</ItemGroup>
 
-  <ItemGroup>
-      <None Include="..\..\identityLibrary.png">
-          <Pack>True</Pack>
-          <PackagePath></PackagePath>
-      </None>
-  </ItemGroup>
-
+<ItemGroup>
+    <None Include="..\..\identityLibrary.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+    </None>
+</ItemGroup>
 </Project>
