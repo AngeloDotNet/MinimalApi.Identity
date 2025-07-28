@@ -18,7 +18,6 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Options;
-using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.Configurations;
@@ -30,34 +29,23 @@ using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.HostedServices;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 
 namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext, TMigrations>(this IServiceCollection services,
-        Action<DefaultServicesConfiguration> configure)
-        where TDbContext : DbContext
-        where TMigrations : class
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services,
+        Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
     {
         var configuration = new DefaultServicesConfiguration(services);
         configure(configuration);
 
         var config = configuration.Configure;
-        var apiValidationOptions = config.GetSection(nameof(ApiValidationOptions)).Get<ApiValidationOptions>();
         var hostedServiceOptions = config.GetSection(nameof(HostedServiceOptions)).Get<HostedServiceOptions>();
         var jwtOptions = config.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
         var identityOptions = config.GetSection(nameof(NetIdentityOptions)).Get<NetIdentityOptions>();
         var smtpOptions = config.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>();
         var userOptions = config.GetSection(nameof(UsersOptions)).Get<UsersOptions>();
-
-        ArgumentNullException.ThrowIfNull(apiValidationOptions, nameof(apiValidationOptions));
-        ArgumentNullException.ThrowIfNull(hostedServiceOptions, nameof(hostedServiceOptions));
-        ArgumentNullException.ThrowIfNull(jwtOptions, nameof(jwtOptions));
-        ArgumentNullException.ThrowIfNull(identityOptions, nameof(identityOptions));
-        ArgumentNullException.ThrowIfNull(smtpOptions, nameof(smtpOptions));
-        ArgumentNullException.ThrowIfNull(userOptions, nameof(userOptions));
 
         services
             .AddProblemDetails()
@@ -66,26 +54,22 @@ public static class RegisterServicesExtensions
             .AddDatabaseContext<TDbContext>(options =>
             {
                 options.Configure = configuration.Configure;
-                options.MigrationsAssembly = typeof(TMigrations).Assembly.FullName!;
+                options.MigrationsAssembly = configuration.MigrationsAssembly;
                 options.DatabaseType = configuration.Configure.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")!;
             })
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
             {
-                options.JWTOptions = jwtOptions;
-                options.IdentityOptions = identityOptions;
+                options.JWTOptions = jwtOptions ?? new();
+                options.IdentityOptions = identityOptions ?? new();
             })
             .AddOptionsConfiguration(configuration.Configure)
             .ConfigureValidation(options => options.ErrorResponseFormat = configuration.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>();
 
         services
-            .AddRegisterServices(options =>
-            {
-                options.Interfaces = [typeof(IAccountService), typeof(IAuthPolicyService)];
-                options.StringEndsWith = "Service";
-                options.Lifetime = ServiceLifetime.Transient;
-            })
-            .PolicyManagerRegistrationService(); //Register PolicyManager package services
+            .PolicyManagerRegistrationService() // Register PolicyManager package services
+                                                //.EmailManagerRegistrationService() // Register EmailManager package services
+            ;
 
         services
             .AddTransient<AuthOptions>()
@@ -246,7 +230,7 @@ public static class RegisterServicesExtensions
                 options.JsonSerializerOptions.WriteIndented = true;
             })
             .Configure<NetIdentityOptions>(configuration.GetSection("NetIdentityOptions"))
-            .Configure<ApiValidationOptions>(configuration.GetSection("ApiValidationOptions"))
+            .Configure<ValidationOptions>(configuration.GetSection("ValidationOptions"))
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(configuration.GetSection("Kestrel"));
 
