@@ -10,7 +10,7 @@ namespace MinimalApi.Identity.PolicyManager.DependencyInjection;
 public static class PolicyQuery
 {
     public static async Task<List<PolicyResponseModel>> GetPoliciesAsync(MinimalApiAuthDbContext dbContext,
-    Expression<Func<AuthPolicy, bool>> filter = null!, CancellationToken cancellationToken = default)
+    Expression<Func<AuthPolicy, bool>>? filter = null, CancellationToken cancellationToken = default)
     {
         var query = dbContext.Set<AuthPolicy>().AsNoTracking();
 
