@@ -22,8 +22,8 @@ public static class PolicyQuery
         return await query.ToModel().ToListAsync(cancellationToken);
     }
 
-    public static async Task<PolicyDetailsResponseModel?> GetPolicyAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken,
-        Expression<Func<AuthPolicy, bool>> filter = null!)
+    public static async Task<PolicyDetailsResponseModel?> GetPolicyAsync(MinimalApiAuthDbContext dbContext,
+        Expression<Func<AuthPolicy, bool>> filter = null!, CancellationToken cancellationToken = default)
     {
         var query = dbContext.Set<AuthPolicy>().AsNoTracking();
 
