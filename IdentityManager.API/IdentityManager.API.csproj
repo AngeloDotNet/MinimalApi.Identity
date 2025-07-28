@@ -8,12 +8,16 @@
 </PropertyGroup>
 
 <ItemGroup>
-    <PackageReference Include="Identity.Module.API" Version="2.0.94" />
-    <PackageReference Include="Identity.Module.Licenses" Version="1.0.23" />
+    <PackageReference Include="Identity.Module.API" Version="2.0.100" />
+    <PackageReference Include="Identity.Module.Licenses" Version="1.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+</ItemGroup>
+
+<ItemGroup>
+  <ProjectReference Include="..\src\MinimalApi.Identity.Migrations\MinimalApi.Identity.Migrations.csproj" />
 </ItemGroup>
 
 </Project>
