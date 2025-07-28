@@ -7,19 +7,19 @@ namespace MinimalApi.Identity.PolicyManager.Validator;
 
 public class CreatePolicyValidator : AbstractValidator<CreatePolicyModel>
 {
-    public CreatePolicyValidator(IOptions<ApiValidationOptions> options)
+    public CreatePolicyValidator(IOptions<ValidationOptions> options)
     {
         var validationOptions = options.Value;
 
         RuleFor(x => x.PolicyName)
             .NotEmpty().WithMessage("Name is required.")
-            .MinimumLength(validationOptions.MinLengthPolicyName).WithMessage($"Name must be at least {validationOptions.MinLengthPolicyName} characters")
-            .MaximumLength(validationOptions.MaxLengthPolicyName).WithMessage($"Name must not exceed {validationOptions.MaxLengthPolicyName} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"Name must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"Name must not exceed {validationOptions.MaxLength} characters");
 
         RuleFor(x => x.PolicyDescription)
             .NotEmpty().WithMessage("Description is required.")
-            .MinimumLength(validationOptions.MinLengthPolicyDescription).WithMessage($"Name must be at least {validationOptions.MinLengthPolicyDescription} characters")
-            .MaximumLength(validationOptions.MaxLengthPolicyDescription).WithMessage($"Name must not exceed {validationOptions.MaxLengthPolicyDescription} characters");
+            .MinimumLength(validationOptions.MinLengthDescription).WithMessage($"Name must be at least {validationOptions.MinLengthDescription} characters")
+            .MaximumLength(validationOptions.MaxLengthDescription).WithMessage($"Name must not exceed {validationOptions.MaxLengthDescription} characters");
 
         RuleFor(x => x.PolicyPermissions)
             .NotEmpty().WithMessage("Permissions are required.")
