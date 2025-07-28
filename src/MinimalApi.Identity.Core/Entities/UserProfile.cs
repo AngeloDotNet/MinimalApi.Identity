@@ -33,10 +33,8 @@ public partial class UserProfile : BaseEntity, IEntity
         {
             throw new ArgumentNullException(nameof(firstName), "FirstName cannot be null or empty.");
         }
-        else
-        {
-            FirstName = firstName;
-        }
+
+        FirstName = firstName;
     }
 
     public void ChangeLastName(string lastName)
