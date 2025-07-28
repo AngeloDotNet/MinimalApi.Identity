@@ -7,14 +7,14 @@ namespace MinimalApi.Identity.Licenses.Validator;
 
 public class CreateLicenseValidator : AbstractValidator<CreateLicenseModel>
 {
-    public CreateLicenseValidator(IOptions<ApiValidationOptions> options)
+    public CreateLicenseValidator(IOptions<ValidationOptions> options)
     {
         var validationOptions = options.Value;
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required")
-            .MinimumLength(validationOptions.MinLengthLicenseName).WithMessage($"Name must be at least {validationOptions.MinLengthLicenseName} characters")
-            .MaximumLength(validationOptions.MaxLengthLicenseName).WithMessage($"Name must not exceed {validationOptions.MaxLengthLicenseName} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"Name must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"Name must not exceed {validationOptions.MaxLength} characters");
 
         RuleFor(x => x.ExpirationDate)
             .NotEmpty().WithMessage("Expiration date is required")
