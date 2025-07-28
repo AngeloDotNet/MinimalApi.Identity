@@ -1,11 +1,5 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using MinimalApi.Identity.Core.Database;
+﻿using Microsoft.Extensions.DependencyInjection;
 using MinimalApi.Identity.Core.DependencyInjection;
-using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.PolicyManager.Mapping;
-using MinimalApi.Identity.PolicyManager.Models;
 using MinimalApi.Identity.PolicyManager.Services.Interfaces;
 using MinimalApi.Identity.PolicyManager.Validator;
 
@@ -40,31 +34,5 @@ public static class PolicyExtensions
             .ConfigureFluentValidation<CreatePolicyValidator>();
 
         return services;
-    }
-
-    public static async Task<List<PolicyResponseModel>> GetPoliciesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken,
-        Expression<Func<AuthPolicy, bool>> filter = null!)
-    {
-        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-        return await query.ToModel().ToListAsync(cancellationToken);
-    }
-
-    public static async Task<PolicyDetailsResponseModel> GetPolicyAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken,
-        Expression<Func<AuthPolicy, bool>> filter = null!)
-    {
-        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-        return await query.ToDetailsModel().FirstOrDefaultAsync(cancellationToken);
     }
 }
