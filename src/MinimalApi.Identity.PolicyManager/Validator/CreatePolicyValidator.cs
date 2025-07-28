@@ -18,7 +18,7 @@ public class CreatePolicyValidator : AbstractValidator<CreatePolicyModel>
 
         RuleFor(x => x.PolicyDescription)
             .NotEmpty().WithMessage("Description is required.")
-            .MinimumLength(validationOptions.MinLengthDescription).WithMessage($"Name must be at least {validationOptions.MinLengthDescription} characters")
+            .MinimumLength(validationOptions.MinLengthDescription).WithMessage($"Description must be at least {validationOptions.MinLengthDescription} characters")
             .MaximumLength(validationOptions.MaxLengthDescription).WithMessage($"Name must not exceed {validationOptions.MaxLengthDescription} characters");
 
         RuleFor(x => x.PolicyPermissions)
