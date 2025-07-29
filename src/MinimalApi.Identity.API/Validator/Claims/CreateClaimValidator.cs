@@ -7,7 +7,7 @@ namespace MinimalApi.Identity.API.Validator.Claims;
 
 public class CreateClaimValidator : AbstractValidator<CreateClaimModel>
 {
-    public CreateClaimValidator(IOptions<ApiValidationOptions> options)
+    public CreateClaimValidator(IOptions<ValidationOptions> options)
     {
         var validationOptions = options.Value;
 
@@ -16,7 +16,7 @@ public class CreateClaimValidator : AbstractValidator<CreateClaimModel>
 
         RuleFor(x => x.Value)
             .NotEmpty().WithMessage("Value is required")
-            .MinimumLength(validationOptions.MinLengthClaimValue).WithMessage($"Claim must be at least {validationOptions.MinLengthClaimValue} characters")
-            .MaximumLength(validationOptions.MaxLengthClaimValue).WithMessage($"Claim must not exceed {validationOptions.MaxLengthClaimValue} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"Claim must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"Claim must not exceed {validationOptions.MaxLength} characters");
     }
 }
