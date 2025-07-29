@@ -7,18 +7,18 @@ namespace MinimalApi.Identity.API.Validator.Modules;
 
 public class CreateModuleValidator : AbstractValidator<CreateModuleModel>
 {
-    public CreateModuleValidator(IOptions<ApiValidationOptions> options)
+    public CreateModuleValidator(IOptions<ValidationOptions> options)
     {
         var validationOptions = options.Value;
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required")
-            .MinimumLength(validationOptions.MinLengthModuleName).WithMessage($"Name must be at least {validationOptions.MinLengthModuleName} characters")
-            .MaximumLength(validationOptions.MaxLengthModuleName).WithMessage($"Name must not exceed {validationOptions.MaxLengthModuleName} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"Name must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"Name must not exceed {validationOptions.MaxLength} characters");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("Description is required")
-            .MinimumLength(validationOptions.MinLengthModuleDescription).WithMessage($"Name must be at least {validationOptions.MinLengthModuleDescription} characters")
-            .MaximumLength(validationOptions.MaxLengthModuleDescription).WithMessage($"Name must not exceed {validationOptions.MaxLengthModuleDescription} characters");
+            .MinimumLength(validationOptions.MinLengthDescription).WithMessage($"Name must be at least {validationOptions.MinLengthDescription} characters")
+            .MaximumLength(validationOptions.MaxLengthDescription).WithMessage($"Name must not exceed {validationOptions.MaxLengthDescription} characters");
     }
 }

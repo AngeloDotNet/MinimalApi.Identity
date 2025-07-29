@@ -26,7 +26,7 @@
 </ItemGroup>
 
 <ItemGroup>
-    <PackageReference Include="Identity.Module.Core" Version="1.0.37" />
+    <PackageReference Include="Identity.Module.Core" Version="1.0.38" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="1.0.32" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />

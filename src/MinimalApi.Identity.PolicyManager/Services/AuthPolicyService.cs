@@ -20,7 +20,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 {
     public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(CancellationToken cancellationToken)
     {
-        var query = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken);
+        var query = await PolicyQuery.GetPoliciesAsync(dbContext, null!, cancellationToken);
 
         if (query.Count == 0)
         {
@@ -54,8 +54,8 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
     {
-        var authPolicy = await PolicyExtensions.GetPolicyAsync(dbContext, cancellationToken,
-            x => x.Id == model.Id && x.PolicyName == model.PolicyName) ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
+        var authPolicy = await PolicyQuery.GetPolicyAsync(dbContext, x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
+            ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
 
         if (authPolicy.IsDefault)
         {
@@ -76,8 +76,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var cancellationToken = scope.ServiceProvider.GetRequiredService<CancellationToken>();
-            var listPolicy = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken, p => p.IsActive);
+            var listPolicy = await PolicyQuery.GetPoliciesAsync(dbContext, p => p.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
@@ -121,8 +120,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         {
             using var scope = serviceProvider.CreateScope();
 
-            var cancellationToken = scope.ServiceProvider.GetRequiredService<CancellationToken>();
-            var listPolicy = await PolicyExtensions.GetPoliciesAsync(dbContext, cancellationToken, p => p.IsActive);
+            var listPolicy = await PolicyQuery.GetPoliciesAsync(dbContext, p => p.IsActive);
             var authorizationOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
             if (listPolicy.Count == 0)
