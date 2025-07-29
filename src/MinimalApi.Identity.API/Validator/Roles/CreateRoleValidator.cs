@@ -7,13 +7,13 @@ namespace MinimalApi.Identity.API.Validator.Roles;
 
 public class CreateRoleValidator : AbstractValidator<CreateRoleModel>
 {
-    public CreateRoleValidator(IOptions<ApiValidationOptions> options)
+    public CreateRoleValidator(IOptions<ValidationOptions> options)
     {
         var applicationOptions = options.Value;
 
         RuleFor(x => x.Role)
             .NotEmpty().WithMessage("Role is required")
-            .MinimumLength(applicationOptions.MinLengthRoleName).WithMessage($"Role name must be at least {applicationOptions.MinLengthRoleName} characters")
-            .MaximumLength(applicationOptions.MaxLengthRoleName).WithMessage($"Role name must not exceed {applicationOptions.MaxLengthRoleName} characters");
+            .MinimumLength(applicationOptions.MinLength).WithMessage($"Role name must be at least {applicationOptions.MinLength} characters")
+            .MaximumLength(applicationOptions.MaxLength).WithMessage($"Role name must not exceed {applicationOptions.MinLength} characters");
     }
 }
