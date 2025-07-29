@@ -14,6 +14,6 @@ public class CreateRoleValidator : AbstractValidator<CreateRoleModel>
         RuleFor(x => x.Role)
             .NotEmpty().WithMessage("Role is required")
             .MinimumLength(applicationOptions.MinLength).WithMessage($"Role name must be at least {applicationOptions.MinLength} characters")
-            .MaximumLength(applicationOptions.MaxLength).WithMessage($"Role name must not exceed {applicationOptions.MinLength} characters");
+            .MaximumLength(applicationOptions.MaxLength).WithMessage($"Role name must not exceed {applicationOptions.MaxLength} characters");
     }
 }
