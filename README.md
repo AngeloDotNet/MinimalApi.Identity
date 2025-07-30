@@ -1,4 +1,4 @@
-﻿# .NET Modular Dynamic Identity Manager
+﻿﻿# .NET Modular Dynamic Identity Manager
 
 Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
 
@@ -10,7 +10,7 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 ### Prerequisites
 
 - .NET 8.0 SDK
-- SQL Server 2022 Express installed ([Setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([Docker example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
+- SQL Server 2022 Express installed ([setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
 
 ### Setup
 
@@ -23,6 +23,9 @@ dotnet add package Identity.Module.API
 ### Configuration
 
 The configuration can be completely managed by adding this section to the _appsettings.json_ file:
+
+> [!WARNING]
+>  The library is still under development, so the configuration may change in future updates.
 
 ```json
 "JwtOptions": {
@@ -68,7 +71,7 @@ The configuration can be completely managed by adding this section to the _appse
     "IntervalAuthPolicyUpdaterMinutes": 5
 },
 "ApplicationOptions": {
-    "MigrationsAssembly": "MinimalApi.Identity.Migrations" //Default value for migrations assembly: "IdentityManager.API"
+    "MigrationsAssembly": "MinimalApi.Identity.Migrations"
 },
 "ConnectionStrings": {
     "DatabaseType": "sqlserver",
@@ -76,8 +79,8 @@ The configuration can be completely managed by adding this section to the _appse
 }
 ```
 
-> [!IMPORTANT]
-> - For migrations you can use a specific project to add to your solution, then configuring the assembly in _ApplicationOptions:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
+> [!NOTE]
+> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ApplicationOptions:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
 
 <!--
 ## 🚀 Getting Started
