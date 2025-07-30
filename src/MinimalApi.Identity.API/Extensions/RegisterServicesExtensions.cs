@@ -67,11 +67,6 @@ public static class RegisterServicesExtensions
             .ConfigureFluentValidation<LoginValidator>();
 
         services
-            .PolicyManagerRegistrationService() // Register PolicyManager package services
-                                                //.EmailManagerRegistrationService() // Register EmailManager package services
-            ;
-
-        services
             .AddTransient<AuthOptions>()
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
@@ -79,6 +74,14 @@ public static class RegisterServicesExtensions
             .AddHostedService<AuthorizationPolicyUpdater>();
 
         return services;
+    }
+
+    public static IServiceCollection RegisterServicesDefault(this IServiceCollection services)
+    {
+        return services
+            .PolicyManagerRegistrationService() // Register PolicyManager package services
+                                                //.EmailManagerRegistrationService() // Register EmailManager package services
+            ;
     }
 
     public static void UseMapEndpoints(this WebApplication app)
