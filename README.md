@@ -1,4 +1,4 @@
-﻿﻿# .NET Modular Dynamic Identity Manager
+# .NET Modular Dynamic Identity Manager
 
 Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
 
