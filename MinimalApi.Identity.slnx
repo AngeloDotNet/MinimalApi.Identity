@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Manager/">
+    <Project Path="src/MinimalApi.Identity.AccountManager/MinimalApi.Identity.AccountManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.PolicyManager/MinimalApi.Identity.PolicyManager.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="src/Directory.Build.props" />
+  </Folder>
+  <Project Path="IdentityManager.API/IdentityManager.API.csproj" />
+  <Project Path="src/MinimalApi.Identity.API/MinimalApi.Identity.API.csproj" />
+  <Project Path="src/MinimalApi.Identity.Core/MinimalApi.Identity.Core.csproj" />
+  <Project Path="src/MinimalApi.Identity.EmailManager/MinimalApi.Identity.EmailManager.csproj" />
+  <Project Path="src/MinimalApi.Identity.Licenses/MinimalApi.Identity.Licenses.csproj" />
+  <Project Path="src/MinimalApi.Identity.Migrations/MinimalApi.Identity.Migrations.csproj" />
+</Solution>
