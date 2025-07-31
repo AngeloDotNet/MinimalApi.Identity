@@ -35,17 +35,17 @@ namespace MinimalApi.Identity.API.Extensions;
 public static class RegisterServicesExtensions
 {
     public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services,
-        Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
+        Action<DefaultServicesConfiguration> configure, IConfiguration configuration) where TDbContext : DbContext
     {
-        var configuration = new DefaultServicesConfiguration(services);
-        configure(configuration);
+        var settings = new DefaultServicesConfiguration(services);
+        configure(settings);
 
-        var config = configuration.Configure;
-        var hostedServiceOptions = config.GetSection(nameof(HostedServiceOptions)).Get<HostedServiceOptions>();
-        var jwtOptions = config.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
-        var identityOptions = config.GetSection(nameof(NetIdentityOptions)).Get<NetIdentityOptions>();
-        var smtpOptions = config.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>();
-        var userOptions = config.GetSection(nameof(UsersOptions)).Get<UsersOptions>();
+        //services.AddOptions<HostedServiceOptions>().BindConfiguration(nameof(HostedServiceOptions)).ValidateDataAnnotations();
+        var hostedServiceOptions = configuration.GetSection(nameof(HostedServiceOptions)).Get<HostedServiceOptions>();
+        var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+        var identityOptions = configuration.GetSection(nameof(NetIdentityOptions)).Get<NetIdentityOptions>();
+        var smtpOptions = configuration.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>();
+        var userOptions = configuration.GetSection(nameof(UsersOptions)).Get<UsersOptions>();
 
         services
             .AddProblemDetails()
@@ -53,17 +53,17 @@ public static class RegisterServicesExtensions
             .AddSwaggerConfiguration()
             .AddDatabaseContext<TDbContext>(options =>
             {
-                options.Configure = configuration.Configure;
-                options.MigrationsAssembly = configuration.MigrationsAssembly;
-                options.DatabaseType = configuration.Configure.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")!;
+                options.Configure = configuration;
+                options.MigrationsAssembly = settings.MigrationsAssembly;
+                options.DatabaseType = configuration.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")!;
             })
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
             {
                 options.JWTOptions = jwtOptions ?? new();
                 options.IdentityOptions = identityOptions ?? new();
             })
-            .AddOptionsConfiguration(configuration.Configure)
-            .ConfigureValidation(options => options.ErrorResponseFormat = configuration.FormatErrorResponse)
+            .AddOptionsConfiguration(configuration)
+            .ConfigureValidation(options => options.ErrorResponseFormat = settings.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>();
 
         services
@@ -71,17 +71,18 @@ public static class RegisterServicesExtensions
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
             .AddScoped<IAuthorizationHandler, PermissionHandler>()
-            .AddHostedService<AuthorizationPolicyUpdater>();
+            .AddHostedService<AuthorizationPolicyUpdater>()
+            .AddMandatoryRegistrations(); // Register default services
 
         return services;
     }
 
-    public static IServiceCollection RegisterServicesDefault(this IServiceCollection services)
+    public static IServiceCollection AddMandatoryRegistrations(this IServiceCollection services)
     {
         return services
-            .PolicyManagerRegistrationService() // Register PolicyManager package services
-                                                //.EmailManagerRegistrationService() // Register EmailManager package services
-            ;
+            //.AccountManagerRegistrationService() // Register AccountManager package services
+            //.EmailManagerRegistrationService() // Register EmailManager package services
+            .PolicyManagerRegistrationService(); // Register PolicyManager package services
     }
 
     public static void UseMapEndpoints(this WebApplication app)
@@ -144,8 +145,10 @@ public static class RegisterServicesExtensions
 
         if (configuration.DatabaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
         {
+            var sqlConnection = configuration.Configure.GetConnectionString("SQLServer");
+
             services.AddDbContext<TDbContext>(options
-                => options.UseSqlServer(configuration.Configure.GetConnectionString("SQLServer"), opt =>
+                => options.UseSqlServer(sqlConnection, opt =>
                 {
                     opt.MigrationsAssembly(configuration.MigrationsAssembly);
                     opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
