@@ -7,7 +7,7 @@ namespace MinimalApi.Identity.API.Validator;
 
 public class EditUserProfileValidator : AbstractValidator<EditUserProfileModel>
 {
-    public EditUserProfileValidator(IOptions<ApiValidationOptions> options)
+    public EditUserProfileValidator(IOptions<ValidationOptions> options)
     {
         var validationOptions = options.Value;
 
@@ -17,12 +17,12 @@ public class EditUserProfileValidator : AbstractValidator<EditUserProfileModel>
 
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required")
-            .MinimumLength(validationOptions.MinLengthFirstName).WithMessage($"First name must be at least {validationOptions.MinLengthFirstName} characters")
-            .MaximumLength(validationOptions.MaxLengthFirstName).WithMessage($"First name must not exceed {validationOptions.MaxLengthFirstName} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"First name must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"First name must not exceed {validationOptions.MaxLength} characters");
 
         RuleFor(x => x.LastName)
             .NotEmpty().WithMessage("Last name is required")
-            .MinimumLength(validationOptions.MinLengthLastName).WithMessage($"Last name must be at least {validationOptions.MinLengthLastName} characters")
-            .MaximumLength(validationOptions.MaxLengthLastName).WithMessage($"Last name must not exceed {validationOptions.MaxLengthLastName} characters");
+            .MinimumLength(validationOptions.MinLength).WithMessage($"Last name must be at least {validationOptions.MinLength} characters")
+            .MaximumLength(validationOptions.MaxLength).WithMessage($"Last name must not exceed {validationOptions.MaxLength} characters");
     }
 }
