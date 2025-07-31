@@ -140,13 +140,12 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, Action<DatabaseServiceConfiguration> configure)
         where TDbContext : DbContext
     {
-        var sqlConnection = string.Empty;
         var configuration = new DatabaseServiceConfiguration(services);
         configure.Invoke(configuration);
 
         if (configuration.DatabaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
         {
-            sqlConnection = configuration.Configure.GetConnectionString("SQLServer");
+            var sqlConnection = configuration.Configure.GetConnectionString("SQLServer");
 
             services.AddDbContext<TDbContext>(options
                 => options.UseSqlServer(sqlConnection, opt =>
