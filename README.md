@@ -5,6 +5,14 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
 
+## 🧩 Features
+
+- **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
+- **Entity Framework Core**: Uses EF Core for data access, making it easy to integrate with your existing database.
+- **Modular**: The library is designed to be modular, allowing you to add or remove features as needed.
+- **Dynamic**: Supports dynamic management of users, roles, claims and policies.
+- **Flexible Configuration**: Easily configurable via `appsettings.json` to suit your application's needs.
+
 ## 🛠️ Installation
 
 ### Prerequisites
@@ -105,29 +113,28 @@ A default administrator account is created automatically with the following conf
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
 
-<!--
-## 🧩 Features
--->
-
 ## 💡 Usage Examples
 
-A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/IdentityManager.API)
+A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
 
 ## 🏗️ ToDo
 
+- [ ] Move the configuration of the claims to a dedicated library
+- [ ] Move the configuration of the module to a dedicated library
+- [ ] Move the configuration of the profile manager to a dedicated library
+- [ ] Move the configuration of the roles to a dedicated library
 - [ ] Add CancellationToken to API endpoints
-- [ ] Add automatic creation of a default administrator account
 - [ ] Move email sending logic (with improvements) to a hosted service
+- [ ] Add email sending implementation to AccountQuery class
+- [ ] Add automatic creation of a default administrator account
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Replacing the hosted service authorization policy updater using Coravel jobs
 - [ ] Add support for relational databases other than MS SQLServer (e.g. MySQL and PostgreSQL)
-<!--
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
 - [ ] Add support for multi tenancy
 - [ ] Add authentication support from third-party providers (e.g. GitHub, Azure)
--->
 
 ## 📦 Packages
 
@@ -147,11 +154,16 @@ Dependencies Packages:
 
 |Package Name|Version|Downloads|
 |------------|-------|---------|
+|[Identity.Module.AccountManager]()|Coming soon|
+|[Identity.Module.ClaimsManager]()|Coming soon||
 |[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core/)|
+|[Identity.Module.EmailManager]()|Coming soon||
+|[Identity.Module.ModuleManager]()|Coming soon||
 |[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager/)|
-|[MinimalApi.Identity.EmailManager]()|Coming soon|
+|[Identity.Module.ProfileManager]()|Coming soon||
+|[Identity.Module.RolesManager]()|Coming soon||
 
-## ☑️ Badges
+## 🏆 Badges
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity)
 
