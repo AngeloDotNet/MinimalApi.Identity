@@ -40,10 +40,8 @@ public static class RegisterServicesExtensions
         var settings = new DefaultServicesConfiguration(services);
         configure(settings);
 
-        //services.AddOptions<HostedServiceOptions>().BindConfiguration(nameof(HostedServiceOptions)).ValidateDataAnnotations();
         var hostedServiceOptions = configuration.GetSection(nameof(HostedServiceOptions)).Get<HostedServiceOptions>();
         var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
-        var identityOptions = configuration.GetSection(nameof(NetIdentityOptions)).Get<NetIdentityOptions>();
         var smtpOptions = configuration.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>();
         var userOptions = configuration.GetSection(nameof(UsersOptions)).Get<UsersOptions>();
 
@@ -53,26 +51,23 @@ public static class RegisterServicesExtensions
             .AddSwaggerConfiguration()
             .AddDatabaseContext<TDbContext>(options =>
             {
-                options.Configure = configuration;
                 options.MigrationsAssembly = settings.MigrationsAssembly;
                 options.DatabaseType = configuration.GetSection("ConnectionStrings").GetValue<string>("DatabaseType")!;
-            })
+            }, configuration)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(options =>
             {
                 options.JWTOptions = jwtOptions ?? new();
-                options.IdentityOptions = identityOptions ?? new();
             })
             .AddOptionsConfiguration(configuration)
             .ConfigureValidation(options => options.ErrorResponseFormat = settings.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>();
 
         services
-            .AddTransient<AuthOptions>()
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
             .AddScoped<IAuthorizationHandler, PermissionHandler>()
             .AddHostedService<AuthorizationPolicyUpdater>()
-            .AddMandatoryRegistrations(); // Register default services
+            .AddMandatoryRegistrations(); // Register mandatory services
 
         return services;
     }
@@ -88,6 +83,8 @@ public static class RegisterServicesExtensions
     public static void UseMapEndpoints(this WebApplication app)
     {
         app.MapEndpoints();
+        //app.MapAccountEndpoints(); //Register AccountManager package endpoints
+        //app.MapEmailEndpoints(); //Register EmailManager package endpoints
         app.MapPolicyEndpoints(); //Register PolicyManager package endpoints
     }
 
@@ -137,20 +134,20 @@ public static class RegisterServicesExtensions
             });
     }
 
-    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, Action<DatabaseServiceConfiguration> configure)
-        where TDbContext : DbContext
+    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, Action<DatabaseServiceConfiguration> configure,
+        IConfiguration configuration) where TDbContext : DbContext
     {
-        var configuration = new DatabaseServiceConfiguration(services);
-        configure.Invoke(configuration);
+        var settings = new DatabaseServiceConfiguration(services);
+        configure.Invoke(settings);
 
-        if (configuration.DatabaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+        if (settings.DatabaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
         {
-            var sqlConnection = configuration.Configure.GetConnectionString("SQLServer");
+            var sqlConnection = configuration.GetConnectionString("SQLServer");
 
             services.AddDbContext<TDbContext>(options
                 => options.UseSqlServer(sqlConnection, opt =>
                 {
-                    opt.MigrationsAssembly(configuration.MigrationsAssembly);
+                    opt.MigrationsAssembly(settings.MigrationsAssembly);
                     opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 }));
@@ -200,23 +197,23 @@ public static class RegisterServicesExtensions
 
         services.Configure<IdentityOptions>(options =>
         {
-            options.User.RequireUniqueEmail = configuration.IdentityOptions.RequireUniqueEmail;
+            options.User.RequireUniqueEmail = configuration.JWTOptions.RequireUniqueEmail;
             options.Password = new PasswordOptions
             {
-                RequireDigit = configuration.IdentityOptions.RequireDigit,
-                RequiredLength = configuration.IdentityOptions.RequiredLength,
-                RequireUppercase = configuration.IdentityOptions.RequireUppercase,
-                RequireLowercase = configuration.IdentityOptions.RequireLowercase,
-                RequireNonAlphanumeric = configuration.IdentityOptions.RequireNonAlphanumeric,
-                RequiredUniqueChars = configuration.IdentityOptions.RequiredUniqueChars
+                RequireDigit = configuration.JWTOptions.RequireDigit,
+                RequiredLength = configuration.JWTOptions.RequiredLength,
+                RequireUppercase = configuration.JWTOptions.RequireUppercase,
+                RequireLowercase = configuration.JWTOptions.RequireLowercase,
+                RequireNonAlphanumeric = configuration.JWTOptions.RequireNonAlphanumeric,
+                RequiredUniqueChars = configuration.JWTOptions.RequiredUniqueChars
             };
 
-            options.SignIn.RequireConfirmedEmail = configuration.IdentityOptions.RequireConfirmedEmail;
+            options.SignIn.RequireConfirmedEmail = configuration.JWTOptions.RequireConfirmedEmail;
             options.Lockout = new LockoutOptions
             {
-                MaxFailedAccessAttempts = configuration.IdentityOptions.MaxFailedAccessAttempts,
-                AllowedForNewUsers = configuration.IdentityOptions.AllowedForNewUsers,
-                DefaultLockoutTimeSpan = configuration.IdentityOptions.DefaultLockoutTimeSpan
+                MaxFailedAccessAttempts = configuration.JWTOptions.MaxFailedAccessAttempts,
+                AllowedForNewUsers = configuration.JWTOptions.AllowedForNewUsers,
+                DefaultLockoutTimeSpan = configuration.JWTOptions.DefaultLockoutTimeSpan
             };
         });
 
@@ -235,7 +232,7 @@ public static class RegisterServicesExtensions
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 options.JsonSerializerOptions.WriteIndented = true;
             })
-            .Configure<NetIdentityOptions>(configuration.GetSection("NetIdentityOptions"))
+            .Configure<JwtOptions>(configuration.GetSection("JwtOptions"))
             .Configure<ValidationOptions>(configuration.GetSection("ValidationOptions"))
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(configuration.GetSection("Kestrel"));
