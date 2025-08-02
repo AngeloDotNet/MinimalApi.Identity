@@ -3,13 +3,13 @@ name: Delete old workflow runs
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */12 * * *' # Run daily, every 12 hours.
+    - cron: '0 */8 * * *' # Run daily, every 8 hours.
 
 env:
   REPOSITORY: AngeloDotNet/MinimalApi.Identity
 
 jobs:
-  del_runs:
+  delete_runs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -21,5 +21,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ env.REPOSITORY }}
-          retain_days: 15
-          keep_minimum_runs: 5
+          retain_days: 7
+          keep_minimum_runs: 3

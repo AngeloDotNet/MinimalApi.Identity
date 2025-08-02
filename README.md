@@ -5,6 +5,21 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
 
+## 📎 Table of Contents
+- [Table of Contents](#-table-of-contents)
+- [Features](#-features)
+- [Installation](#%EF%B8%8F-installation)
+- [Configuration](#%EF%B8%8F-configuration)
+- [Usage Example](#-usage-examples)
+- [API Reference](#-api-reference)
+- [ToDo](#%EF%B8%8F-todo)
+- [Packages](#-packages)
+- [Badges](#-badges)
+- [License](#-license)
+- [Give a Star](#-give-a-star)
+- [Contributing](#-contributing)
+- [Support](#-support)
+
 ## 🧩 Features
 
 - **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
@@ -17,7 +32,7 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 
 ### Prerequisites
 
-- .NET 8.0 SDK
+- .NET 8.0 SDK (latest version)
 - SQL Server 2022 Express installed ([setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
 
 ### Setup
@@ -28,7 +43,7 @@ The library is available on [NuGet](https://www.nuget.org/packages/Identity.Modu
 dotnet add package Identity.Module.API
 ```
 
-### Configuration
+## ⚙️ Configuration
 
 The configuration can be completely managed by adding this section to the _appsettings.json_ file:
 
@@ -36,54 +51,54 @@ The configuration can be completely managed by adding this section to the _appse
 >  The library is still under development, so the configuration may change in future updates.
 
 ```json
-"JwtOptions": {
-    "Issuer": "[ISSUER]",
-    "Audience": "[AUDIENCE]",
-    "SecurityKey": "[SECURITY-KEY-512-CHAR]",
-    "AccessTokenExpirationMinutes": 60,
-    "RefreshTokenExpirationMinutes": 60
-},
-"NetIdentityOptions": {
-    "RequireUniqueEmail": true,
-    "RequireDigit": true,
-    "RequiredLength": 8,
-    "RequireUppercase": true,
-    "RequireLowercase": true,
-    "RequireNonAlphanumeric": true,
-    "RequiredUniqueChars": 4,
-    "RequireConfirmedEmail": true,
-    "MaxFailedAccessAttempts": 3,
-    "AllowedForNewUsers": true,
-    "DefaultLockoutTimeSpan": "00:05:00"
-},
-"SmtpOptions": {
-    "Host": "smtp.example.org",
-    "Port": 25,
-    "Security": "StartTls",
-    "Username": "Username del server SMTP",
-    "Password": "Password del server SMTP",
-    "Sender": "MyApplication <noreply@example.org>",
-    "SaveEmailSent": true
-},
-"UsersOptions": {
-    "AssignAdminRoleOnRegistration": "admin@example.org",
-    "PasswordExpirationDays": 90
-},
-"ValidationOptions": {
-    "MinLength": 3,
-    "MaxLength": 50,
-    "MinLengthDescription": 5,
-    "MaxLengthDescription": 100
-},
-"HostedServiceOptions": {
-    "IntervalAuthPolicyUpdaterMinutes": 5
-},
-"ApplicationOptions": {
-    "MigrationsAssembly": "MinimalApi.Identity.Migrations"
-},
-"ConnectionStrings": {
-    "DatabaseType": "sqlserver",
-    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=[DATABASE];User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+{
+    "JwtOptions": {
+        "Issuer": "[ISSUER]",
+        "Audience": "[AUDIENCE]",
+        "SecurityKey": "[SECURITY-KEY-512-CHAR]",
+        "AccessTokenExpirationMinutes": 60,
+        "RefreshTokenExpirationMinutes": 60,
+        "RequireUniqueEmail": true,
+        "RequireDigit": true,
+        "RequiredLength": 8,
+        "RequireUppercase": true,
+        "RequireLowercase": true,
+        "RequireNonAlphanumeric": true,
+        "RequiredUniqueChars": 4,
+        "RequireConfirmedEmail": true,
+        "MaxFailedAccessAttempts": 3,
+        "AllowedForNewUsers": true,
+        "DefaultLockoutTimeSpan": "00:05:00"
+    },
+    "SmtpOptions": {
+        "Host": "smtp.example.org",
+        "Port": 25,
+        "Security": "StartTls",
+        "Username": "Username del server SMTP",
+        "Password": "Password del server SMTP",
+        "Sender": "MyApplication <noreply@example.org>",
+        "SaveEmailSent": true
+    },
+    "UsersOptions": {
+        "AssignAdminRoleOnRegistration": "admin@example.org",
+        "PasswordExpirationDays": 90
+    },
+    "ValidationOptions": {
+        "MinLength": 3,
+        "MaxLength": 50,
+        "MinLengthDescription": 5,
+        "MaxLengthDescription": 100
+    },
+    "HostedServiceOptions": {
+        "IntervalAuthPolicyUpdaterMinutes": 5
+    },
+    "ApplicationOptions": {
+        "MigrationsAssembly": "MinimalApi.Identity.Migrations" //Default for migrations assembly is the project that contains the Program.cs class
+    },
+    "ConnectionStrings": {
+        "DatabaseType": "sqlserver",
+        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=[DATABASE];User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+    }
 }
 ```
 
@@ -109,13 +124,16 @@ A default administrator account is created automatically with the following conf
 - Password: Set via `AppSettings:AdministratorApiKey`
 -->
 
+## 💡 Usage Examples
+
+> [!WARNING]
+>  The library is still under development, so the Program.cs configuration may change in future updates.
+
+A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
+
 ## 📚 API Reference
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
-
-## 💡 Usage Examples
-
-A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
 
 ## 🏗️ ToDo
 
@@ -123,7 +141,7 @@ A practical example of Program.cs configuration is available [here](https://gith
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Move the configuration of the profile manager to a dedicated library
 - [ ] Move the configuration of the roles to a dedicated library
-- [ ] Add CancellationToken to API endpoints
+- [ ] Add CancellationToken to API endpoints (where necessary)
 - [ ] Move email sending logic (with improvements) to a hosted service
 - [ ] Add email sending implementation to AccountQuery class
 - [ ] Add automatic creation of a default administrator account
