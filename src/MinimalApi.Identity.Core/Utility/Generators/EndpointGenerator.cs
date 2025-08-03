@@ -5,10 +5,11 @@ public static class EndpointGenerator
     private const string EndpointsDefaultApi = "/api";
     public const string EndpointsStringEmpty = "";
 
+    // Endpoints shared
     public const string EndpointsConfirmEmail = "/confirm-email/{userId}/{token}";
     public const string EndpointsConfirmEmailChange = "/confirm-email-change/{userId}/{email}/{token}";
 
-    // Endpoints group
+    // Endpoints groups
     public const string EndpointsAccountGroup = EndpointsDefaultApi + "/account";
     public const string EndpointsAuthGroup = EndpointsDefaultApi + "/auth";
     public const string EndpointsClaimsGroup = EndpointsDefaultApi + "/claims";

@@ -4,9 +4,9 @@ namespace MinimalApi.Identity.API.Options;
 
 public class UsersOptions
 {
-    [Required, MinLength(1, ErrorMessage = "AssignAdminRoleOnRegistration cannot be empty.")]
+    [Required, EmailAddress(ErrorMessage = "Email is required.")]
     public string AssignAdminRoleOnRegistration { get; init; } = null!;
 
-    [Required, Range(1, int.MaxValue, ErrorMessage = "PasswordExpirationDays must be greater than zero.")]
+    [Required, Range(1, 365, ErrorMessage = "PasswordExpirationDays must be greater than zero and less than or equal to 365 (1 year).")]
     public int PasswordExpirationDays { get; init; }
 }
