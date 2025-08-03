@@ -1,32 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MinimalApi.Identity.Core.Models;
 
 namespace MinimalApi.Identity.Core.Utility.Generators;
 
 public static class CallBackGenerator
 {
-    private const string EndpointsConfirmEmail = "/confirm-email/{userId}/{token}";
-    private const string EndpointsConfirmEmailChange = "/confirm-email-change/{userId}/{email}/{token}";
-
-    public static Task<string> GenerateCallBackUrlAsync(string userId, string token, IHttpContextAccessor httpContextAccessor, string newEmail = null!)
+    public static Task<string> GenerateCallBackUrlAsync(GenerateCallBackUrlModel request, IHttpContextAccessor httpContextAccessor)
     {
         var endpoint = string.Empty;
-        var request = httpContextAccessor.HttpContext!.Request;
+        var httpRequest = httpContextAccessor.HttpContext!.Request;
 
-        if (newEmail == null)
+        if (request.NewEmail == null)
         {
-            endpoint = EndpointsConfirmEmailChange
-                .Replace("{userId}", userId)
-                .Replace("{email}", newEmail)
-                .Replace("{token}", token);
+            endpoint = EndpointGenerator.EndpointsConfirmEmailChange
+                .Replace("{userId}", request.UserId)
+                .Replace("{email}", request.NewEmail)
+                .Replace("{token}", request.Token);
         }
         else
         {
-            endpoint = EndpointsConfirmEmail
-                .Replace("{userId}", userId)
-                .Replace("{token}", token);
+            endpoint = EndpointGenerator.EndpointsConfirmEmail
+                .Replace("{userId}", request.UserId)
+                .Replace("{token}", request.Token);
         }
 
-        var callbackUrl = string.Concat(request.Scheme, "://", request.Host, EndpointGenerator.EndpointsAccountGroup, endpoint);
+        var callbackUrl = string.Concat(httpRequest.Scheme, "://", httpRequest.Host, EndpointGenerator.EndpointsAccountGroup, endpoint);
 
         return Task.FromResult(callbackUrl);
     }

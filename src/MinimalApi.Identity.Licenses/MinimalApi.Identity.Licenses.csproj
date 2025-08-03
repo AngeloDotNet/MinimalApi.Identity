@@ -24,9 +24,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
 </ItemGroup>
 
-<!--<ItemGroup>
-    <PackageReference Include="Identity.Module.Core" Version="1.0.39" />
-</ItemGroup>-->
+<ItemGroup>
+    <PackageReference Include="Identity.Module.Core" Version="1.0.50" />
+</ItemGroup>
     
 <ItemGroup>
     <None Include="..\..\identityLibrary.png">
@@ -34,9 +34,4 @@
         <PackagePath></PackagePath>
     </None>
 </ItemGroup>
-    
-<ItemGroup>
-  <ProjectReference Include="..\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj" />
-</ItemGroup>
-
 </Project>

@@ -6,6 +6,7 @@ using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.Core.Authorization;
 
@@ -31,8 +32,8 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
 
             if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
             {
-                logger.LogWarning(ServiceCoreExtensions.UserLockedOut);
-                throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut);
+                logger.LogWarning(MessagesAPI.UserLockedOut);
+                throw new UserIsLockedException(MessagesAPI.UserLockedOut);
             }
 
             if (securityStamp != utente.SecurityStamp)

@@ -15,9 +15,6 @@ public static class ServiceCoreExtensions
 {
     public const string Permission = nameof(ClaimsType.Permission);
 
-    public const string UserNotFound = "User not found";
-    public const string UserLockedOut = "This account has been locked out, please try again later";
-
     public static RouteHandlerBuilder ProducesDefaultProblem(this RouteHandlerBuilder builder, params int[] statusCodes)
     {
         foreach (var statusCode in statusCodes)
