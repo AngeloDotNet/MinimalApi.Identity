@@ -12,7 +12,7 @@ public static class EndpointGenerator
     public const string EndpointsAccountGroup = EndpointsDefaultApi + "/account";
     public const string EndpointsAuthGroup = EndpointsDefaultApi + "/auth";
     public const string EndpointsClaimsGroup = EndpointsDefaultApi + "/claims";
-    public const string EndpointsLicenzeGroup = EndpointsDefaultApi + "/licenses";
+    public const string EndpointsLicenseGroup = EndpointsDefaultApi + "/licenses";
     public const string EndpointsModulesGroup = EndpointsDefaultApi + "/modules";
     public const string EndpointsAuthPolicyGroup = EndpointsDefaultApi + "/policy";
     public const string EndpointsProfilesGroup = EndpointsDefaultApi + "/profiles";
