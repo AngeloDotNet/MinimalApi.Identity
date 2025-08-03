@@ -7,34 +7,6 @@ namespace MinimalApi.Identity.API.Swagger;
 
 public class SwaggerModulesDocumentFilter(FeatureFlagsOptions featureFlagsOptions) : IDocumentFilter
 {
-    //public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
-    //{
-    //    if (!featureFlagsOptions.EnabledFeatureLicense)
-    //    {
-    //        var licensePaths = swaggerDoc.Paths
-    //            .Where(p => p.Key.StartsWith(EndpointGenerator.EndpointsLicenseGroup, StringComparison.OrdinalIgnoreCase))
-    //            .Select(p => p.Key)
-    //            .ToList();
-
-    //        foreach (var path in licensePaths)
-    //        {
-    //            swaggerDoc.Paths.Remove(path);
-    //        }
-    //    }
-
-    //    if (!featureFlagsOptions.EnabledFeatureModule)
-    //    {
-    //        var modulePaths = swaggerDoc.Paths
-    //            .Where(p => p.Key.StartsWith(EndpointGenerator.EndpointsModulesGroup, StringComparison.OrdinalIgnoreCase))
-    //            .Select(p => p.Key)
-    //            .ToList();
-    //        foreach (var path in modulePaths)
-    //        {
-    //            swaggerDoc.Paths.Remove(path);
-    //        }
-    //    }
-    //}
-
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         if (!featureFlagsOptions.EnabledFeatureLicense)
