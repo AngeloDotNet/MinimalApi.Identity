@@ -22,7 +22,7 @@ public static class EndpointGenerator
     public const string EndpointsAccountTag = "Account";
     public const string EndpointsAuthTag = "Authentication";
     public const string EndpointsClaimsTag = "Claims";
-    public const string EndpointsLicenzeTag = "Licenses";
+    public const string EndpointsLicenseTag = "Licenses";
     public const string EndpointsModulesTag = "Modules";
     public const string EndpointsAuthPolicyTag = "Policies";
     public const string EndpointsProfilesTag = "Profiles";
