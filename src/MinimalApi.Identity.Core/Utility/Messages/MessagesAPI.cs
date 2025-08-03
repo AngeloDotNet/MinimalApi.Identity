@@ -32,6 +32,18 @@ public static class MessagesAPI
     public const string InvalidCredentials = "Invalid credentials";
     public const string ResetPassword = "Password reset successfully";
 
+    // License messages
+    public const string LicenseCreated = "License created successfully";
+    public const string LicenseNotFound = "License not found";
+    public const string LicenseAssigned = "License assigned successfully";
+    public const string LicenseCanceled = "License removed successfully";
+    public const string LicensesNotFound = "Licenses not found";
+    public const string LicenseDeleted = "License deleted successfully";
+    public const string LicenseNotDeleted = "License not deleted, it is not possible to delete a license assigned to a user";
+    public const string LicenseNotAssignable = "You cannot assign more than one license to a user. Please check which license the user owns.";
+    public const string LicenseExpired = "License expired. Without a valid license you cannot use the software.";
+    public const string LicenseAlreadyExist = "License already exists";
+
     // Module messages
     public const string ModuleCreated = "Module created successfully";
     public const string ModuleNotFound = "Module not found";
@@ -65,7 +77,6 @@ public static class MessagesAPI
 
     // Required messages
     public const string RequiredTwoFactor = "Two-factor authentication is required";
-    //public const string NewEmailIsRequired = "New email is required";
     public const string RequiredNewEmail = "New email is required";
 
     // Role messages
@@ -84,13 +95,14 @@ public static class MessagesAPI
     public const string SendEmailForChangeEmail = "Confirmation link to change email sent. Please check your email";
 
     // User messages
+    public const string UserCreated = "User created successfully";
+    public const string UserForcedChangePassword = "The user must change the password, otherwise it will not be possible to sign in.";
     public const string UserIdEmailTokenRequired = "UserId, Email and Token are required";
     public const string UserIdTokenRequired = "UserId and Token are required";
-    public const string UserCreated = "User created successfully";
-    public const string UserNotAllowedLogin = "User is not allowed to sign in";
+    public const string UserLockedOut = "This account has been locked out, please try again later";
     public const string UserLogOut = "User logged out";
+    public const string UserNotAllowedLogin = "User is not allowed to sign in";
     public const string UserNotEmailConfirmed = "User is not email confirmed";
-    public const string UserNotFound = "User not found";
     public const string UserNotEnableLogin = "User is not allowed to sign in";
-    public const string UserForcedChangePassword = "The user must change the password, otherwise it will not be possible to sign in.";
+    public const string UserNotFound = "User not found";
 }
