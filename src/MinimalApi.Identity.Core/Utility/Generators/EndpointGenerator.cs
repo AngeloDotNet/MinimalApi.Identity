@@ -3,12 +3,16 @@
 public static class EndpointGenerator
 {
     private const string EndpointsDefaultApi = "/api";
-    private const string EndpointsStringEmpty = "";
+    public const string EndpointsStringEmpty = "";
+
+    public const string EndpointsConfirmEmail = "/confirm-email/{userId}/{token}";
+    public const string EndpointsConfirmEmailChange = "/confirm-email-change/{userId}/{email}/{token}";
 
     // Endpoints group
     public const string EndpointsAccountGroup = EndpointsDefaultApi + "/account";
     public const string EndpointsAuthGroup = EndpointsDefaultApi + "/auth";
     public const string EndpointsClaimsGroup = EndpointsDefaultApi + "/claims";
+    public const string EndpointsLicenzeGroup = EndpointsDefaultApi + "/licenses";
     public const string EndpointsModulesGroup = EndpointsDefaultApi + "/modules";
     public const string EndpointsAuthPolicyGroup = EndpointsDefaultApi + "/policy";
     public const string EndpointsProfilesGroup = EndpointsDefaultApi + "/profiles";
@@ -18,6 +22,7 @@ public static class EndpointGenerator
     public const string EndpointsAccountTag = "Account";
     public const string EndpointsAuthTag = "Authentication";
     public const string EndpointsClaimsTag = "Claims";
+    public const string EndpointsLicenzeTag = "Licenses";
     public const string EndpointsModulesTag = "Modules";
     public const string EndpointsAuthPolicyTag = "Policies";
     public const string EndpointsProfilesTag = "Profiles";
