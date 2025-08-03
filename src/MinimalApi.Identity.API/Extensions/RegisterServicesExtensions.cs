@@ -18,6 +18,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Options;
+using MinimalApi.Identity.API.Swagger;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.Configurations;
@@ -26,6 +27,8 @@ using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Licenses.DependencyInjection;
+using MinimalApi.Identity.Licenses.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.HostedServices;
@@ -48,7 +51,7 @@ public static class RegisterServicesExtensions
         services
             .AddProblemDetails()
             .AddHttpContextAccessor()
-            .AddSwaggerConfiguration()
+            .AddSwaggerConfiguration(settings.FeatureFlags)
             .AddDatabaseContext<TDbContext>(options =>
             {
                 options.MigrationsAssembly = settings.MigrationsAssembly;
@@ -66,29 +69,39 @@ public static class RegisterServicesExtensions
             .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
             .AddScoped<IAuthorizationHandler, PermissionHandler>()
-            .AddHostedService<AuthorizationPolicyUpdater>()
-            .AddMandatoryRegistrations(); // Register mandatory services
+            .AddHostedService<AuthorizationPolicyUpdater>();
 
         return services;
     }
 
-    public static IServiceCollection AddMandatoryRegistrations(this IServiceCollection services)
+    public static IServiceCollection AddModulesRegistrations(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
-        return services
-            //.AccountManagerRegistrationService() // Register AccountManager package services
-            //.EmailManagerRegistrationService() // Register EmailManager package services
-            .PolicyManagerRegistrationService(); // Register PolicyManager package services
+        services.PolicyManagerRegistrationService(); // Register PolicyManager package services
+                                                     //.AccountManagerRegistrationService() // Register AccountManager package services
+                                                     //.EmailManagerRegistrationService() // Register EmailManager package services
+
+        if (featureFlagsOptions.EnabledFeatureLicense)
+        {
+            services.LicenseRegistrationService();
+        }
+
+        return services;
     }
 
-    public static void UseMapEndpoints(this WebApplication app)
+    public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
     {
         app.MapEndpoints();
         //app.MapAccountEndpoints(); //Register AccountManager package endpoints
         //app.MapEmailEndpoints(); //Register EmailManager package endpoints
         app.MapPolicyEndpoints(); //Register PolicyManager package endpoints
+
+        if (featureFlagsOptions.EnabledFeatureLicense)
+        {
+            app.MapLicenseEndpoints();
+        }
     }
 
-    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
         return services
             .AddEndpointsApiExplorer()
@@ -131,6 +144,9 @@ public static class RegisterServicesExtensions
                     { securityScheme, Array.Empty<string>() }
                 };
                 options.AddSecurityRequirement(securityRequirement);
+
+                // Register SwaggerModule DocumentFilter to conditionally remove inactive endpoints
+                options.DocumentFilter<SwaggerModulesDocumentFilter>(featureFlagsOptions);
             });
     }
 
