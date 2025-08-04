@@ -23,4 +23,4 @@ Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations
 
 Select MinimalApi.Identity.Core as the default project from the drop-down menu, as shown in the image below.
 
-[Image]
+<img width="796" height="146" alt="Screenshot 2025-08-03 214346" src="https://github.com/user-attachments/assets/c30283ec-2c2d-44d3-8cd4-406181f186b9" />
