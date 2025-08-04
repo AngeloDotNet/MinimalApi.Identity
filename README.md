@@ -1,18 +1,20 @@
 # .NET Modular Dynamic Identity Manager
 
+A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.
+<!--
 Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+-->
 
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
 
 ## 📎 Table of Contents
-- [Table of Contents](#-table-of-contents)
+
 - [Features](#-features)
 - [Installation](#%EF%B8%8F-installation)
 - [Configuration](#%EF%B8%8F-configuration)
 - [Usage Example](#-usage-examples)
 - [API Reference](#-api-reference)
-- [ToDo](#%EF%B8%8F-todo)
 - [Packages](#-packages)
 - [Badges](#-badges)
 - [License](#-license)
@@ -25,8 +27,9 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 - **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
 - **Entity Framework Core**: Uses EF Core for data access, making it easy to integrate with your existing database.
 - **Modular**: The library is designed to be modular, allowing you to add or remove features as needed.
-- **Dynamic**: Supports dynamic management of users, roles, claims and policies.
+- **Dynamic**: Supports dynamic management of users, roles, claims, forms, licensing and policies.
 - **Flexible Configuration**: Easily configurable via `appsettings.json` to suit your application's needs.
+- **Outbox Pattern**: Implement the [transactional outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html) for reliable email sending.
 
 ## 🛠️ Installation
 
@@ -52,10 +55,16 @@ The configuration can be completely managed by adding this section to the _appse
 
 ```json
 {
+    "ConnectionStrings": {
+        "DatabaseType": "sqlserver",
+        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=[DATABASE];User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+    },
     "JwtOptions": {
+        "SchemaName": "Bearer",
         "Issuer": "[ISSUER]",
         "Audience": "[AUDIENCE]",
         "SecurityKey": "[SECURITY-KEY-512-CHAR]",
+        "ClockSkew": "00:05:00",
         "AccessTokenExpirationMinutes": 60,
         "RefreshTokenExpirationMinutes": 60,
         "RequireUniqueEmail": true,
@@ -79,6 +88,17 @@ The configuration can be completely managed by adding this section to the _appse
         "Sender": "MyApplication <noreply@example.org>",
         "SaveEmailSent": true
     },
+    "ApplicationOptions": {
+        "MigrationsAssembly": "MinimalApi.Identity.Migrations",
+        "ErrorResponseFormat": "List"
+    },
+    "FeatureFlagsOptions": {
+        "EnabledFeatureLicense": true,
+        "EnabledFeatureModule": true
+    },
+    "HostedServiceOptions": {
+        "IntervalAuthPolicyUpdaterMinutes": 5
+    },
     "UsersOptions": {
         "AssignAdminRoleOnRegistration": "admin@example.org",
         "PasswordExpirationDays": 90
@@ -88,16 +108,6 @@ The configuration can be completely managed by adding this section to the _appse
         "MaxLength": 50,
         "MinLengthDescription": 5,
         "MaxLengthDescription": 100
-    },
-    "HostedServiceOptions": {
-        "IntervalAuthPolicyUpdaterMinutes": 5
-    },
-    "ApplicationOptions": {
-        "MigrationsAssembly": "MinimalApi.Identity.Migrations" //Default for migrations assembly is the project that contains the Program.cs class
-    },
-    "ConnectionStrings": {
-        "DatabaseType": "sqlserver",
-        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=[DATABASE];User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
     }
 }
 ```
@@ -105,10 +115,22 @@ The configuration can be completely managed by adding this section to the _appse
 > [!NOTE]
 > For migrations you can use a specific project to add to your solution, then configuring the assembly in _ApplicationOptions:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
 
-<!--
-## 🚀 Getting Started
+## 🗃️ Database
 
-Coming soon stay tuned
+See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/docs/Database.md) for managing the database
+
+<!--
+## 🔰 Feature Flags
+
+See the [documentation]() for managing feature flags.
+-->
+
+## 💡 Usage Examples
+
+> [!WARNING]
+> The library is still under development, so the Program.cs configuration may change in future updates.
+
+A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
 
 ## 🔐 Authentication
 
@@ -116,6 +138,7 @@ This library currently supports the following authentication types:
 
 - JWT Bearer Token
 
+<!--
 ### 🧑‍💼 Administrator Account
 
 A default administrator account is created automatically with the following configuration:
@@ -124,62 +147,13 @@ A default administrator account is created automatically with the following conf
 - Password: Set via `AppSettings:AdministratorApiKey`
 -->
 
-## 💡 Usage Examples
-
-> [!WARNING]
->  The library is still under development, so the Program.cs configuration may change in future updates.
-
-A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
-
 ## 📚 API Reference
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
 
-## 🏗️ ToDo
-
-- [ ] Move the configuration of the claims to a dedicated library
-- [ ] Move the configuration of the module to a dedicated library
-- [ ] Move the configuration of the profile manager to a dedicated library
-- [ ] Move the configuration of the roles to a dedicated library
-- [ ] Add CancellationToken to API endpoints (where necessary)
-- [ ] Move email sending logic (with improvements) to a hosted service
-- [ ] Add email sending implementation to AccountQuery class
-- [ ] Add automatic creation of a default administrator account
-- [ ] Replacing exceptions with implementation of operation results 
-- [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Replacing the hosted service authorization policy updater using Coravel jobs
-- [ ] Add support for relational databases other than MS SQLServer (e.g. MySQL and PostgreSQL)
-- [ ] Add endpoints for two-factor authentication and management
-- [ ] Add endpoints for downloading and deleting personal data
-- [ ] Add support for multi tenancy
-- [ ] Add authentication support from third-party providers (e.g. GitHub, Azure)
-
 ## 📦 Packages
 
-Main packages:
-
-|Package Name|Version|Downloads|
-|------------|-------|---------|
-|[Identity.Module.API](https://www.nuget.org/packages/Identity.Module.API)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.API)](https://www.nuget.org/packages/Identity.Module.API)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Api)](https://www.nuget.org/packages/Identity.Module.Api/)|
-
-Optional packages:
-
-|Package Name|Version|Downloads|
-|------------|-------|---------|
-|[Identity.Module.Licenses](https://www.nuget.org/packages/Identity.Module.Licenses)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses/)|
-
-Dependencies Packages:
-
-|Package Name|Version|Downloads|
-|------------|-------|---------|
-|[Identity.Module.AccountManager]()|Coming soon|
-|[Identity.Module.ClaimsManager]()|Coming soon||
-|[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core/)|
-|[Identity.Module.EmailManager]()|Coming soon||
-|[Identity.Module.ModuleManager]()|Coming soon||
-|[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|[![Nuget](https://img.shields.io/nuget/dt/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager/)|
-|[Identity.Module.ProfileManager]()|Coming soon||
-|[Identity.Module.RolesManager]()|Coming soon||
+See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/docs/Packages.md) for a list of all available packages.
 
 ## 🏆 Badges
 
