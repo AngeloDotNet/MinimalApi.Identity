@@ -1,17 +1,17 @@
-name: Publish Identity.Module.Licenses on NuGet
+name: Publish Identity.Module.LicenseManager on NuGet
   
 on:
   push:
     branches: [ main ]
-    paths: [ 'src/MinimalApi.Identity.Licenses/**' ]
+    paths: [ 'src/MinimalApi.Identity.LicenseManager/**' ]
   workflow_dispatch:
       
 env:
   NET_VERSION: '8.x'
-  PROJECT_NAME: src/MinimalApi.Identity.Licenses
-  PROJECT_FILE: MinimalApi.Identity.Licenses.csproj
-  TAG_NAME: Identity.Module.Licenses
-  RELEASE_NAME: Identity.Module.Licenses
+  PROJECT_NAME: src/MinimalApi.Identity.LicenseManager
+  PROJECT_FILE: MinimalApi.Identity.LicenseManager.csproj
+  TAG_NAME: Identity.Module.LicenseManager
+  RELEASE_NAME: Identity.Module.LicenseManager
   
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-dotnet@v4.3.0
       with:
         dotnet-version: ${{ env.NET_VERSION }}
-        #dotnet-quality: 'ga'
+        dotnet-quality: 'ga'
 
     - name: Nerdbank.GitVersioning 
       uses: dotnet/nbgv@v0.4.2
