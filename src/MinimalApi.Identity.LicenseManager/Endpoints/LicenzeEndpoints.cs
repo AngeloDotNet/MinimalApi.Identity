@@ -13,7 +13,7 @@ using MinimalApi.Identity.LicenseManager.Models;
 
 namespace MinimalApi.Identity.LicenseManager.Endpoints;
 
-public static class LicenzeEndpoints
+public static class LicenseEndpoints
 {
     public static IEndpointRouteBuilder MapLicenseEndpoints(this IEndpointRouteBuilder endpoints)
     {
