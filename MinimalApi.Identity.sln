@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityManager.API", "IdentityManager.API\IdentityManager.API.csproj", "{D042AE19-940D-4EBA-D786-31267428A4A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.API", "src\MinimalApi.Identity.API\MinimalApi.Identity.API.csproj", "{7AE5E28A-602D-6065-FBC0-3CF5C88738CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Core", "src\MinimalApi.Identity.Core\MinimalApi.Identity.Core.csproj", "{CC052BD3-E20E-F1DC-30A2-587B9706C449}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.Migrations.SQLServer", "src\MinimalApi.Identity.Migrations.SQLServer\MinimalApi.Identity.Migrations.SQLServer.csproj", "{673DF935-F8E4-F724-6985-9C8C973F8E36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manager", "Manager", "{E023F327-27BA-B6D0-E082-B7782DED3E0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.AccountManager", "src\MinimalApi.Identity.AccountManager\MinimalApi.Identity.AccountManager.csproj", "{D6335A5D-CF53-9061-32F0-F431516127A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.EmailManager", "src\MinimalApi.Identity.EmailManager\MinimalApi.Identity.EmailManager.csproj", "{7761AABA-4E56-82DC-76F6-8EA5EFCB4891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.LicenseManager", "src\MinimalApi.Identity.LicenseManager\MinimalApi.Identity.LicenseManager.csproj", "{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.Identity.PolicyManager", "src\MinimalApi.Identity.PolicyManager\MinimalApi.Identity.PolicyManager.csproj", "{48339DCD-9440-C86C-0A58-C9150B2391EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{089100B1-113F-4E66-888A-E83F3999EAFD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		.github\copilot-instructions.md = .github\copilot-instructions.md
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7B439073-6F30-63B1-5EED-B07CC31CF721}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Database.md = docs\Database.md
+		docs\Packages.md = docs\Packages.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Endpoints", "Endpoints", "{7B148607-05BC-8A7B-34D6-B66556F63EA6}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Endpoints\AccountEndpoints.md = docs\Endpoints\AccountEndpoints.md
+		docs\Endpoints\AuthenticationEndpoints.md = docs\Endpoints\AuthenticationEndpoints.md
+		docs\Endpoints\ClaimsEndpoints.md = docs\Endpoints\ClaimsEndpoints.md
+		docs\Endpoints\PolicyEndpoints.md = docs\Endpoints\PolicyEndpoints.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D042AE19-940D-4EBA-D786-31267428A4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D042AE19-940D-4EBA-D786-31267428A4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D042AE19-940D-4EBA-D786-31267428A4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D042AE19-940D-4EBA-D786-31267428A4A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AE5E28A-602D-6065-FBC0-3CF5C88738CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE5E28A-602D-6065-FBC0-3CF5C88738CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AE5E28A-602D-6065-FBC0-3CF5C88738CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AE5E28A-602D-6065-FBC0-3CF5C88738CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC052BD3-E20E-F1DC-30A2-587B9706C449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC052BD3-E20E-F1DC-30A2-587B9706C449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC052BD3-E20E-F1DC-30A2-587B9706C449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC052BD3-E20E-F1DC-30A2-587B9706C449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{673DF935-F8E4-F724-6985-9C8C973F8E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{673DF935-F8E4-F724-6985-9C8C973F8E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{673DF935-F8E4-F724-6985-9C8C973F8E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{673DF935-F8E4-F724-6985-9C8C973F8E36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6335A5D-CF53-9061-32F0-F431516127A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6335A5D-CF53-9061-32F0-F431516127A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6335A5D-CF53-9061-32F0-F431516127A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6335A5D-CF53-9061-32F0-F431516127A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7761AABA-4E56-82DC-76F6-8EA5EFCB4891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7761AABA-4E56-82DC-76F6-8EA5EFCB4891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7761AABA-4E56-82DC-76F6-8EA5EFCB4891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7761AABA-4E56-82DC-76F6-8EA5EFCB4891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48339DCD-9440-C86C-0A58-C9150B2391EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48339DCD-9440-C86C-0A58-C9150B2391EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48339DCD-9440-C86C-0A58-C9150B2391EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48339DCD-9440-C86C-0A58-C9150B2391EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6335A5D-CF53-9061-32F0-F431516127A4} = {E023F327-27BA-B6D0-E082-B7782DED3E0E}
+		{7761AABA-4E56-82DC-76F6-8EA5EFCB4891} = {E023F327-27BA-B6D0-E082-B7782DED3E0E}
+		{521DE030-DDEA-4F4E-E20C-2E7FA56E9A9D} = {E023F327-27BA-B6D0-E082-B7782DED3E0E}
+		{48339DCD-9440-C86C-0A58-C9150B2391EB} = {E023F327-27BA-B6D0-E082-B7782DED3E0E}
+		{7B439073-6F30-63B1-5EED-B07CC31CF721} = {089100B1-113F-4E66-888A-E83F3999EAFD}
+		{7B148607-05BC-8A7B-34D6-B66556F63EA6} = {7B439073-6F30-63B1-5EED-B07CC31CF721}
+	EndGlobalSection
+EndGlobal
