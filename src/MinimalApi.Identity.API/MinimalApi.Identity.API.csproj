@@ -36,7 +36,6 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Nerdbank.GitVersioning" />
 </ItemGroup>
 
 <ItemGroup>
