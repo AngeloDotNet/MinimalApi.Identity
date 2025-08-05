@@ -9,10 +9,10 @@
     <File Path=".editorconfig" />
     <File Path=".github/copilot-instructions.md" />
     <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />
     <File Path="README.md" />
-    <File Path="src/Directory.Build.props" />
   </Folder>
   <Folder Name="/Solution Items/Docs/">
     <File Path="docs/Database.md" />
@@ -27,5 +27,5 @@
   <Project Path="IdentityManager.API/IdentityManager.API.csproj" />
   <Project Path="src/MinimalApi.Identity.API/MinimalApi.Identity.API.csproj" />
   <Project Path="src/MinimalApi.Identity.Core/MinimalApi.Identity.Core.csproj" />
-  <Project Path="src/MinimalApi.Identity.Migrations/MinimalApi.Identity.Migrations.csproj" />
+  <Project Path="src/MinimalApi.Identity.Migrations.SQLServer/MinimalApi.Identity.Migrations.SQLServer.csproj" />
 </Solution>
