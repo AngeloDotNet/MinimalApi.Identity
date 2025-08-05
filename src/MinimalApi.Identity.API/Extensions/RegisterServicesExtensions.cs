@@ -53,15 +53,6 @@ public static class RegisterServicesExtensions
             .AddHostedService<AuthorizationPolicyUpdater>();
 
         services
-            //.Configure<JsonOptions>(options =>
-            //{
-            //    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-            //    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            //    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-            //    options.JsonSerializerOptions.WriteIndented = true;
-            //})
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
             .Configure<HostedServiceOptions>(configuration.GetSection(nameof(HostedServiceOptions)))
             .Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)))
