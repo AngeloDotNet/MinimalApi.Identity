@@ -8,8 +8,7 @@
         <PackageVersion Include="Identity.Module.Core" Version="1.0.59" />
         <PackageVersion Include="Identity.Module.Licenses" Version="1.0.44" />
         <PackageVersion Include="Identity.Module.PolicyManager" Version="1.0.50" />
-        <!--<PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" PrivateAssets="All" />-->
-        <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
+        <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" PrivateAssets="All" />
         <PackageVersion Include="MailKit" Version="4.13.0" />
         <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
         <PackageVersion Include="Scrutor" Version="6.1.0" />
