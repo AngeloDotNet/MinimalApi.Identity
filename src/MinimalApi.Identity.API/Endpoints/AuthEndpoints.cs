@@ -10,6 +10,7 @@ using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
@@ -18,11 +19,11 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointsApi.EndpointsAuthGroup)
+            .MapGroup(EndpointGenerator.EndpointsAuthGroup)
             .RequireAuthorization()
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = EndpointsApi.EndpointsAuthTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsAuthTag }];
                 return opt;
             });
 
