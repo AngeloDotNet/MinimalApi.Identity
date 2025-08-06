@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
-using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Middleware;
 
@@ -63,7 +62,7 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         {
             Status = (int)statusCode,
             Type = type,
-            Title = MessageApi.ProblemDetailsMessageTitle,
+            Title = MessagesExceptions.ProblemDetailsMessageTitle,
             Instance = $"{context.Request.Method} {context.Request.Path}",
             Detail = detail,
             Extensions = {
@@ -131,12 +130,12 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
             NotFoundException notFoundException => notFoundException.Message,
 
-            UserIsLockedException => ServiceCoreExtensions.UserLockedOut,
+            UserIsLockedException => MessagesAPI.UserLockedOut,
             UserTokenIsInvalidException userTokenIsInvalidException => userTokenIsInvalidException.Message,
-            UserUnknownException => MessageApi.UserNotAuthenticated,
-            UserWithoutPermissionsException => MessageApi.UserNotHavePermission,
+            UserUnknownException => MessagesExceptions.UserNotAuthenticated,
+            UserWithoutPermissionsException => MessagesExceptions.UserNotHavePermission,
 
             ValidationModelException validationModelException => validationModelException.Message,
-            _ => MessageApi.UnexpectedError
+            _ => MessagesExceptions.UnexpectedError
         };
 }
