@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
@@ -17,55 +16,54 @@ using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Models;
+using MinimalApi.Identity.Core.Utility.Generators;
+using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOptions> iOptions, IOptions<UsersOptions> uOptions,
-    UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender,
-    IHttpContextAccessor httpContextAccessor, IModuleService moduleService, IProfileService profileService) : IAuthService
+public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions,
+    UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+    IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor, IModuleService moduleService,
+    IProfileService profileService) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
-        var identityOptions = iOptions.Value;
-        var jwtOptions = jOptions.Value;
-        var userOptions = uOptions.Value;
-
-        var signInResult = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe,
-            identityOptions.AllowedForNewUsers);
+        var signInResult = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, jwtOptions.Value.AllowedForNewUsers);
 
         if (!signInResult.Succeeded)
         {
             return signInResult switch
             {
-                { IsNotAllowed: true } => throw new BadRequestUserException(MessageApi.UserNotAllowedLogin),
-                { IsLockedOut: true } => throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut),
-                { RequiresTwoFactor: true } => throw new BadRequestUserException(MessageApi.RequiredTwoFactor),
-                _ => throw new BadRequestUserException(MessageApi.InvalidCredentials)
+                { IsNotAllowed: true } => throw new BadRequestUserException(MessagesAPI.UserNotAllowedLogin),
+                { IsLockedOut: true } => throw new UserIsLockedException(MessagesAPI.UserLockedOut),
+                { RequiresTwoFactor: true } => throw new BadRequestUserException(MessagesAPI.RequiredTwoFactor),
+                _ => throw new BadRequestUserException(MessagesAPI.InvalidCredentials)
             };
         }
 
         var user = await userManager.FindByNameAsync(model.Username)
-            ?? throw new NotFoundException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
 
         if (!user.EmailConfirmed)
         {
-            throw new BadRequestUserException(MessageApi.UserNotEmailConfirmed);
+            throw new BadRequestUserException(MessagesAPI.UserNotEmailConfirmed);
         }
 
         var profileUser = await profileService.GetProfileAsync(user.Id)
-            ?? throw new NotFoundException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundException(MessagesAPI.ProfileNotFound);
 
         if (!profileUser.IsEnabled)
         {
-            throw new BadRequestException(MessageApi.UserNotEnableLogin);
+            throw new BadRequestException(MessagesAPI.UserNotEnableLogin);
         }
 
         var lastDateChangePassword = profileUser.LastDateChangePassword;
-        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, userOptions);
+        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
 
         if (lastDateChangePassword == null || checkLastDateChangePassword)
         {
-            throw new BadRequestException(MessageApi.UserForcedChangePassword);
+            throw new BadRequestException(MessagesAPI.UserForcedChangePassword);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -85,7 +83,7 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         .Union(customClaims)
         .Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role))).ToList();
 
-        var loginResponse = CreateToken(claims, jwtOptions);
+        var loginResponse = CreateToken(claims, jwtOptions.Value);
 
         user.RefreshToken = loginResponse.RefreshToken;
         user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(60);
@@ -97,7 +95,6 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
     public async Task<string> RegisterAsync(RegisterModel model)
     {
-        var usersOptions = uOptions.Value;
         var user = new ApplicationUser
         {
             UserName = model.Username,
@@ -110,19 +107,19 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         {
             await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname));
 
-            var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions) ? DefaultRoles.Admin : DefaultRoles.User;
+            var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value) ? DefaultRoles.Admin : DefaultRoles.User;
             var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString());
 
             if (!roleAssignResult.Succeeded)
             {
-                throw new BadRequestRoleException(MessageApi.RoleNotAssigned);
+                throw new BadRequestRoleException(MessagesAPI.RoleNotAssigned);
             }
 
             var claimsAssignResult = await AddClaimsToUserAsync(user, role);
 
             if (!claimsAssignResult.Succeeded)
             {
-                throw new BadRequestException(MessageApi.ClaimsNotAssigned);
+                throw new BadRequestException(MessagesAPI.ClaimsNotAssigned);
             }
 
             var userId = await userManager.GetUserIdAsync(user);
@@ -130,11 +127,13 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
             token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            var callbackUrl = await GenerateCallBackUrlAsync(userId, token);
+            var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(new GenerateCallBackUrlModel(userId, token, null), httpContextAccessor);
+            var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
+                "It is recommended to copy and paste for simplicity.";
 
-            await emailSender.SendEmailTypeAsync(user.Email, callbackUrl, EmailSendingType.RegisterUser);
+            await emailSender.SendEmailAsync(user.Email!, "Confirm your email", messageText, EmailSendingType.RegisterUser);
 
-            return MessageApi.UserCreated;
+            return MessagesAPI.UserCreated;
         }
 
         throw new BadRequestUserException(result.Errors);
@@ -142,22 +141,21 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
     public async Task<AuthResponseModel> RefreshTokenAsync(RefreshTokenModel model)
     {
-        var jwtOptions = jOptions.Value;
         var user = ValidateAccessToken(model.AccessToken)
-            ?? throw new BadRequestUserException(MessageApi.InvalidAccessToken);
+            ?? throw new BadRequestUserException(MessagesExceptions.InvalidAccessToken);
 
         var userId = user.GetUserId();
         var dbUser = await userManager.FindByIdAsync(userId);
 
         if (dbUser?.RefreshToken == null || dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow || dbUser.RefreshToken != model.RefreshToken)
         {
-            throw new BadRequestUserException(MessageApi.InvalidRefreshToken);
+            throw new BadRequestUserException(MessagesExceptions.InvalidRefreshToken);
         }
 
-        var loginResponse = CreateToken(user.Claims.ToList(), jwtOptions);
+        var loginResponse = CreateToken(user.Claims.ToList(), jwtOptions.Value);
 
         dbUser.RefreshToken = loginResponse.RefreshToken;
-        dbUser.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.RefreshTokenExpirationMinutes);
+        dbUser.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.Value.RefreshTokenExpirationMinutes);
 
         await userManager.UpdateAsync(dbUser);
 
@@ -168,18 +166,16 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     {
         await signInManager.SignOutAsync();
 
-        return MessageApi.UserLogOut;
+        return MessagesAPI.UserLogOut;
     }
 
     public async Task<AuthResponseModel> ImpersonateAsync(ImpersonateUserModel inputModel)
     {
-        var jwtOptions = jOptions.Value;
-        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString())
-            ?? throw new UserUnknownException($"User not found");
+        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString()) ?? throw new UserUnknownException($"User not found");
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
-            throw new UserIsLockedException(ServiceCoreExtensions.UserLockedOut);
+            throw new UserIsLockedException(MessagesAPI.UserLockedOut);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -200,10 +196,10 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
             .Union(customClaims)
             .Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role))).ToList();
 
-        var loginResponse = CreateToken(updateIdentity, jwtOptions);
+        var loginResponse = CreateToken(updateIdentity, jwtOptions.Value);
 
         user.RefreshToken = loginResponse.RefreshToken;
-        user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.RefreshTokenExpirationMinutes);
+        user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.Value.RefreshTokenExpirationMinutes);
 
         await userManager.UpdateAsync(user);
 
@@ -225,11 +221,11 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
     {
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
 
         if (!await userManager.IsEmailConfirmedAsync(user))
         {
-            throw new BadRequestException(MessageApi.ErrorEmailNotConfirmed);
+            throw new BadRequestException(MessagesAPI.ErrorEmailNotConfirmed);
         }
 
         var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -239,32 +235,30 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
         await emailSender.SendEmailAsync(user.Email!, "Reset Password", messageText, EmailSendingType.ForgotPassword);
 
-        return MessageApi.SendEmailResetPassword;
+        return MessagesAPI.SendEmailResetPassword;
     }
 
     public async Task<string> ResetPasswordAsync(ResetPasswordModel inputModel, string code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new BadRequestUserException(MessageApi.ErrorCodeResetPassword);
+            throw new BadRequestUserException(MessagesAPI.ErrorCodeResetPassword);
         }
 
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundException(MessageApi.UserNotFound);
+            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
 
         var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password);
 
         if (result.Succeeded)
         {
-            return MessageApi.ResetPassword;
+            return MessagesAPI.ResetPassword;
         }
         else
         {
             throw new BadRequestUserException(result.Errors);
         }
     }
-
-    #region "Private method"
 
     private static AuthResponseModel CreateToken(List<Claim> claims, JwtOptions jwtOptions)
     {
@@ -296,21 +290,21 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
         }
     }
 
-    private async Task<string> GenerateCallBackUrlAsync(string userId, string token)
-    {
-        var request = httpContextAccessor.HttpContext!.Request;
-        var callbackUrl = $"{request.Scheme}://{request.Host}{EndpointsApi.EndpointsAccountGroup}" +
-        $"{EndpointsApi.EndpointsConfirmEmail}".Replace("{userId}", userId).Replace("{token}", token);
+    //private async Task<string> GenerateCallBackUrlAsync(string userId, string token, IHttpContextAccessor httpContextAccessor)
+    //{
+    //    var request = httpContextAccessor.HttpContext!.Request;
+    //    var callbackUrl = $"{request.Scheme}://{request.Host}{EndpointsApi.EndpointsAccountGroup}" +
+    //    $"{EndpointsApi.EndpointsConfirmEmail}".Replace("{userId}", userId).Replace("{token}", token);
 
-        await Task.Delay(500);
-        return callbackUrl;
-    }
+    //    await Task.Delay(500);
+    //    return callbackUrl;
+    //}
 
     private async Task<bool> CheckUserIsAdminDesignedAsync(string email, UsersOptions userOptions)
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (user?.Email == null)
+        if (user == null || user.Email == null)
         {
             return false;
         }
@@ -375,16 +369,15 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
     private ClaimsPrincipal ValidateAccessToken(string accessToken)
     {
-        var jwtOptions = jOptions.Value;
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = jwtOptions.Issuer,
+            ValidIssuer = jwtOptions.Value.Issuer,
             ValidateAudience = true,
-            ValidAudience = jwtOptions.Audience,
+            ValidAudience = jwtOptions.Value.Audience,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecurityKey)),
             RequireExpirationTime = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -420,6 +413,4 @@ public class AuthService(IOptions<JwtOptions> jOptions, IOptions<NetIdentityOpti
 
         return false;
     }
-
-    #endregion
 }

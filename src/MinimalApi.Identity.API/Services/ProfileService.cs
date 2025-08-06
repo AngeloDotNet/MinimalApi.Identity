@@ -9,6 +9,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
+using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -20,17 +21,17 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
             .Select(profile => ProfileMapper.FromEntity(profile))
             .ToListAsync();
 
-        return profiles.Count == 0 ? throw new NotFoundProfileException(MessageApi.ProfilesNotFound) : profiles;
+        return profiles.Count == 0 ? throw new NotFoundProfileException(MessagesAPI.ProfilesNotFound) : profiles;
     }
 
     public async Task<UserProfileModel> GetProfileAsync(int userId)
     {
         var user = await userManager.FindByIdAsync(userId.ToString())
-            ?? throw new NotFoundProfileException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundProfileException(MessagesAPI.ProfileNotFound);
 
         var profile = await dbContext.Set<UserProfile>().AsNoTracking()
             .FirstOrDefaultAsync(x => x.UserId == user.Id)
-            ?? throw new NotFoundProfileException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundProfileException(MessagesAPI.ProfileNotFound);
 
         return ProfileMapper.FromEntity(profile);
     }
@@ -45,13 +46,13 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
         dbContext.Set<UserProfile>().Add(profile);
         var result = await dbContext.SaveChangesAsync();
 
-        return result > 0 ? MessageApi.ProfileCreated : MessageApi.ProfileNotCreated;
+        return result > 0 ? MessagesAPI.ProfileCreated : MessagesAPI.ProfileNotCreated;
     }
 
     public async Task<string> EditProfileAsync(EditUserProfileModel model)
     {
         var profile = await dbContext.Set<UserProfile>().FirstOrDefaultAsync(x => x.UserId == model.UserId)
-            ?? throw new NotFoundProfileException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundProfileException(MessagesAPI.ProfileNotFound);
 
         profile.ChangeFirstName(model.FirstName);
         profile.ChangeLastName(model.LastName);
@@ -59,7 +60,7 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
         dbContext.Set<UserProfile>().Update(profile);
         var result = await dbContext.SaveChangesAsync();
 
-        return result > 0 ? MessageApi.ProfileUpdated : throw new BadRequestException(MessageApi.ProfileNotUpdated);
+        return result > 0 ? MessagesAPI.ProfileUpdated : throw new BadRequestException(MessagesAPI.ProfileNotUpdated);
     }
 
     public async Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user)
@@ -86,14 +87,14 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
     public async Task<string> ChangeEnablementStatusUserProfileAsync(ChangeEnableProfileModel model)
     {
         var profile = await dbContext.Set<UserProfile>().FirstOrDefaultAsync(x => x.UserId == model.UserId)
-            ?? throw new NotFoundProfileException(MessageApi.ProfileNotFound);
+            ?? throw new NotFoundProfileException(MessagesAPI.ProfileNotFound);
 
         profile.ChangeUserEnabled(model.IsEnabled);
 
         dbContext.Set<UserProfile>().Update(profile);
         var result = await dbContext.SaveChangesAsync();
 
-        return result > 0 ? (model.IsEnabled ? MessageApi.ProfileEnabled : MessageApi.ProfileDisabled)
-            : throw new BadRequestException(model.IsEnabled ? MessageApi.ProfileNotEnabled : MessageApi.ProfileNotDisabled);
+        return result > 0 ? (model.IsEnabled ? MessagesAPI.ProfileEnabled : MessagesAPI.ProfileDisabled)
+            : throw new BadRequestException(model.IsEnabled ? MessagesAPI.ProfileNotEnabled : MessagesAPI.ProfileNotDisabled);
     }
 }

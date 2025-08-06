@@ -9,6 +9,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
@@ -17,15 +18,15 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointsApi.EndpointsRolesGroup)
+            .MapGroup(EndpointGenerator.EndpointsRolesGroup)
             .RequireAuthorization()
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = EndpointsApi.EndpointsRolesTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsRolesTag }];
                 return opt;
             });
 
-        apiGroup.MapGet(EndpointsApi.EndpointsStringEmpty, async ([FromServices] IRoleService roleService) =>
+        apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IRoleService roleService) =>
         {
             return await roleService.GetAllRolesAsync();
         })

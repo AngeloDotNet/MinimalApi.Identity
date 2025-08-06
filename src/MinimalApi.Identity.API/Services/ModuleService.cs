@@ -8,6 +8,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
+using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
@@ -19,14 +20,14 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
             .Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
             .ToListAsync();
 
-        return result.Count == 0 ? throw new NotFoundModuleException(MessageApi.ModulesNotFound) : result;
+        return result.Count == 0 ? throw new NotFoundModuleException(MessagesAPI.ModulesNotFound) : result;
     }
 
     public async Task<string> CreateModuleAsync(CreateModuleModel model)
     {
         if (await CheckModuleExistAsync(model))
         {
-            throw new ConflictException(MessageApi.ModuleAlreadyExist);
+            throw new ConflictException(MessagesAPI.ModuleAlreadyExist);
         }
 
         var module = new Module
@@ -38,23 +39,23 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         dbContext.Set<Module>().Add(module);
         await dbContext.SaveChangesAsync();
 
-        return MessageApi.ModuleCreated;
+        return MessagesAPI.ModuleCreated;
     }
 
     public async Task<string> AssignModuleAsync(AssignModuleModel model)
     {
         var user = await userManager.FindByIdAsync(model.UserId.ToString())
-            ?? throw new NotFoundUserException(MessageApi.UserNotFound);
+            ?? throw new NotFoundUserException(MessagesAPI.UserNotFound);
 
         var module = await dbContext.Set<Module>().FindAsync(model.ModuleId)
-            ?? throw new NotFoundModuleException(MessageApi.ModuleNotFound);
+            ?? throw new NotFoundModuleException(MessagesAPI.ModuleNotFound);
 
         var userHasModule = await dbContext.Set<UserModule>()
             .AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
 
         if (userHasModule)
         {
-            throw new BadRequestException(MessageApi.ModuleNotAssignable);
+            throw new BadRequestException(MessagesAPI.ModuleNotAssignable);
         }
 
         var userModule = new UserModule
@@ -66,35 +67,35 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         dbContext.Set<UserModule>().Add(userModule);
         await dbContext.SaveChangesAsync();
 
-        return MessageApi.ModuleAssigned;
+        return MessagesAPI.ModuleAssigned;
     }
 
     public async Task<string> RevokeModuleAsync(RevokeModuleModel model)
     {
         var userModule = await dbContext.Set<UserModule>()
             .SingleOrDefaultAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId)
-            ?? throw new NotFoundModuleException(MessageApi.ModuleNotFound);
+            ?? throw new NotFoundModuleException(MessagesAPI.ModuleNotFound);
 
         dbContext.Set<UserModule>().Remove(userModule);
         await dbContext.SaveChangesAsync();
 
-        return MessageApi.ModuleCanceled;
+        return MessagesAPI.ModuleCanceled;
     }
 
     public async Task<string> DeleteModuleAsync(DeleteModuleModel model)
     {
         var module = await dbContext.Set<Module>().FindAsync(model.ModuleId)
-            ?? throw new NotFoundModuleException(MessageApi.ModuleNotFound);
+            ?? throw new NotFoundModuleException(MessagesAPI.ModuleNotFound);
 
         if (await dbContext.Set<UserModule>().AnyAsync(ul => ul.ModuleId == model.ModuleId))
         {
-            throw new BadRequestException(MessageApi.ModuleNotDeleted);
+            throw new BadRequestException(MessagesAPI.ModuleNotDeleted);
         }
 
         dbContext.Set<Module>().Remove(module);
         await dbContext.SaveChangesAsync();
 
-        return MessageApi.ModuleDeleted;
+        return MessagesAPI.ModuleDeleted;
     }
 
     public async Task<List<Claim>> GetClaimsModuleUserAsync(ApplicationUser user)
