@@ -10,6 +10,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
@@ -18,15 +19,15 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointsApi.EndpointsClaimsGroup)
+            .MapGroup(EndpointGenerator.EndpointsClaimsGroup)
             .RequireAuthorization()
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = EndpointsApi.EndpointsClaimsTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsClaimsTag }];
                 return opt;
             });
 
-        apiGroup.MapGet(EndpointsApi.EndpointsStringEmpty, async ([FromServices] IClaimsService claimsService) =>
+        apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IClaimsService claimsService) =>
         {
             return await claimsService.GetAllClaimsAsync();
         })
