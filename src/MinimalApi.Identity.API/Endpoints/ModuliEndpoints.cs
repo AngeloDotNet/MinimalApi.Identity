@@ -10,6 +10,7 @@ using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
+using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
@@ -18,15 +19,15 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointsApi.EndpointsModulesGroup)
+            .MapGroup(EndpointGenerator.EndpointsModulesGroup)
             .RequireAuthorization()
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = EndpointsApi.EndpointsModulesTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsModulesTag }];
                 return opt;
             });
 
-        apiGroup.MapGet(EndpointsApi.EndpointsStringEmpty, async ([FromServices] IModuleService moduleService) =>
+        apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IModuleService moduleService) =>
         {
             return await moduleService.GetAllModulesAsync();
         })
