@@ -10,7 +10,7 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
 {
     private static int requiredUniqueChars;
 
-    public RegisterValidator(IOptions<NetIdentityOptions> iOptions, IOptions<ValidationOptions> vOptions)
+    public RegisterValidator(IOptions<JwtOptions> iOptions, IOptions<ValidationOptions> vOptions)
     {
         var identityOptions = iOptions.Value;
         var validationOptions = vOptions.Value;
