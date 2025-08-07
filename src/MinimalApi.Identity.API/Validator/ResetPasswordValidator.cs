@@ -7,7 +7,7 @@ namespace MinimalApi.Identity.API.Validator;
 
 public class ResetPasswordValidator : AbstractValidator<ResetPasswordModel>
 {
-    public ResetPasswordValidator(IOptions<NetIdentityOptions> iOptions)
+    public ResetPasswordValidator(IOptions<JwtOptions> iOptions)
     {
         var identityOptions = iOptions.Value;
 

@@ -304,7 +304,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (user == null || user.Email == null)
+        if (user is null || user.Email is null)
         {
             return false;
         }
