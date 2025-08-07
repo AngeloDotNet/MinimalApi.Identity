@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Manager/">
-    <Project Path="src/MinimalApi.Identity.AccountManager/MinimalApi.Identity.AccountManager.csproj" />
-    <Project Path="src/MinimalApi.Identity.EmailManager/MinimalApi.Identity.EmailManager.csproj" />
+    <!--<Project Path="src/MinimalApi.Identity.AccountManager/MinimalApi.Identity.AccountManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.EmailManager/MinimalApi.Identity.EmailManager.csproj" />-->
     <Project Path="src/MinimalApi.Identity.LicenseManager/MinimalApi.Identity.LicenseManager.csproj" />
     <Project Path="src/MinimalApi.Identity.PolicyManager/MinimalApi.Identity.PolicyManager.csproj" />
   </Folder>
