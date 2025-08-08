@@ -23,12 +23,11 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
     {
         var query = await PolicyQuery.GetPoliciesAsync(dbContext, null!, cancellationToken);
 
-        if (query.Count == 0)
+        return query.Count switch
         {
-            throw new NotFoundException(MessagesAPI.PolicyNotFound);
-        }
-
-        return query.ToList();
+            0 => throw new NotFoundException(MessagesAPI.PolicyNotFound),
+            _ => query.ToList()
+        };
     }
 
     public async Task<string> CreatePolicyAsync(CreatePolicyModel model, CancellationToken cancellationToken)
