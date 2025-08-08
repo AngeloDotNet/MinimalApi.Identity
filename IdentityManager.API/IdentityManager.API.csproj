@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-<PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>MinimalApi.Identity.API-TEST</UserSecretsId>
-</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>IdentityManager.API</UserSecretsId>
+    </PropertyGroup>
 
-<ItemGroup>
-    <PackageReference Include="Identity.Module.API" Version="2.0.122" />
-    <!--<PackageReference Include="Identity.Module.Licenses" Version="1.0.41" />--> <!-- TODO: da eliminare - Migrate to IdentityManager.API -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Identity.Module.API" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-<ItemGroup>
-    <ProjectReference Include="..\src\MinimalApi.Identity.Migrations\MinimalApi.Identity.Migrations.csproj" />
-</ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\src\MinimalApi.Identity.Migrations.SQLServer\MinimalApi.Identity.Migrations.SQLServer.csproj" />
+    </ItemGroup>
 
 </Project>
