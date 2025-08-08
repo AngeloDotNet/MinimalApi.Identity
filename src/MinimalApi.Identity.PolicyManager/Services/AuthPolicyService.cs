@@ -8,6 +8,7 @@ using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
+using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Mapping;
 using MinimalApi.Identity.PolicyManager.Models;
@@ -24,7 +25,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
 
         if (query.Count == 0)
         {
-            throw new NotFoundException(PolicyExtensions.PolicyNotFound);
+            throw new NotFoundException(MessagesAPI.PolicyNotFound);
         }
 
         return query.ToList();
@@ -34,7 +35,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
     {
         if (await CheckPolicyExistAsync(model.PolicyName))
         {
-            throw new ConflictException(PolicyExtensions.PolicyAlreadyExist);
+            throw new ConflictException(MessagesAPI.PolicyAlreadyExist);
         }
 
         var authPolicy = new AuthPolicy
@@ -49,17 +50,17 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         dbContext.Set<AuthPolicy>().Add(authPolicy);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return PolicyExtensions.PolicyCreated;
+        return MessagesAPI.PolicyCreated;
     }
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
     {
         var authPolicy = await PolicyQuery.GetPolicyAsync(dbContext, x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
-            ?? throw new NotFoundException(PolicyExtensions.PolicyNotFound);
+            ?? throw new NotFoundException(MessagesAPI.PolicyNotFound);
 
         if (authPolicy.IsDefault)
         {
-            throw new BadRequestException(PolicyExtensions.PolicyNotDeleted);
+            throw new BadRequestException(MessagesAPI.PolicyNotDeleted);
         }
 
         var entityPolicy = authPolicy.ToEntityModel();
@@ -67,7 +68,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         dbContext.Set<AuthPolicy>().Remove(entityPolicy);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return PolicyExtensions.PolicyDeleted;
+        return MessagesAPI.PolicyDeleted;
     }
 
     public async Task<bool> GenerateAuthPoliciesAsync()

@@ -6,11 +6,11 @@
         <Nullable>enable</Nullable>
         <Authors>Angelo Pirola</Authors>
         <Company>Angelo Pirola</Company>
-        <Product>Identity.Module.PolicyManager</Product>
-        <Title>Identity.Module.PolicyManager</Title>
+        <Product>Identity.Module.AccountManager</Product>
+        <Title>Identity.Module.AccountManager</Title>
         <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
         access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
-        <PackageId>Identity.Module.PolicyManager</PackageId>
+        <PackageId>Identity.Module.AccountManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
@@ -19,7 +19,7 @@
         <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
@@ -34,5 +34,5 @@
             <PackagePath></PackagePath>
         </None>
     </ItemGroup>
-
+    
 </Project>

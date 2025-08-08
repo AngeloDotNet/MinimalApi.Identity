@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Extensions;
 using MinimalApi.Identity.PolicyManager.Models;
@@ -17,14 +18,14 @@ public static class AuthPolicyEndpoints
     public static IEndpointRouteBuilder MapPolicyEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(PolicyExtensions.EndpointsAuthPolicyGroup)
+            .MapGroup(EndpointGenerator.EndpointsAuthPolicyGroup)
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = PolicyExtensions.EndpointsAuthPolicyTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsAuthPolicyTag }];
                 return opt;
             });
 
-        apiGroup.MapGet(PolicyExtensions.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
+        apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<Ok<List<PolicyResponseModel>>>(StatusCodes.Status200OK)
             .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
             .RequireAuthorization(nameof(Permissions.AuthPolicyRead))
