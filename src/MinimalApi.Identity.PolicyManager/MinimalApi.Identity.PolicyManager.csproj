@@ -23,7 +23,7 @@
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Identity.Module.Core" />
     </ItemGroup>
@@ -34,5 +34,5 @@
             <PackagePath></PackagePath>
         </None>
     </ItemGroup>
-
+    
 </Project>
