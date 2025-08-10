@@ -33,8 +33,8 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
-        Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services,
+        IConfiguration configuration, Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
     {
         var settings = new DefaultServicesConfiguration(services);
         configure(settings);
@@ -54,13 +54,20 @@ public static class RegisterServicesExtensions
 
         services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
-            .Configure<HostedServiceOptions>(configuration.GetSection(nameof(HostedServiceOptions)))
-            .Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)))
-            .Configure<SmtpOptions>(configuration.GetSection(nameof(SmtpOptions)))
-            .Configure<UsersOptions>(configuration.GetSection(nameof(UsersOptions)))
-            .Configure<ValidationOptions>(configuration.GetSection(nameof(ValidationOptions)))
+            //.Configure<HostedServiceOptions>(configuration.GetSection(nameof(HostedServiceOptions)))
+            //.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)))
+            //.Configure<SmtpOptions>(configuration.GetSection(nameof(SmtpOptions)))
+            //.Configure<UsersOptions>(configuration.GetSection(nameof(UsersOptions)))
+            //.Configure<ValidationOptions>(configuration.GetSection(nameof(ValidationOptions)))
+            .Configure<HostedServiceOptions>(options => configuration.GetSection(nameof(HostedServiceOptions)).Bind(options))
+            .Configure<JwtOptions>(options => configuration.GetSection(nameof(JwtOptions)).Bind(options))
+            .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
+            .Configure<UsersOptions>(options => configuration.GetSection(nameof(UsersOptions)).Bind(options))
+            .Configure<ValidationOptions>(options => configuration.GetSection(nameof(ValidationOptions)).Bind(options))
+
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-            .Configure<KestrelServerOptions>(configuration.GetSection("Kestrel"))
+            //.Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel"))
+            .Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel").Bind(options))
 
             .ConfigureValidation(options => options.ErrorResponseFormat = settings.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>();
@@ -124,16 +131,75 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         string databaseType, string migrationAssembly) where TDbContext : DbContext
     {
-        if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
-        {
-            var sqlConnection = configuration.GetConnectionString("SQLServer");
+        //if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+        //{
+        //    var sqlConnection = string.Empty;
 
-            services.AddDbContext<TDbContext>(options => options.UseSqlServer(sqlConnection, opt =>
+        //    if (configuration.GetConnectionString("SQLServer") != null)
+        //    {
+        //        sqlConnection = configuration.GetConnectionString("SQLServer");
+        //    }
+        //    else
+        //    {
+        //        throw new ArgumentNullException("SQLServer connection string is not configured.");
+        //    }
+
+        //    services.AddDbContext<TDbContext>(options => options.UseSqlServer(sqlConnection, opt =>
+        //    {
+        //        opt.MigrationsAssembly(migrationAssembly);
+        //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+        //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+        //    }));
+        //}
+
+        if (databaseType is not null)
+        {
+            if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
             {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            }));
+                var sqlConnection = configuration.GetConnectionString("SQLServer");
+                ArgumentNullException.ThrowIfNull(sqlConnection, "SQLServer connection string is not configured.");
+
+                services.AddDbContext<TDbContext>(options =>
+                    options.UseSqlServer(sqlConnection, opt =>
+                    {
+                        opt.MigrationsAssembly(migrationAssembly);
+                        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    }));
+            }
+
+            //if (databaseType.Equals("postgresql", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //var sqlConnection = configuration.GetConnectionString("PostgreSQL");
+            //services.AddDbContext<TDbContext>(options => options.UseNpgsql(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //}));
+            //}
+
+            //if (databaseType.Equals("mysql", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    var sqlConnection = configuration.GetConnectionString("MySQL");
+            //    services.AddDbContext<TDbContext>(options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
+            //    {
+            //        opt.MigrationsAssembly(migrationAssembly);
+            //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    }));
+            //}
+
+            //if (databaseType.Equals("sqlite", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    var sqlConnection = configuration.GetConnectionString("SQLite");
+            //    services.AddDbContext<TDbContext>(options => options.UseSqlite(sqlConnection, opt =>
+            //    {
+            //        opt.MigrationsAssembly(migrationAssembly);
+            //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    }));
+            //}
         }
 
         return services;
@@ -163,15 +229,6 @@ public static class RegisterServicesExtensions
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //ValidateIssuer = true,
-                    //ValidIssuer = settings.Issuer,
-                    //ValidateAudience = true,
-                    //ValidAudience = settings.Audience,
-                    //ValidateIssuerSigningKey = true,
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.SecurityKey)),
-                    //RequireExpirationTime = true,
-                    //ValidateLifetime = settings.ExpirationTime.GetValueOrDefault() > TimeSpan.Zero,
-                    //ClockSkew = settings.ClockSkew
                     ValidateIssuer = true,
                     ValidIssuer = settings.Issuer,
                     ValidateAudience = true,
