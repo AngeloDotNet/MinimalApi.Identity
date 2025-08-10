@@ -22,10 +22,9 @@ using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions,
-    UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-    IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor, IModuleService moduleService,
-    IProfileService profileService) : IAuthService
+public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor,
+    IModuleService moduleService, IProfileService profileService) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {

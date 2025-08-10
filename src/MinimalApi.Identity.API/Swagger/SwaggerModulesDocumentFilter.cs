@@ -9,22 +9,6 @@ public class SwaggerModulesDocumentFilter(FeatureFlagsOptions featureFlagsOption
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        //if (!featureFlagsOptions.EnabledFeatureLicense)
-        //{
-        //    var toRemove = new List<string>();
-        //    foreach (var path in swaggerDoc.Paths.Keys)
-        //    {
-        //        if (path.StartsWith(EndpointGenerator.EndpointsLicenseGroup, StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            toRemove.Add(path);
-        //        }
-        //    }
-        //    foreach (var path in toRemove)
-        //    {
-        //        swaggerDoc.Paths.Remove(path);
-        //    }
-        //}
-
         if (!featureFlagsOptions.EnabledFeatureModule)
         {
             var toRemove = new List<string>();

@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-dotnet@v4.3.0
       with:
         dotnet-version: ${{ env.NET_VERSION }}
-        #dotnet-quality: 'ga'
+        dotnet-quality: 'ga'
 
     #- name: Build with dotnet
     #  run: dotnet build --configuration Release
@@ -60,6 +60,7 @@ jobs:
       with:
           tag_name: ${{ env.TAG_NAME }}_v${{ steps.nbgv.outputs.NuGetPackageVersion }}
           release_name: ${{ env.RELEASE_NAME }} ${{ steps.nbgv.outputs.NuGetPackageVersion }}
-          body: Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+          #body: Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
+          body: A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.
           draft: false
           prerelease: false

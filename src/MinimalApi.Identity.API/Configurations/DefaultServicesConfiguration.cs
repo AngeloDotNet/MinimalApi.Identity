@@ -8,9 +8,9 @@ public class DefaultServicesConfiguration(IServiceCollection services)
 {
     private readonly IServiceCollection services = services;
 
-    public string DatabaseType { get; set; } = string.Empty; // Must be set before using
-    public string MigrationsAssembly { get; set; } = string.Empty; // Must be set before using
-    public JwtOptions JwtOptions { get; set; } = new JwtOptions(); // JWT options configuration, if needed
-    public FeatureFlagsOptions FeatureFlags { get; set; } = new FeatureFlagsOptions(); // Feature flags configuration
-    public ErrorResponseFormat FormatErrorResponse { get; set; } = ErrorResponseFormat.Default; // Default format for error responses
+    public string DatabaseType { get; set; } = string.Empty;
+    public string MigrationsAssembly { get; set; } = string.Empty;
+    public JwtOptions JwtOptions { get; set; } = new JwtOptions();
+    public FeatureFlagsOptions FeatureFlags { get; set; } = new FeatureFlagsOptions();
+    public ErrorResponseFormat FormatErrorResponse { get; set; } = ErrorResponseFormat.Default;
 }
