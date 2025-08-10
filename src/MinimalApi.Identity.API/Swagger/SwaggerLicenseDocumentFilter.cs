@@ -25,21 +25,5 @@ public class SwaggerLicenseDocumentFilter(FeatureFlagsOptions featureFlagsOption
                 swaggerDoc.Paths.Remove(path);
             }
         }
-
-        //if (!featureFlagsOptions.EnabledFeatureModule)
-        //{
-        //    var toRemove = new List<string>();
-        //    foreach (var path in swaggerDoc.Paths.Keys)
-        //    {
-        //        if (path.StartsWith(EndpointGenerator.EndpointsModulesGroup, StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            toRemove.Add(path);
-        //        }
-        //    }
-        //    foreach (var path in toRemove)
-        //    {
-        //        swaggerDoc.Paths.Remove(path);
-        //    }
-        //}
     }
 }
