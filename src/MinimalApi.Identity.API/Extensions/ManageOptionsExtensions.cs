@@ -6,8 +6,8 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class ManageOptionsExtensions
 {
-    private static FeatureFlagsOptions featureFlagsOptions;
-    private static JwtOptions jwtOptions;
+    private static FeatureFlagsOptions? featureFlagsOptions;
+    private static JwtOptions? jwtOptions;
 
     public static FeatureFlagsOptions GetFeatureFlagsOptions(IConfiguration configuration)
     {
