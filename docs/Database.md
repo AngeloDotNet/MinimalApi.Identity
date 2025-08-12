@@ -19,6 +19,4 @@ To create database migrations, follow these simple steps:
 
 - Select `MinimalApi.Identity.Core` as the default project from the drop-down menu.
 
-- In the `Package Manager Console`, run the following command: 
-
-`Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`
+- In the `Package Manager Console`, run the following command: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`
