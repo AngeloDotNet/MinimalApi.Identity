@@ -24,7 +24,9 @@ public static class CallBackGenerator
                 .Replace("{token}", request.Token);
         }
 
-        var callbackUrl = string.Concat(httpRequest.Scheme, "://", httpRequest.Host, EndpointGenerator.EndpointsAccountGroup, endpoint);
+        var endpointUrl = string.Concat(EndpointGenerator.EndpointsAccountGroup, endpoint);
+        var callbackUrl = string.Concat(httpRequest.Scheme, "://", httpRequest.Host, endpointUrl);
+        //var callbackUrl = string.Concat(httpRequest.Scheme, "://", httpRequest.Host, EndpointGenerator.EndpointsAccountGroup, endpoint);
 
         return Task.FromResult(callbackUrl);
     }

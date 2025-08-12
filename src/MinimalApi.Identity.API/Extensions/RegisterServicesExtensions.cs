@@ -89,7 +89,8 @@ public static class RegisterServicesExtensions
         return options;
     }
 
-    public static IServiceCollection AddModulesRegistrations(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    //public static IServiceCollection AddModulesRegistrations(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
         services.PolicyManagerRegistrationService();
         //.AccountManagerRegistrationService()

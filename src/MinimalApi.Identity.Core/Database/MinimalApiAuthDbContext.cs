@@ -16,7 +16,8 @@ public class MinimalApiAuthDbContext(DbContextOptions<MinimalApiAuthDbContext> o
         base.OnModelCreating(builder);
 
         var entityTypes = Assembly.GetExecutingAssembly()
-            .GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IEntity).IsAssignableFrom(t));
+                                                    .GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IEntity)
+                                                    .IsAssignableFrom(t));
 
         foreach (var type in entityTypes)
         {
