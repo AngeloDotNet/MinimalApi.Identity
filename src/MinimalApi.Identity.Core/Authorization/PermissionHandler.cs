@@ -1,12 +1,10 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
-using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.Core.Authorization;
 
@@ -17,12 +15,13 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
         var user = context.User;
         var permissionsRequirements = context.Requirements.OfType<PermissionRequirement>();
 
-        if (UsersExtensions.IsAuthenticated(user))
+        if (await UsersExtensions.IsAuthValidAsync(user, userManager))
         {
-            var userId = user.GetUserId();
+            //var userId = user.GetUserId();
             var nameUser = user?.Identity?.Name;
-            var securityStamp = context.User.GetClaimValue(ClaimTypes.SerialNumber);
-            var utente = await userManager.FindByIdAsync(userId);
+            //var securityStamp = context.User.GetClaimValue(ClaimTypes.SerialNumber);
+            //var utente = await userManager.FindByIdAsync(userId);
+            var utente = await userManager.FindByIdAsync(user!.GetUserId());
 
             if (utente == null || user == null)
             {
@@ -30,17 +29,23 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 throw new UserUnknownException($"User {nameUser} not found");
             }
 
-            if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
-            {
-                logger.LogWarning(MessagesAPI.UserLockedOut);
-                throw new UserIsLockedException(MessagesAPI.UserLockedOut);
-            }
+            //if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
+            //{
+            //    logger.LogWarning(MessagesAPI.UserLockedOut);
+            //    throw new UserIsLockedException(MessagesAPI.UserLockedOut);
+            //}
 
-            if (securityStamp != utente.SecurityStamp)
-            {
-                logger.LogWarning("User {nameUser} security stamp is invalid", nameUser);
-                throw new UserTokenIsInvalidException($"User {nameUser} security stamp is invalid");
-            }
+            //if (securityStamp != utente.SecurityStamp)
+            //{
+            //    logger.LogWarning("User {nameUser} security stamp is invalid", nameUser);
+            //    throw new UserTokenIsInvalidException($"User {nameUser} security stamp is invalid");
+            //}
+
+            //if (!user.SecurityStampIsValid(securityStamp))
+            //{
+            //    logger.LogWarning("User {nameUser} security stamp is invalid", nameUser);
+            //    throw new UserTokenIsInvalidException($"User {nameUser} security stamp is invalid");
+            //}
 
             foreach (var permissionRequirement in permissionsRequirements)
             {
