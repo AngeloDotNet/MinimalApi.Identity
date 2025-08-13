@@ -8,6 +8,16 @@ public class EmailSendingConfiguration : IEntityTypeConfiguration<EmailSending>
 {
     public void Configure(EntityTypeBuilder<EmailSending> builder)
     {
-        builder.Property(x => x.EmailSendingType).HasConversion<string>();
+        //builder.Property(x => x.EmailSendingType).HasConversion<string>();
+
+        builder.HasOne(builder => builder.TypeEmailSending)
+            .WithMany(y => y.EmailSendings)
+            .HasForeignKey(y => y.TypeEmailSendingId)
+            .IsRequired();
+
+        builder.HasOne(builder => builder.TypeEmailStatus)
+            .WithMany(typeEmailStatus => typeEmailStatus.EmailSendings)
+            .HasForeignKey(builder => builder.TypeEmailStatusId)
+            .IsRequired();
     }
 }
