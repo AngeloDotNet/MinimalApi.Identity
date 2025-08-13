@@ -2,7 +2,7 @@
 
 public enum EmailSendingType
 {
-    RegisterUser,
-    ChangeEmail,
-    ForgotPassword
+    RegisterUser = 1,
+    ChangeEmail = 2,
+    ForgotPassword = 3
 }
