@@ -1,11 +1,11 @@
+using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
+using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
-using MinimalApi.Identity.Licenses.DependencyInjection;
-using MinimalApi.Identity.Licenses.Endpoints;
 
 namespace IdentityManager.API;
 
@@ -19,36 +19,54 @@ public class Program
         builder.Services.AddCors(options => options.AddPolicy("cors", builder
             => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-        var migrationsAssembly = builder.Configuration.GetValue<string>("ApplicationOptions:MigrationsAssembly");
+        builder.Services.AddOptions<JwtOptions>().BindConfiguration(nameof(JwtOptions)).ValidateDataAnnotations().ValidateOnStart();
+        builder.Services.AddOptions<FeatureFlagsOptions>().BindConfiguration(nameof(FeatureFlagsOptions)).ValidateDataAnnotations().ValidateOnStart();
 
-        if (string.IsNullOrEmpty(migrationsAssembly))
+        //var databaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
+        //var migrationsAssembly = builder.Configuration.GetValue<string>("ApplicationOptions:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
+
+        //var errorResponseFormat = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
+
+        //var jwtOptions = ManageOptionsExtensions.GetJwtOptions(configuration);
+        //var featureFlagsOptions = ManageOptionsExtensions.GetFeatureFlagsOptions(configuration);
+        var serviceProvider = builder.Services.BuildServiceProvider();
+        var jwtOptions = serviceProvider.GetRequiredService<IOptions<JwtOptions>>().Value;
+        var featureFlagsOptions = serviceProvider.GetRequiredService<IOptions<FeatureFlagsOptions>>().Value;
+
+        // If you need to register services with a lifecycle other than Transient, do not modify this configuration.
+        builder.Services.AddRegisterServices(options =>
         {
-            migrationsAssembly = typeof(Program).Assembly.FullName!;
-        }
+            options.Interfaces = [typeof(IAuthService)];    // Register your interfaces here, but do not remove the IAuthService service.
+            options.StringEndsWith = "Service";                     // This will register all services that end with "Service" in the assembly.
+            options.Lifetime = ServiceLifetime.Transient;           // This will register the services with a Transient lifetime.
+        });
 
-        builder.Services
-            // If you need to register services with a lifecycle other than Transient, do not modify this configuration.
-            .AddRegisterServices(options =>
-            {
-                options.Interfaces = [typeof(IAuthService)]; // Register your interfaces here, but do not remove the IAuthService service.
-                options.StringEndsWith = "Service"; // This will register all services that end with "Service" in the assembly.
-                options.Lifetime = ServiceLifetime.Transient; // This will register the services with a Transient lifetime.
-            })
-            // Instead, create one (or more) duplicates like the one below, modifying it as needed.
-            // The life cycle can take the values: Transient, Singleton and Scoped
-            //.AddRegisterServices(options =>
-            //{
-            //    options.Interfaces = [typeof(YourServiceRepository)]; // Replace YourServiceRepository with your actual service interfaces.
-            //    options.StringEndsWith = "Repository"; // This will register all services that end with "Repository" in the assembly.
-            //    options.Lifetime = ServiceLifetime.Scoped; // This will register the services with a Scoped lifetime.
-            //})
-            .LicenseRegistrationService() //Register licensing services if this feature is needed, otherwise just comment out this line.
-            .AddRegisterDefaultServices<MinimalApiAuthDbContext>(options =>
-            {
-                options.MigrationsAssembly = migrationsAssembly;
-                options.FormatErrorResponse = ErrorResponseFormat.List; // or ErrorResponseFormat.Default
-            }, configuration);
+        // Instead, create one (or more) duplicates like the one below, modifying it as needed.
+        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(configuration, options =>
+        {
+            //options.DatabaseType = databaseType;
+            //options.MigrationsAssembly = migrationsAssembly;
+            //options.JwtOptions = jwtOptions;
+            //options.FeatureFlags = featureFlagsOptions;
+            //options.FormatErrorResponse = errorResponseFormat;
+            options.DatabaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
+            options.MigrationsAssembly = builder.Configuration.GetValue<string>("ApplicationOptions:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
+            //options.JwtOptions = ManageOptionsExtensions.GetJwtOptions(configuration);
+            options.JwtOptions = jwtOptions;
+            //options.FeatureFlags = ManageOptionsExtensions.GetFeatureFlagsOptions(configuration);
+            options.FeatureFlags = featureFlagsOptions;
+            options.FormatErrorResponse = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
+        });
 
+        // The life cycle can take the values: Transient, Singleton and Scoped
+        //.AddRegisterServices(options =>
+        //{
+        //    options.Interfaces = [typeof(YourServiceRepository)]; // Replace YourServiceRepository with your actual service interfaces.
+        //    options.StringEndsWith = "Repository";                // This will register all services that end with "Repository" in the assembly.
+        //    options.Lifetime = ServiceLifetime.Scoped;            // This will register the services with a Scoped lifetime.
+        //});
+
+        builder.Services.AddRegisterFeatureFlags(featureFlagsOptions);
         builder.Services.AddAuthorization(options =>
         {
             // Here you can add additional authorization policies
@@ -77,9 +95,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseMapEndpoints();
-        app.MapLicenseEndpoints(); //Register licensing services if this feature is needed, otherwise just comment out this line.
-
+        app.UseMapEndpoints(featureFlagsOptions);
         app.Run();
     }
 }
