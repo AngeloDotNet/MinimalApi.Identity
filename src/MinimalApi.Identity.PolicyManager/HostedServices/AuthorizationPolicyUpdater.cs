@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Options;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
+using MinimalApi.Identity.PolicyManager.Services;
 
 namespace MinimalApi.Identity.PolicyManager.HostedServices;
 
