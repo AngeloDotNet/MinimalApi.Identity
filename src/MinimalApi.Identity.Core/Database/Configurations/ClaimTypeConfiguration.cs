@@ -10,7 +10,7 @@ public class ClaimTypeConfiguration : IEntityTypeConfiguration<ClaimType>
     public void Configure(EntityTypeBuilder<ClaimType> builder)
     {
         var claimTypeList = new List<ClaimType>();
-        var idRiga = 0;
+        var idRiga = 1;
 
         foreach (var ct in Enum.GetValues<ClaimsType>())
         {
