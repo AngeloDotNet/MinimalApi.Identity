@@ -21,6 +21,11 @@ public static class MessagesAPI
     public const string ConfirmingEmail = "Thank you for confirming your email";
     public const string ConfirmingEmailChanged = "Thank you for confirming your email change";
 
+    // Email messages
+    public const string EmailCreated = "Email created successfully";
+    public const string EmailNotFound = "Email not found";
+    public const string EmailDeleted = "Email deleted successfully";
+
     // Error messages
     public const string ErrorChangeUsername = "Error changing username";
     public const string ErrorEmailNotConfirmed = "Email not confirmed";
