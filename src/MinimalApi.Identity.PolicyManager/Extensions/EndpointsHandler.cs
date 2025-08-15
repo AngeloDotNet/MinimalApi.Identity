@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MinimalApi.Identity.PolicyManager.Models;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
+using MinimalApi.Identity.PolicyManager.Services;
 
 namespace MinimalApi.Identity.PolicyManager.Extensions;
 
