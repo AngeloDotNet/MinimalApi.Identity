@@ -1,6 +1,6 @@
 ﻿using MinimalApi.Identity.PolicyManager.Models;
 
-namespace MinimalApi.Identity.PolicyManager.Services.Interfaces;
+namespace MinimalApi.Identity.PolicyManager.Services;
 
 public interface IAuthPolicyService
 {

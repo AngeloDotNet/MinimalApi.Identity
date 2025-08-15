@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
+using MinimalApi.Identity.PolicyManager.Services;
 
 namespace MinimalApi.Identity.PolicyManager.HostedServices;
 

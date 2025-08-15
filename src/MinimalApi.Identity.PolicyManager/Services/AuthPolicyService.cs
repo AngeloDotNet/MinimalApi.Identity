@@ -1,74 +1,72 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Database;
-using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Exceptions;
-using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
-using MinimalApi.Identity.PolicyManager.Mapping;
 using MinimalApi.Identity.PolicyManager.Models;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
+using MinimalApi.Identity.PolicyManager.Services;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPolicyService> logger,
-    IServiceProvider serviceProvider) : IAuthPolicyService
+public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPolicyService> logger, IServiceProvider serviceProvider) : IAuthPolicyService
 {
     public async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(CancellationToken cancellationToken)
-    {
-        var query = await PolicyQuery.GetPoliciesAsync(dbContext, null!, cancellationToken);
+        => await PolicyQuery.GetPoliciesAsync(dbContext, null, cancellationToken);
+    //{
+    //    var query = await PolicyQuery.GetPoliciesAsync(dbContext, null!, cancellationToken);
 
-        return query.Count switch
-        {
-            0 => throw new NotFoundException(MessagesAPI.PolicyNotFound),
-            _ => query.ToList()
-        };
-    }
+    //    return query.Count switch
+    //    {
+    //        0 => throw new NotFoundException(MessagesAPI.PolicyNotFound),
+    //        _ => query.ToList()
+    //    };
+    //}
 
     public async Task<string> CreatePolicyAsync(CreatePolicyModel model, CancellationToken cancellationToken)
-    {
-        if (await CheckPolicyExistAsync(model.PolicyName))
-        {
-            throw new ConflictException(MessagesAPI.PolicyAlreadyExist);
-        }
+        => await PolicyQuery.CreatePolicyAsync(model, dbContext, cancellationToken);
+    //{
+    //    if (await CheckPolicyExistAsync(model.PolicyName))
+    //    {
+    //        throw new ConflictException(MessagesAPI.PolicyAlreadyExist);
+    //    }
 
-        var authPolicy = new AuthPolicy
-        {
-            PolicyName = model.PolicyName,
-            PolicyDescription = model.PolicyDescription,
-            PolicyPermissions = model.PolicyPermissions,
-            IsDefault = false,
-            IsActive = true
-        };
+    //    var authPolicy = new AuthPolicy
+    //    {
+    //        PolicyName = model.PolicyName,
+    //        PolicyDescription = model.PolicyDescription,
+    //        PolicyPermissions = model.PolicyPermissions,
+    //        IsDefault = false,
+    //        IsActive = true
+    //    };
 
-        dbContext.Set<AuthPolicy>().Add(authPolicy);
-        await dbContext.SaveChangesAsync(cancellationToken);
+    //    dbContext.Set<AuthPolicy>().Add(authPolicy);
+    //    await dbContext.SaveChangesAsync(cancellationToken);
 
-        return MessagesAPI.PolicyCreated;
-    }
+    //    return MessagesAPI.PolicyCreated;
+    //}
 
     public async Task<string> DeletePolicyAsync(DeletePolicyModel model, CancellationToken cancellationToken)
-    {
-        var authPolicy = await PolicyQuery.GetPolicyAsync(dbContext, x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
-            ?? throw new NotFoundException(MessagesAPI.PolicyNotFound);
+        => await PolicyQuery.DeletePolicyAsync(model, dbContext, cancellationToken);
+    //{
+    //    var authPolicy = await PolicyQuery.GetPolicyAsync(dbContext, x => x.Id == model.Id && x.PolicyName == model.PolicyName, cancellationToken)
+    //        ?? throw new NotFoundException(MessagesAPI.PolicyNotFound);
 
-        if (authPolicy.IsDefault)
-        {
-            throw new BadRequestException(MessagesAPI.PolicyNotDeleted);
-        }
+    //    if (authPolicy.IsDefault)
+    //    {
+    //        throw new BadRequestException(MessagesAPI.PolicyNotDeleted);
+    //    }
 
-        var entityPolicy = authPolicy.ToEntityModel();
+    //    var entityPolicy = authPolicy.ToEntityModel();
 
-        dbContext.Set<AuthPolicy>().Remove(entityPolicy);
-        await dbContext.SaveChangesAsync(cancellationToken);
+    //    dbContext.Set<AuthPolicy>().Remove(entityPolicy);
+    //    await dbContext.SaveChangesAsync(cancellationToken);
 
-        return MessagesAPI.PolicyDeleted;
-    }
+    //    return MessagesAPI.PolicyDeleted;
+    //}
 
     public async Task<bool> GenerateAuthPoliciesAsync()
     {
@@ -157,7 +155,7 @@ public class AuthPolicyService(MinimalApiAuthDbContext dbContext, ILogger<AuthPo
         }
     }
 
-    private async Task<bool> CheckPolicyExistAsync(string policyName)
-        => await dbContext.Set<AuthPolicy>().AsNoTracking()
-                    .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
+    //private async Task<bool> CheckPolicyExistAsync(string policyName)
+    //    => await dbContext.Set<AuthPolicy>().AsNoTracking()
+    //                .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
 }

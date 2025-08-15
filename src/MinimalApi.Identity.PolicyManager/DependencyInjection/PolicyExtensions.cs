@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MinimalApi.Identity.Core.DependencyInjection;
-using MinimalApi.Identity.PolicyManager.Services.Interfaces;
+using MinimalApi.Identity.PolicyManager.Services;
 using MinimalApi.Identity.PolicyManager.Validator;
 
 namespace MinimalApi.Identity.PolicyManager.DependencyInjection;
