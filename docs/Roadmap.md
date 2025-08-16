@@ -6,6 +6,7 @@
 - [ ] Move the configuration of the roles to a dedicated library
 - [ ] Add CancellationToken to API endpoints (where necessary)
 - [ ] Move email sending logic (with improvements) to a hosted service
+- [ ] Verify that the return type is a model record and not the database entity
 - [ ] Add automatic creation of a default administrator account
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
