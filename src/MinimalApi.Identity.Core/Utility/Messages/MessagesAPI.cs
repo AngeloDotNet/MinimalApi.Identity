@@ -24,6 +24,7 @@ public static class MessagesAPI
     // Email messages
     public const string EmailCreated = "Email created successfully";
     public const string EmailNotFound = "Email not found";
+    public const string EmailUpdated = "Email updated successfully";
     public const string EmailDeleted = "Email deleted successfully";
 
     // Error messages
