@@ -22,13 +22,6 @@ public class Program
         builder.Services.AddOptions<JwtOptions>().BindConfiguration(nameof(JwtOptions)).ValidateDataAnnotations().ValidateOnStart();
         builder.Services.AddOptions<FeatureFlagsOptions>().BindConfiguration(nameof(FeatureFlagsOptions)).ValidateDataAnnotations().ValidateOnStart();
 
-        //var databaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
-        //var migrationsAssembly = builder.Configuration.GetValue<string>("ApplicationOptions:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
-
-        //var errorResponseFormat = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
-
-        //var jwtOptions = ManageOptionsExtensions.GetJwtOptions(configuration);
-        //var featureFlagsOptions = ManageOptionsExtensions.GetFeatureFlagsOptions(configuration);
         var serviceProvider = builder.Services.BuildServiceProvider();
         var jwtOptions = serviceProvider.GetRequiredService<IOptions<JwtOptions>>().Value;
         var featureFlagsOptions = serviceProvider.GetRequiredService<IOptions<FeatureFlagsOptions>>().Value;
@@ -44,16 +37,9 @@ public class Program
         // Instead, create one (or more) duplicates like the one below, modifying it as needed.
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(configuration, options =>
         {
-            //options.DatabaseType = databaseType;
-            //options.MigrationsAssembly = migrationsAssembly;
-            //options.JwtOptions = jwtOptions;
-            //options.FeatureFlags = featureFlagsOptions;
-            //options.FormatErrorResponse = errorResponseFormat;
             options.DatabaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
             options.MigrationsAssembly = builder.Configuration.GetValue<string>("ApplicationOptions:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
-            //options.JwtOptions = ManageOptionsExtensions.GetJwtOptions(configuration);
             options.JwtOptions = jwtOptions;
-            //options.FeatureFlags = ManageOptionsExtensions.GetFeatureFlagsOptions(configuration);
             options.FeatureFlags = featureFlagsOptions;
             options.FormatErrorResponse = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
         });
@@ -96,6 +82,6 @@ public class Program
         app.UseAuthorization();
 
         app.UseMapEndpoints(featureFlagsOptions);
-        app.Run();
+        await app.RunAsync();
     }
 }
