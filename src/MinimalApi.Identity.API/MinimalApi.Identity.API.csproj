@@ -8,8 +8,7 @@
     <Company>Angelo Pirola</Company>
     <Product>Identity.Module.API</Product>
     <Title>Identity.Module.API</Title>
-    <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
-    access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
+    <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
     <PackageId>Identity.Module.API</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
@@ -29,7 +28,7 @@
     <PackageReference Include="Identity.Module.Core" />
     <PackageReference Include="Identity.Module.Licenses" />
     <PackageReference Include="Identity.Module.PolicyManager" />
-    <PackageReference Include="MailKit" />
+    <!--<PackageReference Include="MailKit" />-->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
