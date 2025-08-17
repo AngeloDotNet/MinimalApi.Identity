@@ -53,20 +53,22 @@ public static class RegisterServicesExtensions
             .AddHostedService<AuthorizationPolicyUpdater>();
 
         services
+            //.AccountManagerRegistrationService()
+            //.EmailManagerRegistrationService()
+            //.LicenseManagerRegistrationService() // It is registered as Feature Flags (AddRegisterFeatureFlags)
+            //.ModuleManagerRegistrationService() // It is registered as Feature Flags (AddRegisterFeatureFlags)
+            .PolicyManagerRegistrationService()
+        //.ProfileManagerRegistrationService()
+        ;
+
+        services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
-            //.Configure<HostedServiceOptions>(configuration.GetSection(nameof(HostedServiceOptions)))
-            //.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)))
-            //.Configure<SmtpOptions>(configuration.GetSection(nameof(SmtpOptions)))
-            //.Configure<UsersOptions>(configuration.GetSection(nameof(UsersOptions)))
-            //.Configure<ValidationOptions>(configuration.GetSection(nameof(ValidationOptions)))
             .Configure<HostedServiceOptions>(options => configuration.GetSection(nameof(HostedServiceOptions)).Bind(options))
-            .Configure<JwtOptions>(options => configuration.GetSection(nameof(JwtOptions)).Bind(options))
             .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
             .Configure<UsersOptions>(options => configuration.GetSection(nameof(UsersOptions)).Bind(options))
             .Configure<ValidationOptions>(options => configuration.GetSection(nameof(ValidationOptions)).Bind(options))
 
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-            //.Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel"))
             .Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel").Bind(options))
 
             .ConfigureValidation(options => options.ErrorResponseFormat = settings.FormatErrorResponse)
@@ -77,6 +79,8 @@ public static class RegisterServicesExtensions
 
     private static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
     {
+        ArgumentNullException.ThrowIfNull(jsonOptions);
+
         var options = new JsonOptions();
 
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -89,16 +93,25 @@ public static class RegisterServicesExtensions
         return options;
     }
 
-    //public static IServiceCollection AddModulesRegistrations(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
-        services.PolicyManagerRegistrationService();
-        //.AccountManagerRegistrationService()
-        //.EmailManagerRegistrationService()
+        //services.PolicyManagerRegistrationService()
+        ////.AccountManagerRegistrationService()
+        ////.EmailManagerRegistrationService()
+        ////.ProfileRegistrationService()
+        //;
 
+        //License feature flag
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
             services.LicenseRegistrationService();
+            //services.LicenseManagerRegistrationService();
+        }
+
+        //Module feature flag
+        if (featureFlagsOptions.EnabledFeatureModule)
+        {
+            //services.ModuleManagerRegistrationService();
         }
 
         return services;
@@ -110,10 +123,16 @@ public static class RegisterServicesExtensions
         //app.MapAccountEndpoints();
         //app.MapEmailEndpoints(); 
         app.MapPolicyEndpoints();
+        //app.MapProfileEndpoints();
 
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
             app.MapLicenseEndpoints();
+        }
+
+        if (featureFlagsOptions.EnabledFeatureModule)
+        {
+            //app.MapModuleEndpoints();
         }
     }
 
@@ -132,27 +151,6 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         string databaseType, string migrationAssembly) where TDbContext : DbContext
     {
-        //if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
-        //{
-        //    var sqlConnection = string.Empty;
-
-        //    if (configuration.GetConnectionString("SQLServer") != null)
-        //    {
-        //        sqlConnection = configuration.GetConnectionString("SQLServer");
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentNullException("SQLServer connection string is not configured.");
-        //    }
-
-        //    services.AddDbContext<TDbContext>(options => options.UseSqlServer(sqlConnection, opt =>
-        //    {
-        //        opt.MigrationsAssembly(migrationAssembly);
-        //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-        //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        //    }));
-        //}
-
         if (databaseType is not null)
         {
             if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
