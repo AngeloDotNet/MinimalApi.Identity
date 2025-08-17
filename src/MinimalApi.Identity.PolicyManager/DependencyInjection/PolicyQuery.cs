@@ -24,29 +24,29 @@ public static class PolicyQuery
         return await query.ToModel().ToListAsync(cancellationToken);
     }
 
-    public static async Task<PolicyDetailsResponseModel?> GetPolicyAsync(MinimalApiAuthDbContext dbContext,
-        Expression<Func<AuthPolicy, bool>> filter = null!, CancellationToken cancellationToken = default)
-    {
-        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+    //public static async Task<PolicyDetailsResponseModel?> GetPolicyAsync(MinimalApiAuthDbContext dbContext,
+    //    Expression<Func<AuthPolicy, bool>> filter = null!, CancellationToken cancellationToken = default)
+    //{
+    //    var query = dbContext.Set<AuthPolicy>().AsNoTracking();
 
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
+    //    if (filter != null)
+    //    {
+    //        query = query.Where(filter);
+    //    }
 
-        return await query.ToDetailsModel().FirstOrDefaultAsync(cancellationToken);
-    }
+    //    return await query.ToDetailsModel().FirstOrDefaultAsync(cancellationToken);
+    //}
 
-    public static async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
-    {
-        var query = await GetPoliciesAsync(dbContext, null!, cancellationToken);
+    //public static async Task<List<PolicyResponseModel>> GetAllPoliciesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
+    //{
+    //    var query = await GetPoliciesAsync(dbContext, null!, cancellationToken);
 
-        return query.Count switch
-        {
-            0 => throw new NotFoundException(MessagesAPI.PolicyNotFound),
-            _ => query.ToList()
-        };
-    }
+    //    return query.Count switch
+    //    {
+    //        0 => throw new NotFoundException(MessagesAPI.PolicyNotFound),
+    //        _ => query.ToList()
+    //    };
+    //}
 
     public static async Task<string> CreatePolicyAsync(CreatePolicyModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
@@ -77,7 +77,7 @@ public static class PolicyQuery
             .Where(x => x.Id == model.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesAPI.PolicyNotFound);
 
-        if (policyToDelete is not null && policyToDelete.IsDefault)
+        if (policyToDelete.IsDefault)
         {
             throw new BadRequestException(MessagesAPI.PolicyNotDeleted);
         }
