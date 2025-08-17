@@ -55,8 +55,6 @@ public static class RegisterServicesExtensions
         services
             //.AccountManagerRegistrationService()
             //.EmailManagerRegistrationService()
-            //.LicenseManagerRegistrationService() // It is registered as Feature Flags (AddRegisterFeatureFlags)
-            //.ModuleManagerRegistrationService() // It is registered as Feature Flags (AddRegisterFeatureFlags)
             .PolicyManagerRegistrationService()
         //.ProfileManagerRegistrationService()
         ;
@@ -95,12 +93,6 @@ public static class RegisterServicesExtensions
 
     public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
-        //services.PolicyManagerRegistrationService()
-        ////.AccountManagerRegistrationService()
-        ////.EmailManagerRegistrationService()
-        ////.ProfileRegistrationService()
-        //;
-
         //License feature flag
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
