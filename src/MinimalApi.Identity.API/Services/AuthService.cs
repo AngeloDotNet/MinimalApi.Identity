@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -22,9 +21,13 @@ using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
+//public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
+//    SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor,
+//    IModuleService moduleService, IProfileService profileService) : IAuthService
+//public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
+//    SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor, IModuleService moduleService) : IAuthService
 public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager, IEmailSenderService emailSender, IHttpContextAccessor httpContextAccessor,
-    IModuleService moduleService, IProfileService profileService) : IAuthService
+    SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, IModuleService moduleService) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
@@ -34,10 +37,10 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         {
             return signInResult switch
             {
-                { IsNotAllowed: true } => throw new BadRequestUserException(MessagesAPI.UserNotAllowedLogin),
+                { IsNotAllowed: true } => throw new BadRequestException(MessagesAPI.UserNotAllowedLogin),
                 { IsLockedOut: true } => throw new UserIsLockedException(MessagesAPI.UserLockedOut),
-                { RequiresTwoFactor: true } => throw new BadRequestUserException(MessagesAPI.RequiredTwoFactor),
-                _ => throw new BadRequestUserException(MessagesAPI.InvalidCredentials)
+                { RequiresTwoFactor: true } => throw new BadRequestException(MessagesAPI.RequiredTwoFactor),
+                _ => throw new BadRequestException(MessagesAPI.InvalidCredentials)
             };
         }
 
@@ -46,24 +49,24 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         if (!user.EmailConfirmed)
         {
-            throw new BadRequestUserException(MessagesAPI.UserNotEmailConfirmed);
+            throw new BadRequestException(MessagesAPI.UserNotEmailConfirmed);
         }
 
-        var profileUser = await profileService.GetProfileAsync(user.Id)
-            ?? throw new NotFoundException(MessagesAPI.ProfileNotFound);
+        //TODO: Integrate profile service to get user profile
+        //var profileUser = await profileService.GetProfileAsync(user.Id) ?? throw new NotFoundException(MessagesAPI.ProfileNotFound);
 
-        if (!profileUser.IsEnabled)
-        {
-            throw new BadRequestException(MessagesAPI.UserNotEnableLogin);
-        }
+        //if (!profileUser.IsEnabled)
+        //{
+        //    throw new BadRequestException(MessagesAPI.UserNotEnableLogin);
+        //}
 
-        var lastDateChangePassword = profileUser.LastDateChangePassword;
-        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
+        //var lastDateChangePassword = profileUser.LastDateChangePassword;
+        //var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
 
-        if (lastDateChangePassword == null || checkLastDateChangePassword)
-        {
-            throw new BadRequestException(MessagesAPI.UserForcedChangePassword);
-        }
+        //if (lastDateChangePassword == null || checkLastDateChangePassword)
+        //{
+        //    throw new BadRequestException(MessagesAPI.UserForcedChangePassword);
+        //}
 
         await userManager.UpdateSecurityStampAsync(user);
 
@@ -104,14 +107,15 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         if (result.Succeeded)
         {
-            await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname));
+            //TODO: Integrate profile service to create user profile
+            //await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname));
 
             var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value) ? DefaultRoles.Admin : DefaultRoles.User;
             var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString());
 
             if (!roleAssignResult.Succeeded)
             {
-                throw new BadRequestRoleException(MessagesAPI.RoleNotAssigned);
+                throw new BadRequestException(MessagesAPI.RoleNotAssigned);
             }
 
             var claimsAssignResult = await AddClaimsToUserAsync(user, role);
@@ -130,25 +134,26 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
                 "It is recommended to copy and paste for simplicity.";
 
-            await emailSender.SendEmailAsync(user.Email!, "Confirm your email", messageText, EmailSendingType.RegisterUser);
+            //TODO: Integrate email sender service to send emails
+            //await emailSender.SendEmailAsync(user.Email!, "Confirm your email", messageText, EmailSendingType.RegisterUser);
 
             return MessagesAPI.UserCreated;
         }
 
-        throw new BadRequestUserException(result.Errors);
+        throw new BadRequestException(result.Errors);
     }
 
     public async Task<AuthResponseModel> RefreshTokenAsync(RefreshTokenModel model)
     {
         var user = ValidateAccessToken(model.AccessToken)
-            ?? throw new BadRequestUserException(MessagesExceptions.InvalidAccessToken);
+            ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
 
         var userId = user.GetUserId();
         var dbUser = await userManager.FindByIdAsync(userId);
 
         if (dbUser?.RefreshToken == null || dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow || dbUser.RefreshToken != model.RefreshToken)
         {
-            throw new BadRequestUserException(MessagesExceptions.InvalidRefreshToken);
+            throw new BadRequestException(MessagesExceptions.InvalidRefreshToken);
         }
 
         var loginResponse = CreateToken(user.Claims.ToList(), jwtOptions.Value);
@@ -232,7 +237,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         var messageText = $"To reset your password, you will need to indicate this code: {encodedToken}. " +
             "It is recommended to copy and paste for simplicity.";
 
-        await emailSender.SendEmailAsync(user.Email!, "Reset Password", messageText, EmailSendingType.ForgotPassword);
+        //TODO: Integrate email sender service to send emails
+        //await emailSender.SendEmailAsync(user.Email!, "Reset Password", messageText, EmailSendingType.ForgotPassword);
 
         return MessagesAPI.SendEmailResetPassword;
     }
@@ -241,7 +247,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new BadRequestUserException(MessagesAPI.ErrorCodeResetPassword);
+            throw new BadRequestException(MessagesAPI.ErrorCodeResetPassword);
         }
 
         var user = await userManager.FindByEmailAsync(inputModel.Email)
@@ -255,7 +261,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         }
         else
         {
-            throw new BadRequestUserException(result.Errors);
+            throw new BadRequestException(result.Errors);
         }
     }
 
@@ -289,16 +295,6 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         }
     }
 
-    //private async Task<string> GenerateCallBackUrlAsync(string userId, string token, IHttpContextAccessor httpContextAccessor)
-    //{
-    //    var request = httpContextAccessor.HttpContext!.Request;
-    //    var callbackUrl = $"{request.Scheme}://{request.Host}{EndpointsApi.EndpointsAccountGroup}" +
-    //    $"{EndpointsApi.EndpointsConfirmEmail}".Replace("{userId}", userId).Replace("{token}", token);
-
-    //    await Task.Delay(500);
-    //    return callbackUrl;
-    //}
-
     private async Task<bool> CheckUserIsAdminDesignedAsync(string email, UsersOptions userOptions)
     {
         var user = await userManager.FindByEmailAsync(email);
@@ -308,7 +304,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             return false;
         }
 
-        return user.Email.Equals(userOptions.AssignAdminRoleOnRegistration, StringComparison.InvariantCultureIgnoreCase);
+        return user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private async Task<IdentityResult> AddClaimsToUserAsync(ApplicationUser user, DefaultRoles role)
@@ -346,8 +342,11 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         var userProfile = new List<Claim>();
         var userClaimModules = new List<Claim>();
 
+        //TODO: Integrate licenseService to get user license claims
+
+        //TODO: Integrate profileService to get user profile claims
         var task = new List<Task> {
-            Task.Run(async () => userProfile = await profileService.GetClaimUserProfileAsync(user)),
+            //Task.Run(async () => userProfile = await profileService.GetClaimUserProfileAsync(user)),
             Task.Run(async () => userClaimModules = await moduleService.GetClaimsModuleUserAsync(user))
         };
 
