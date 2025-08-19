@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MinimalApi.Identity.API.Exceptions.NotFound;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
@@ -18,7 +17,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         var query = await dbContext.Set<ClaimType>().AsNoTracking().ToListAsync();
 
-        return query.Count == 0 ? throw new NotFoundClaimException(MessagesAPI.ClaimsNotFound)
+        return query.Count == 0 ? throw new NotFoundException(MessagesAPI.ClaimsNotFound)
             : query.Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default)).ToList();
     }
 
@@ -50,12 +49,12 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     public async Task<string> AssignClaimAsync(AssignClaimModel model)
     {
         var user = await userManager.FindByIdAsync(model.UserId.ToString())
-            ?? throw new NotFoundUserException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
 
         var claim = await dbContext.Set<ClaimType>().AsNoTracking().FirstOrDefaultAsync(c
             => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
             && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase))
-            ?? throw new NotFoundClaimException(MessagesAPI.ClaimNotFound);
+            ?? throw new NotFoundException(MessagesAPI.ClaimNotFound);
 
         var userHasClaim = await userManager.GetClaimsAsync(user);
 
@@ -72,7 +71,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     public async Task<string> RevokeClaimAsync(RevokeClaimModel model)
     {
         var user = await userManager.FindByIdAsync(model.UserId.ToString())
-            ?? throw new NotFoundUserException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
 
         var userHasClaim = await userManager.GetClaimsAsync(user);
 
@@ -92,7 +91,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         var claim = await dbContext.Set<ClaimType>().FirstOrDefaultAsync(c
             => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
             && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase))
-            ?? throw new NotFoundClaimException(MessagesAPI.ClaimNotFound);
+            ?? throw new NotFoundException(MessagesAPI.ClaimNotFound);
 
         if (claim.Default)
         {
