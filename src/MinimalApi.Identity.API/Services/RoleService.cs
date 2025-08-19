@@ -17,7 +17,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             .Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
             .ToListAsync();
 
-        if (roles.Count == 0 || roles is null)
+        if (roles.Count == 0)
         {
             return Enumerable.Empty<RoleResponseModel>().ToList();
         }
