@@ -6,4 +6,7 @@ public class HostedServiceOptions
 {
     [Required]
     public int IntervalAuthPolicyUpdaterMinutes { get; init; }
+
+    [Required]
+    public int IntervalEmailSenderMinutes { get; init; }
 }

@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Options;
@@ -27,14 +26,13 @@ using MinimalApi.Identity.Licenses.DependencyInjection;
 using MinimalApi.Identity.Licenses.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
-using MinimalApi.Identity.PolicyManager.HostedServices;
 
 namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services,
-        IConfiguration configuration, Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
+        Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
     {
         var settings = new DefaultServicesConfiguration(services);
         configure(settings);
@@ -47,10 +45,11 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions);
 
         services
-            .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+            //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
             .AddScoped<IAuthorizationHandler, PermissionHandler>()
-            .AddHostedService<AuthorizationPolicyUpdater>();
+            //.AddHostedService<AuthorizationPolicyUpdater>()
+            ;
 
         services
             //.AccountManagerRegistrationService()

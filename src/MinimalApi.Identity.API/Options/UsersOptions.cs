@@ -5,7 +5,11 @@ namespace MinimalApi.Identity.API.Options;
 public class UsersOptions
 {
     [Required, EmailAddress]
-    public string AssignAdminRoleOnRegistration { get; init; } = null!;
+    //public string AssignAdminRoleOnRegistration { get; init; } = null!;
+    public string AssignAdminEmail { get; init; } = null!;
+
+    [Required]
+    public string AssignAdminPassword { get; init; } = null!;
 
     //[Required, Range(1, 365, ErrorMessage = "PasswordExpirationDays must be greater than zero and less than or equal to 365 (1 year).")]
     [Required]
