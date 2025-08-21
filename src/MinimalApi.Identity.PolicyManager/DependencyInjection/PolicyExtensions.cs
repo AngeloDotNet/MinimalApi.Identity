@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.PolicyManager.HostedServices;
 using MinimalApi.Identity.PolicyManager.Services;
 using MinimalApi.Identity.PolicyManager.Validator;
 
@@ -19,7 +21,9 @@ public static class PolicyExtensions
                 options.StringEndsWith = "Service";
                 options.Lifetime = ServiceLifetime.Transient;
             })
-            .ConfigureFluentValidation<CreatePolicyValidator>();
+            .ConfigureFluentValidation<CreatePolicyValidator>()
+            .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+            .AddHostedService<AuthorizationPolicyUpdater>();
 
         return services;
     }
