@@ -10,117 +10,158 @@ public static class UsersExtensions
 {
     public static string GetUserId(this IPrincipal user)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         if (user is not ClaimsPrincipal claimsPrincipal)
         {
             throw new ArgumentException("User must be a ClaimsPrincipal", nameof(user));
         }
 
-        var claimValue = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var claim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
 
-        if (string.IsNullOrEmpty(claimValue))
+        if (claim is null || string.IsNullOrEmpty(claim.Value))
         {
             throw new InvalidOperationException("Claim value for NameIdentifier is missing or empty.");
         }
 
-        return claimValue;
+        return claim.Value;
     }
 
     public static string GetClaimValue(this IPrincipal user, string claimType)
-        => ((ClaimsPrincipal)user).FindFirst(claimType)?.Value!;
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(claimType);
 
-    //public static bool IsAuthenticated(this ClaimsPrincipal principal)
-    //{
-    //    var userIsAuthenticated = principal.Identity?.IsAuthenticated ?? false;
+        if (user is not ClaimsPrincipal claimsPrincipal)
+        {
+            throw new ArgumentException("User must be a ClaimsPrincipal", nameof(user));
+        }
 
-    //    if (!userIsAuthenticated)
-    //    {
-    //        throw new UserUnknownException("User is not authenticated");
-    //    }
-
-    //    return userIsAuthenticated;
-    //}
+        var claim = claimsPrincipal.FindFirst(claimType);
+        return claim?.Value ?? throw new InvalidOperationException($"Claim value for {claimType} is missing.");
+    }
 
     public static async Task<bool> IsAuthValidAsync(this ClaimsPrincipal principal, UserManager<ApplicationUser> userManager)
     {
-        var securityStamp = principal.GetClaimValue(ClaimTypes.SerialNumber);
-        var userIsAuthenticated = principal.Identity?.IsAuthenticated ?? false;
+        ArgumentNullException.ThrowIfNull(principal);
+        ArgumentNullException.ThrowIfNull(userManager);
+
+        var userIsAuthenticated = principal.Identity?.IsAuthenticated == true;
 
         if (!userIsAuthenticated)
         {
-            //throw new UserUnknownException("User is not authenticated");
             return false;
         }
+
+        var securityStamp = principal.GetClaimValue(ClaimTypes.SerialNumber);
 
         if (!SecurityStampIsValid(principal, securityStamp))
         {
-            //throw new UserTokenIsInvalidException("User security stamp is invalid");
             return false;
         }
 
-        if (!await UserIsLockedAsync(principal, userManager))
+        if (!await UserIsLockedAsync(principal, userManager).ConfigureAwait(false))
         {
-            //throw new UserIsLockedException(MessagesAPI.UserLockedOut);
-            return false;
-        }
-
-        return userIsAuthenticated;
-    }
-
-    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor)
-        => httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-
-    internal static bool SecurityStampIsValid(this ClaimsPrincipal user, string securityStamp)
-    {
-        //if (user == null)
-        //{
-        //    throw new ArgumentNullException(nameof(user), "User cannot be null");
-        //}
-
-        //if (string.IsNullOrEmpty(securityStamp))
-        //{
-        //    throw new ArgumentException("Security stamp cannot be null or empty", nameof(securityStamp));
-        //}
-
-        var userSecurityStamp = user.GetClaimValue(ClaimTypes.SerialNumber);
-
-        //if (userSecurityStamp != securityStamp)
-        if (user.GetClaimValue(ClaimTypes.SerialNumber) != securityStamp)
-        {
-            //throw new UserTokenIsInvalidException("User security stamp is invalid");
             return false;
         }
 
         return true;
+    }
+
+    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+
+        return httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
+    }
+
+    internal static bool SecurityStampIsValid(this ClaimsPrincipal user, string securityStamp)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(securityStamp);
+
+        var userSecurityStamp = user.GetClaimValue(ClaimTypes.SerialNumber);
+        return userSecurityStamp == securityStamp;
     }
 
     internal static async Task<bool> UserIsLockedAsync(this ClaimsPrincipal user, UserManager<ApplicationUser> userManager)
     {
-        //if (user == null)
-        //{
-        //    throw new ArgumentNullException(nameof(user), "User cannot be null");
-        //}
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(userManager);
 
-        var utente = await userManager.FindByIdAsync(user!.GetUserId());
-        var lockoutEnd = utente!.LockoutEnd.GetValueOrDefault();
+        var userId = user.GetUserId();
+        var utente = await userManager.FindByIdAsync(userId).ConfigureAwait(false);
 
-        //if (string.IsNullOrEmpty(lockoutEnd))
-        //{
-        //    return false;
-        //}
-
-        //if (DateTimeOffset.TryParse(lockoutEnd, out var lockoutEndDate))
-        //{
-        //    return lockoutEndDate > DateTimeOffset.UtcNow;
-        //}
-
-        if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
+        if (utente is null)
         {
-            //logger.LogWarning(MessagesAPI.UserLockedOut);
-            //throw new UserIsLockedException(MessagesAPI.UserLockedOut);
             return false;
         }
 
-        //throw new InvalidOperationException("Invalid lockout end date format.");
-        return true;
+        var lockoutEnd = utente.LockoutEnd.GetValueOrDefault();
+        return lockoutEnd <= DateTimeOffset.UtcNow;
     }
 }
+
+//public static class UsersExtensions
+//{
+//    public static string GetUserId(this IPrincipal user)
+//    {
+//        if (user is not ClaimsPrincipal claimsPrincipal)
+//        {
+//            throw new ArgumentException("User must be a ClaimsPrincipal", nameof(user));
+//        }
+
+//        var claimValue = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+//        if (string.IsNullOrEmpty(claimValue))
+//        {
+//            throw new InvalidOperationException("Claim value for NameIdentifier is missing or empty.");
+//        }
+
+//        return claimValue;
+//    }
+
+//    public static string GetClaimValue(this IPrincipal user, string claimType)
+//        => ((ClaimsPrincipal)user).FindFirst(claimType)?.Value!;
+
+//    public static async Task<bool> IsAuthValidAsync(this ClaimsPrincipal principal, UserManager<ApplicationUser> userManager)
+//    {
+//        var securityStamp = principal.GetClaimValue(ClaimTypes.SerialNumber);
+//        var userIsAuthenticated = principal.Identity?.IsAuthenticated ?? false;
+
+//        if (!userIsAuthenticated || !SecurityStampIsValid(principal, securityStamp) || !await UserIsLockedAsync(principal, userManager))
+//        {
+//            return false;
+//        }
+
+//        return userIsAuthenticated;
+//    }
+
+//    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor)
+//        => httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+
+//    internal static bool SecurityStampIsValid(this ClaimsPrincipal user, string securityStamp)
+//    {
+//        var userSecurityStamp = user.GetClaimValue(ClaimTypes.SerialNumber);
+
+//        if (user.GetClaimValue(ClaimTypes.SerialNumber) != securityStamp)
+//        {
+//            return false;
+//        }
+
+//        return true;
+//    }
+
+//    internal static async Task<bool> UserIsLockedAsync(this ClaimsPrincipal user, UserManager<ApplicationUser> userManager)
+//    {
+//        var utente = await userManager.FindByIdAsync(user!.GetUserId());
+//        var lockoutEnd = utente!.LockoutEnd.GetValueOrDefault();
+
+//        if (utente.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
+//        {
+//            return false;
+//        }
+
+//        return true;
+//    }
+//}

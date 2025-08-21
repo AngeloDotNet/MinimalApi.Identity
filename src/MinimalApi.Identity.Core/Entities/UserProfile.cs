@@ -2,65 +2,58 @@
 
 namespace MinimalApi.Identity.Core.Entities;
 
-public partial class UserProfile : BaseEntity, IEntity
+public class UserProfile : BaseEntity, IEntity
 {
-    public UserProfile(int userId, string firstName, string lastName)
-    {
-        ChangeUserId(userId);
-        ChangeFirstName(firstName);
-        ChangeLastName(lastName);
-    }
-
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
+    public string FirstName { get; set; } = null!;
+    public string LastName { get; set; } = null!;
     public bool IsEnabled { get; set; }
     public DateOnly? LastDateChangePassword { get; set; }
-    public int UserId { get; private set; }
-    public ApplicationUser User { get; private set; }
+    public int UserId { get; set; }
+    public ApplicationUser User { get; set; } = null!;
 
-    public void ChangeUserId(int userId)
-    {
-        UserId = userId switch
-        {
-            <= 0 => throw new ArgumentOutOfRangeException(nameof(userId), "UserId must be greater than zero."),
-            _ => userId,
-        };
-    }
+    //public void ChangeUserId(int userId)
+    //{
+    //    UserId = userId switch
+    //    {
+    //        <= 0 => throw new ArgumentOutOfRangeException(nameof(userId), "UserId must be greater than zero."),
+    //        _ => userId,
+    //    };
+    //}
 
-    public void ChangeFirstName(string firstName)
-    {
-        if (string.IsNullOrWhiteSpace(firstName))
-        {
-            throw new ArgumentNullException(nameof(firstName), "FirstName cannot be null or empty.");
-        }
+    //public void ChangeFirstName(string firstName)
+    //{
+    //    if (string.IsNullOrWhiteSpace(firstName))
+    //    {
+    //        throw new ArgumentNullException(nameof(firstName), "FirstName cannot be null or empty.");
+    //    }
 
-        FirstName = firstName;
-    }
+    //    FirstName = firstName;
+    //}
 
-    public void ChangeLastName(string lastName)
-    {
-        if (string.IsNullOrWhiteSpace(lastName))
-        {
-            throw new ArgumentNullException(nameof(lastName), "LastName cannot be null or empty.");
-        }
+    //public void ChangeLastName(string lastName)
+    //{
+    //    if (string.IsNullOrWhiteSpace(lastName))
+    //    {
+    //        throw new ArgumentNullException(nameof(lastName), "LastName cannot be null or empty.");
+    //    }
 
-        LastName = lastName;
-    }
+    //    LastName = lastName;
+    //}
 
-    public void ChangeUserEnabled(bool isEnabled)
-    {
-        IsEnabled = isEnabled;
-    }
+    //public void ChangeUserEnabled(bool isEnabled)
+    //{
+    //    IsEnabled = isEnabled;
+    //}
 
-    public void ChangeLastDateChangePassword(DateOnly? lastDateChangePassword)
-    {
-        var utcNow = DateOnly.FromDateTime(DateTime.UtcNow);
+    //public void ChangeLastDateChangePassword(DateOnly? lastDateChangePassword)
+    //{
+    //    var utcNow = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        if (lastDateChangePassword >= utcNow)
-        {
-            throw new ArgumentOutOfRangeException(nameof(lastDateChangePassword), "Last date change password cannot be greater than today.");
-        }
+    //    if (lastDateChangePassword >= utcNow)
+    //    {
+    //        throw new ArgumentOutOfRangeException(nameof(lastDateChangePassword), "Last date change password cannot be greater than today.");
+    //    }
 
-        LastDateChangePassword = lastDateChangePassword;
-    }
+    //    LastDateChangePassword = lastDateChangePassword;
+    //}
 }

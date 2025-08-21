@@ -1,9 +1,10 @@
 # .NET Modular Dynamic Identity Manager
 
 A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.
-<!--
-Modular dynamic identity manager for users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.
--->
+
+## 🏷️ Description
+
+**MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server
 
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
@@ -11,12 +12,18 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 ## 📎 Table of Contents
 
 - [Features](#-features)
+- [Description](#-description)
 - [Installation](#%EF%B8%8F-installation)
 - [Configuration](#%EF%B8%8F-configuration)
+- [Database]()
+- [Feature Flags]()
 - [Usage Example](#-usage-examples)
+- [Authentication]()
+- [Administrator Account]()
 - [API Reference](#-api-reference)
 - [Packages](#-packages)
 - [Badges](#-badges)
+- [Roadmap]()
 - [License](#-license)
 - [Give a Star](#-give-a-star)
 - [Contributing](#-contributing)
@@ -38,6 +45,14 @@ Modular dynamic identity manager for users, roles, claims and more for access co
 - .NET 8.0 SDK (latest version)
 - SQL Server 2022 Express installed ([setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
 
+<!--
+As an alternative to SQL Server you can use one of these databases:
+
+- PostgreSQL
+- MySQL
+- SQLite
+-->
+
 ### Setup
 
 The library is available on [NuGet](https://www.nuget.org/packages/Identity.Module.API), just search for _Identity.Module.API_ in the Package Manager GUI or run the following command in the .NET CLI:
@@ -53,18 +68,19 @@ The configuration can be completely managed by adding this section to the _appse
 > [!WARNING]
 >  The library is still under development, so the configuration may change in future updates.
 
+<!--
 ```json
 {
     "ConnectionStrings": {
         "DatabaseType": "sqlserver",
-        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=[DATABASE];User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
     },
     "JwtOptions": {
         "SchemaName": "Bearer",
         "Issuer": "[ISSUER]",
         "Audience": "[AUDIENCE]",
         "SecurityKey": "[SECURITY-KEY-512-CHAR]",
-        "ClockSkew": "00:05:00",
+        "ClockSkew": "00:05:00", // Default: 5 minutes
         "AccessTokenExpirationMinutes": 60,
         "RefreshTokenExpirationMinutes": 60,
         "RequireUniqueEmail": true,
@@ -89,7 +105,7 @@ The configuration can be completely managed by adding this section to the _appse
         "SaveEmailSent": true
     },
     "ApplicationOptions": {
-        "MigrationsAssembly": "MinimalApi.Identity.Migrations",
+        "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
         "ErrorResponseFormat": "List"
     },
     "FeatureFlagsOptions": {
@@ -111,6 +127,9 @@ The configuration can be completely managed by adding this section to the _appse
     }
 }
 ```
+-->
+
+An example appSettings.json configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
 
 > [!NOTE]
 > For migrations you can use a specific project to add to your solution, then configuring the assembly in _ApplicationOptions:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
@@ -119,9 +138,11 @@ The configuration can be completely managed by adding this section to the _appse
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/docs/Database.md) for managing the database
 
-<!--
 ## 🔰 Feature Flags
 
+coming soon
+
+<!--
 See the [documentation]() for managing feature flags.
 -->
 
@@ -130,7 +151,7 @@ See the [documentation]() for managing feature flags.
 > [!WARNING]
 > The library is still under development, so the Program.cs configuration may change in future updates.
 
-A practical example of Program.cs configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
+An example configuration of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
 
 ## 🔐 Authentication
 
@@ -138,9 +159,12 @@ This library currently supports the following authentication types:
 
 - JWT Bearer Token
 
-<!--
+
 ### 🧑‍💼 Administrator Account
 
+coming soon
+
+<!--
 A default administrator account is created automatically with the following configuration:
 
 - Username: Set via `UsersOptions:AssignAdminRoleOnRegistration`
@@ -171,6 +195,10 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/blob
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=progetti-2025_minimalapi-identity&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity) 
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=progetti-2025_minimalapi-identity&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity)
 
+## 🗺️ Roadmap
+
+See the development roadmap for this repository [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/docs/Roadmap.md)
+
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -190,4 +218,4 @@ The project is constantly evolving. Contributions are always welcome. Feel free 
 
 ## 🆘 Support
 
-If you have any questions or need help, you can add a new thread [here](https://github.com/AngeloDotNet/MinimalApi.Identity/discussions/1).
+If you have any questions or need help, read [here](https://github.com/AngeloDotNet/MinimalApi.Identity/discussions/1) to find out what to do.

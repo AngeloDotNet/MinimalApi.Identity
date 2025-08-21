@@ -28,7 +28,7 @@ public static class PolicyQuery
     {
         if (await CheckPolicyExistAsync(model.PolicyName, dbContext))
         {
-            throw new ConflictException(MessagesAPI.PolicyAlreadyExist);
+            throw new ConflictException(MessagesApi.PolicyAlreadyExist);
         }
 
         var authPolicy = new AuthPolicy
@@ -43,7 +43,7 @@ public static class PolicyQuery
         dbContext.Set<AuthPolicy>().Add(authPolicy);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return MessagesAPI.PolicyCreated;
+        return MessagesApi.PolicyCreated;
     }
 
     public static async Task<string> DeletePolicyAsync(DeletePolicyModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
@@ -51,17 +51,17 @@ public static class PolicyQuery
         var policyToDelete = await dbContext.Set<AuthPolicy>()
             .AsNoTracking()
             .Where(x => x.Id == model.Id)
-            .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesAPI.PolicyNotFound);
+            .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.PolicyNotFound);
 
         if (policyToDelete.IsDefault)
         {
-            throw new BadRequestException(MessagesAPI.PolicyNotDeleted);
+            throw new BadRequestException(MessagesApi.PolicyNotDeleted);
         }
 
         dbContext.Set<AuthPolicy>().Remove(policyToDelete);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return MessagesAPI.PolicyDeleted;
+        return MessagesApi.PolicyDeleted;
     }
 
     private static async Task<bool> CheckPolicyExistAsync(string policyName, MinimalApiAuthDbContext dbContext)
