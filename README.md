@@ -4,30 +4,31 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 
 ## 🏷️ Description
 
-**MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server
+**MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and relational database (of your choice).
 
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
 
+<!--
 ## 📎 Table of Contents
 
 - [Features](#-features)
-- [Description](#-description)
 - [Installation](#%EF%B8%8F-installation)
 - [Configuration](#%EF%B8%8F-configuration)
-- [Database]()
-- [Feature Flags]()
+- [Database](#%EF%B8%8F-database)
+- [Feature Flags](#-feature-flags)
 - [Usage Example](#-usage-examples)
-- [Authentication]()
-- [Administrator Account]()
+- [Authentication](#-authentication)
+- [Administrator Account](#-administrator-account)
 - [API Reference](#-api-reference)
 - [Packages](#-packages)
 - [Badges](#-badges)
-- [Roadmap]()
+- [Roadmap](#%EF%B8%8F-roadmap)
 - [License](#-license)
 - [Give a Star](#-give-a-star)
 - [Contributing](#-contributing)
 - [Support](#-support)
+-->
 
 ## 🧩 Features
 
@@ -67,67 +68,6 @@ The configuration can be completely managed by adding this section to the _appse
 
 > [!WARNING]
 >  The library is still under development, so the configuration may change in future updates.
-
-<!--
-```json
-{
-    "ConnectionStrings": {
-        "DatabaseType": "sqlserver",
-        "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
-    },
-    "JwtOptions": {
-        "SchemaName": "Bearer",
-        "Issuer": "[ISSUER]",
-        "Audience": "[AUDIENCE]",
-        "SecurityKey": "[SECURITY-KEY-512-CHAR]",
-        "ClockSkew": "00:05:00", // Default: 5 minutes
-        "AccessTokenExpirationMinutes": 60,
-        "RefreshTokenExpirationMinutes": 60,
-        "RequireUniqueEmail": true,
-        "RequireDigit": true,
-        "RequiredLength": 8,
-        "RequireUppercase": true,
-        "RequireLowercase": true,
-        "RequireNonAlphanumeric": true,
-        "RequiredUniqueChars": 4,
-        "RequireConfirmedEmail": true,
-        "MaxFailedAccessAttempts": 3,
-        "AllowedForNewUsers": true,
-        "DefaultLockoutTimeSpan": "00:05:00"
-    },
-    "SmtpOptions": {
-        "Host": "smtp.example.org",
-        "Port": 25,
-        "Security": "StartTls",
-        "Username": "Username del server SMTP",
-        "Password": "Password del server SMTP",
-        "Sender": "MyApplication <noreply@example.org>",
-        "SaveEmailSent": true
-    },
-    "ApplicationOptions": {
-        "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
-        "ErrorResponseFormat": "List"
-    },
-    "FeatureFlagsOptions": {
-        "EnabledFeatureLicense": true,
-        "EnabledFeatureModule": true
-    },
-    "HostedServiceOptions": {
-        "IntervalAuthPolicyUpdaterMinutes": 5
-    },
-    "UsersOptions": {
-        "AssignAdminRoleOnRegistration": "admin@example.org",
-        "PasswordExpirationDays": 90
-    },
-    "ValidationOptions": {
-        "MinLength": 3,
-        "MaxLength": 50,
-        "MinLengthDescription": 5,
-        "MaxLengthDescription": 100
-    }
-}
-```
--->
 
 An example appSettings.json configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
 
