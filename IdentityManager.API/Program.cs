@@ -29,12 +29,9 @@ public class Program
         // If you need to register services with a lifecycle other than Transient, do not modify this configuration.
         builder.Services.AddRegisterServices(options =>
         {
-            // Register your interfaces here, but do not remove the IAuthService service.
-            options.Interfaces = [typeof(IAuthService)];
-            // This will register all services that end with "Service" in the assembly.
-            options.StringEndsWith = "Service";
-            // This will register the services with a Transient lifetime.
-            options.Lifetime = ServiceLifetime.Transient;
+            options.Interfaces = [typeof(IAuthService)]; // Register your interfaces here, but do not remove the IAuthService service.
+            options.StringEndsWith = "Service"; // This will register all services that end with "Service" in the assembly.
+            options.Lifetime = ServiceLifetime.Transient; // This will register the services with a Transient lifetime.
         });
 
         // Instead, create one (or more) duplicates like the one below, modifying it as needed.
@@ -48,14 +45,11 @@ public class Program
         });
 
         // The life cycle can take the values: Transient, Singleton and Scoped
-        //.AddRegisterServices(options =>
+        //builder.Services.AddRegisterServices(options =>
         //{
-        // Replace YourServiceRepository with your actual service interfaces.
-        //    options.Interfaces = [typeof(YourServiceRepository)];
-        // This will register all services that end with "Repository" in the assembly.
-        //    options.StringEndsWith = "Repository";
-        // This will register the services with a Scoped lifetime.
-        //    options.Lifetime = ServiceLifetime.Scoped;            
+        //    options.Interfaces = [typeof(YourServiceRepository)]; // Replace YourServiceRepository with your actual service interfaces.
+        //    options.StringEndsWith = "Repository"; // This will register all services that end with "Repository" in the assembly.
+        //    options.Lifetime = ServiceLifetime.Scoped; // This will register the services with a Scoped lifetime.
         //});
 
         builder.Services.AddRegisterFeatureFlags(featureFlagsOptions);
