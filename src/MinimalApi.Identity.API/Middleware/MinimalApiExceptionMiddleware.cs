@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MinimalApi.Identity.API.Exceptions.BadRequest;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Options;
@@ -104,12 +103,19 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         => exception switch
         {
             ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
-            BadRequestException or BadRequestRoleException or BadRequestUserException => HttpStatusCode.BadRequest,
+
+            BadRequestException => HttpStatusCode.BadRequest,
+            //BadRequestException or
+            //BadRequestRoleException or
+            //BadRequestUserException => HttpStatusCode.BadRequest,
+
             ConflictException => HttpStatusCode.Conflict,
 
             NotFoundException => HttpStatusCode.NotFound,
 
-            UserIsLockedException or UserTokenIsInvalidException or UserUnknownException or
+            UserIsLockedException or
+            UserTokenIsInvalidException or
+            UserUnknownException or
             UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
 
             ValidationModelException => HttpStatusCode.UnprocessableEntity,
@@ -123,8 +129,8 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             ArgumentNullException argumentNullException => argumentNullException.Message,
 
             BadRequestException badRequestException => badRequestException.Message,
-            BadRequestRoleException badRequestRoleException => badRequestRoleException.Message,
-            BadRequestUserException badRequestUserException => badRequestUserException.Message,
+            //BadRequestRoleException badRequestRoleException => badRequestRoleException.Message,
+            //BadRequestUserException badRequestUserException => badRequestUserException.Message,
 
             ConflictException conflictException => conflictException.Message,
 
