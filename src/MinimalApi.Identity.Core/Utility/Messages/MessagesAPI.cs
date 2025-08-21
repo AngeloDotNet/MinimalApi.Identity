@@ -1,6 +1,6 @@
 ﻿namespace MinimalApi.Identity.Core.Utility.Messages;
 
-public static class MessagesAPI
+public static class MessagesApi
 {
     // Claim messages
     public const string ClaimCreated = "Claim created successfully";
