@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Identity.Module.API" Version="2.5.13" />
-    <PackageVersion Include="Identity.Module.Core" Version="2.5.33" />
+    <PackageVersion Include="Identity.Module.Core" Version="2.5.36" />
     <PackageVersion Include="Identity.Module.Licenses" Version="1.0.44" />
     <PackageVersion Include="Identity.Module.PolicyManager" Version="2.5.15" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
