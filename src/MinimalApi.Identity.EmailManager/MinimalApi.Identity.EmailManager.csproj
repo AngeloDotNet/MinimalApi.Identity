@@ -8,8 +8,7 @@
         <Company>Angelo Pirola</Company>
         <Product>MinimalApi.Identity.EmailManager</Product>
         <Title>Identity.Module.EmailManager</Title>
-        <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
-        access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
+        <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
         <PackageId>Identity.Module.EmailManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
@@ -26,7 +25,7 @@
     
     <ItemGroup>
         <PackageReference Include="Identity.Module.Core" />
-        <PackageReference Include="MailKit" />
+        <!--<PackageReference Include="MailKit" />-->
     </ItemGroup>    
     
     <ItemGroup>
@@ -34,6 +33,6 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
-    </ItemGroup>
+    </ItemGroup>    
     
 </Project>
