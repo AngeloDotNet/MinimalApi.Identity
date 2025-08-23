@@ -42,14 +42,12 @@ public static class RegisterServicesExtensions
             .AddHttpContextAccessor()
             .AddSwaggerConfiguration(settings.FeatureFlags)
             .AddDatabaseContext<TDbContext>(configuration, settings.DatabaseType, settings.MigrationsAssembly)
-            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions);
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions)
+            .AddRegisterFeatureFlags(settings.FeatureFlags);
 
         services
-            //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
             .AddScoped<SignInManager<ApplicationUser>>()
-            .AddScoped<IAuthorizationHandler, PermissionHandler>()
-            //.AddHostedService<AuthorizationPolicyUpdater>()
-            ;
+            .AddScoped<IAuthorizationHandler, PermissionHandler>();
 
         services
             //.AccountManagerRegistrationService()
@@ -92,14 +90,12 @@ public static class RegisterServicesExtensions
 
     public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
-        //License feature flag
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
             services.LicenseRegistrationService();
             //services.LicenseManagerRegistrationService();
         }
 
-        //Module feature flag
         if (featureFlagsOptions.EnabledFeatureModule)
         {
             //services.ModuleManagerRegistrationService();
@@ -112,7 +108,6 @@ public static class RegisterServicesExtensions
     {
         app.MapEndpoints();
         //app.MapAccountEndpoints();
-        //app.MapEmailEndpoints(); 
         app.MapPolicyEndpoints();
         //app.MapProfileEndpoints();
 
@@ -146,8 +141,7 @@ public static class RegisterServicesExtensions
         {
             if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
             {
-                var sqlConnection = configuration.GetConnectionString("SQLServer");
-                ArgumentNullException.ThrowIfNull(sqlConnection, "SQLServer connection string is not configured.");
+                var sqlConnection = configuration.GetConnectionString("SQLServer") ?? "SQLServer connection string is not configured.";
 
                 services.AddDbContext<TDbContext>(options =>
                     options.UseSqlServer(sqlConnection, opt =>
