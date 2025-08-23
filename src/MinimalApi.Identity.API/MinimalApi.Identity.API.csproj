@@ -26,7 +26,9 @@
 
 <ItemGroup>
     <PackageReference Include="Identity.Module.Core" />
+    <PackageReference Include="Identity.Module.EmailManager" />
     <PackageReference Include="Identity.Module.Licenses" />
+    <!--<PackageReference Include="Identity.Module.LicenseManager" />-->
     <PackageReference Include="Identity.Module.PolicyManager" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
@@ -44,4 +46,4 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
 </ItemGroup>
 
-</Project>    
+</Project>
