@@ -15,8 +15,11 @@ After setting the type of database you want to use, modify the corresponding con
 > [!TIP]
 > To update the database schema you need to create migrations, they will be applied automatically at the next application startup.
 
-To create database migrations, follow these simple steps:
+To create database migrations select `MinimalApi.Identity.Core` as the default project from the drop-down menu in the `Package Manager Console`
+and run the command: `Add-Migration MIGRATION-NAME`
 
-- Select `MinimalApi.Identity.Core` as the default project from the drop-down menu.
+> [!NOTE]
+> if you use a separate project for migrations (It is recommended to add a reference in the project name to the database used, in this case it is SQL Server), 
+> make sure to set the `-Project` parameter to the name of that project.
 
-- In the `Package Manager Console`, run the following command: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`
+Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`

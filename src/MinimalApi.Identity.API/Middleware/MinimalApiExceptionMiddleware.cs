@@ -136,7 +136,7 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
             NotFoundException notFoundException => notFoundException.Message,
 
-            UserIsLockedException => MessagesAPI.UserLockedOut,
+            UserIsLockedException => MessagesApi.UserLockedOut,
             UserTokenIsInvalidException userTokenIsInvalidException => userTokenIsInvalidException.Message,
             UserUnknownException => MessagesExceptions.UserNotAuthenticated,
             UserWithoutPermissionsException => MessagesExceptions.UserNotHavePermission,
