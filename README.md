@@ -9,27 +9,6 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 > [!IMPORTANT]
 > **This library is still under development of new implementations and in the process of creating the related documentation.**
 
-<!--
-## 📎 Table of Contents
-
-- [Features](#-features)
-- [Installation](#%EF%B8%8F-installation)
-- [Configuration](#%EF%B8%8F-configuration)
-- [Database](#%EF%B8%8F-database)
-- [Feature Flags](#-feature-flags)
-- [Usage Example](#-usage-examples)
-- [Authentication](#-authentication)
-- [Administrator Account](#-administrator-account)
-- [API Reference](#-api-reference)
-- [Packages](#-packages)
-- [Badges](#-badges)
-- [Roadmap](#%EF%B8%8F-roadmap)
-- [License](#-license)
-- [Give a Star](#-give-a-star)
-- [Contributing](#-contributing)
-- [Support](#-support)
--->
-
 ## 🧩 Features
 
 - **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
@@ -72,7 +51,7 @@ The configuration can be completely managed by adding this section to the _appse
 An example appSettings.json configuration is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
 
 > [!NOTE]
-> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ApplicationOptions:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
+> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ConnectionStrings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
 
 ## 🗃️ Database
 
@@ -80,7 +59,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/blob
 
 ## 🔰 Feature Flags
 
-coming soon
+🚧 coming soon
 
 <!--
 See the [documentation]() for managing feature flags.
@@ -102,7 +81,7 @@ This library currently supports the following authentication types:
 
 ### 🧑‍💼 Administrator Account
 
-coming soon
+🚧 coming soon
 
 <!--
 A default administrator account is created automatically with the following configuration:
