@@ -22,6 +22,7 @@ using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.Licenses.DependencyInjection;
 using MinimalApi.Identity.Licenses.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
@@ -51,7 +52,7 @@ public static class RegisterServicesExtensions
 
         services
             //.AccountManagerRegistrationService()
-            //.EmailManagerRegistrationService()
+            .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
         //.ProfileManagerRegistrationService()
         ;
