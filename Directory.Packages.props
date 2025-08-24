@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Identity.Module.API" Version="2.5.42" />
     <PackageVersion Include="Identity.Module.Core" Version="2.5.43" />
-    <PackageVersion Include="Identity.Module.EmailManager" Version="2.5.2" />
+    <PackageVersion Include="Identity.Module.EmailManager" Version="2.5.3" />
     <PackageVersion Include="Identity.Module.Licenses" Version="1.0.44" />
     <PackageVersion Include="Identity.Module.PolicyManager" Version="2.5.18" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />

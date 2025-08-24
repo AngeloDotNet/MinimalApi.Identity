@@ -7,8 +7,7 @@ namespace MinimalApi.Identity.EmailManager.Services;
 
 public class EmailManagerService(MinimalApiAuthDbContext dbContext) : IEmailManagerService
 {
-    public async Task<IQueryable<EmailSending>> GetAllEmailsAsync(CancellationToken cancellationToken)
-        => await EmailQuery.GetAllEmailsAsync(dbContext, cancellationToken);
+    public IQueryable<EmailSending> GetAllEmailsAsync() => EmailQuery.GetAllEmailsAsync(dbContext);
 
     public async Task<string> CreateEmailAsync(EmailSending model, CancellationToken cancellationToken)
         => await EmailQuery.CreateEmailAsync(model, dbContext, cancellationToken);

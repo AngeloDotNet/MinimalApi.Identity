@@ -9,21 +9,10 @@ namespace MinimalApi.Identity.EmailManager.DependencyInjection;
 
 public static class EmailQuery
 {
-    //public static async Task<List<EmailResponseModel>> GetAllEmailsAsync(MinimalApiAuthDbContext dbContext,
-    //    Expression<Func<EmailSending, bool>>? filter = null, CancellationToken cancellationToken = default)
-    //{
-    //    var query = dbContext.Set<EmailSending>().AsNoTracking();
-
-    //    if (filter != null)
-    //    {
-    //        query = query.Where(filter);
-    //    }
-
-    //    return await query.ToListModel().ToListAsync(cancellationToken);
-    //}
-
-    public static async Task<IQueryable<EmailSending>> GetAllEmailsAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
-        => (IQueryable<EmailSending>)await dbContext.Set<EmailSending>().AsNoTracking().ToListAsync(cancellationToken);
+    public static IQueryable<EmailSending> GetAllEmailsAsync(MinimalApiAuthDbContext dbContext)
+    {
+        return dbContext.Set<EmailSending>().AsNoTracking();
+    }
 
     public static async Task<string> CreateEmailAsync(EmailSending model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {

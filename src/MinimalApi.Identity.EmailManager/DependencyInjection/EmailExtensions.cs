@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using MinimalApi.Identity.Core.DependencyInjection;
-using MinimalApi.Identity.EmailManager.HostedServices;
+using MinimalApi.Identity.EmailManager.BackgroundServices;
 using MinimalApi.Identity.EmailManager.SenderEmail;
 using MinimalApi.Identity.EmailManager.Services;
 
@@ -19,7 +18,8 @@ public static class EmailExtensions
                 options.Lifetime = ServiceLifetime.Transient;
             })
             .AddSingleton<IMailKitEmailSender, MailKitEmailSender>()
-            .AddSingleton<IHostedService, BackgroundEmailSender>();
+            //.AddSingleton<IHostedService, BackgroundEmailSender>();
+            .AddHostedService<BackgroundEmailSender>();
 
         return services;
     }
