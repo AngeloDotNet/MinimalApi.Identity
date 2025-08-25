@@ -37,27 +37,27 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         {
             return signInResult switch
             {
-                { IsNotAllowed: true } => throw new BadRequestException(MessagesAPI.UserNotAllowedLogin),
-                { IsLockedOut: true } => throw new UserIsLockedException(MessagesAPI.UserLockedOut),
-                { RequiresTwoFactor: true } => throw new BadRequestException(MessagesAPI.RequiredTwoFactor),
-                _ => throw new BadRequestException(MessagesAPI.InvalidCredentials)
+                { IsNotAllowed: true } => throw new BadRequestException(MessagesApi.UserNotAllowedLogin),
+                { IsLockedOut: true } => throw new UserIsLockedException(MessagesApi.UserLockedOut),
+                { RequiresTwoFactor: true } => throw new BadRequestException(MessagesApi.RequiredTwoFactor),
+                _ => throw new BadRequestException(MessagesApi.InvalidCredentials)
             };
         }
 
         var user = await userManager.FindByNameAsync(model.Username)
-            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!user.EmailConfirmed)
         {
-            throw new BadRequestException(MessagesAPI.UserNotEmailConfirmed);
+            throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
         }
 
         //TODO: Integrate profile service to get user profile
-        //var profileUser = await profileService.GetProfileAsync(user.Id) ?? throw new NotFoundException(MessagesAPI.ProfileNotFound);
+        //var profileUser = await profileService.GetProfileAsync(user.Id) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         //if (!profileUser.IsEnabled)
         //{
-        //    throw new BadRequestException(MessagesAPI.UserNotEnableLogin);
+        //    throw new BadRequestException(MessagesApi.UserNotEnableLogin);
         //}
 
         //var lastDateChangePassword = profileUser.LastDateChangePassword;
@@ -65,7 +65,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         //if (lastDateChangePassword == null || checkLastDateChangePassword)
         //{
-        //    throw new BadRequestException(MessagesAPI.UserForcedChangePassword);
+        //    throw new BadRequestException(MessagesApi.UserForcedChangePassword);
         //}
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -115,14 +115,14 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
             if (!roleAssignResult.Succeeded)
             {
-                throw new BadRequestException(MessagesAPI.RoleNotAssigned);
+                throw new BadRequestException(MessagesApi.RoleNotAssigned);
             }
 
             var claimsAssignResult = await AddClaimsToUserAsync(user, role);
 
             if (!claimsAssignResult.Succeeded)
             {
-                throw new BadRequestException(MessagesAPI.ClaimsNotAssigned);
+                throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
             }
 
             var userId = await userManager.GetUserIdAsync(user);
@@ -137,7 +137,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             //TODO: Integrate email sender service to send emails
             //await emailSender.SendEmailAsync(user.Email!, "Confirm your email", messageText, EmailSendingType.RegisterUser);
 
-            return MessagesAPI.UserCreated;
+            return MessagesApi.UserCreated;
         }
 
         throw new BadRequestException(result.Errors);
@@ -170,7 +170,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
     {
         await signInManager.SignOutAsync();
 
-        return MessagesAPI.UserLogOut;
+        return MessagesApi.UserLogOut;
     }
 
     public async Task<AuthResponseModel> ImpersonateAsync(ImpersonateUserModel inputModel)
@@ -179,7 +179,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
-            throw new UserIsLockedException(MessagesAPI.UserLockedOut);
+            throw new UserIsLockedException(MessagesApi.UserLockedOut);
         }
 
         await userManager.UpdateSecurityStampAsync(user);
@@ -225,11 +225,11 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
     {
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!await userManager.IsEmailConfirmedAsync(user))
         {
-            throw new BadRequestException(MessagesAPI.ErrorEmailNotConfirmed);
+            throw new BadRequestException(MessagesApi.ErrorEmailNotConfirmed);
         }
 
         var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -240,24 +240,24 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         //TODO: Integrate email sender service to send emails
         //await emailSender.SendEmailAsync(user.Email!, "Reset Password", messageText, EmailSendingType.ForgotPassword);
 
-        return MessagesAPI.SendEmailResetPassword;
+        return MessagesApi.SendEmailResetPassword;
     }
 
     public async Task<string> ResetPasswordAsync(ResetPasswordModel inputModel, string code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new BadRequestException(MessagesAPI.ErrorCodeResetPassword);
+            throw new BadRequestException(MessagesApi.ErrorCodeResetPassword);
         }
 
         var user = await userManager.FindByEmailAsync(inputModel.Email)
-            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password);
 
         if (result.Succeeded)
         {
-            return MessagesAPI.ResetPassword;
+            return MessagesApi.ResetPassword;
         }
         else
         {
