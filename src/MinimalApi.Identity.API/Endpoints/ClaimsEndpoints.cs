@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
@@ -61,7 +62,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Add claim";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim added successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
 
             return opt;
@@ -124,7 +125,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Delete claim";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim deleted successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
 
             return opt;
