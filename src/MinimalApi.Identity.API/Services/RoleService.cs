@@ -33,7 +33,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
     {
         if (await roleManager.RoleExistsAsync(model.Role))
         {
-            throw new ConflictException(MessagesAPI.RoleExists);
+            throw new ConflictException(MessagesApi.RoleExists);
         }
 
         var newRole = new ApplicationRole
@@ -49,17 +49,17 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             throw new BadRequestException(result.Errors);
         }
 
-        return MessagesAPI.RoleCreated;
+        return MessagesApi.RoleCreated;
     }
 
     public async Task<string> AssignRoleAsync(AssignRoleModel model)
     {
         var user = await userManager.FindByNameAsync(model.Username)
-            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!await roleManager.RoleExistsAsync(model.Role))
         {
-            throw new NotFoundException(MessagesAPI.RoleNotFound);
+            throw new NotFoundException(MessagesApi.RoleNotFound);
         }
 
         var result = await userManager.AddToRoleAsync(user, model.Role);
@@ -69,13 +69,13 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             throw new BadRequestException(result.Errors);
         }
 
-        return MessagesAPI.RoleAssigned;
+        return MessagesApi.RoleAssigned;
     }
 
     public async Task<string> RevokeRoleAsync(RevokeRoleModel model)
     {
         var user = await userManager.FindByNameAsync(model.Username)
-            ?? throw new NotFoundException(MessagesAPI.UserNotFound);
+            ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         var result = await userManager.RemoveFromRoleAsync(user, model.Role);
 
@@ -84,17 +84,17 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             throw new BadRequestException(result.Errors);
         }
 
-        return MessagesAPI.RoleCanceled;
+        return MessagesApi.RoleCanceled;
     }
 
     public async Task<string> DeleteRoleAsync(DeleteRoleModel model)
     {
         var role = await roleManager.FindByNameAsync(model.Role)
-            ?? throw new NotFoundException(MessagesAPI.RoleNotFound);
+            ?? throw new NotFoundException(MessagesApi.RoleNotFound);
 
         if (role.Default)
         {
-            throw new BadRequestException(MessagesAPI.RoleNotDeleted);
+            throw new BadRequestException(MessagesApi.RoleNotDeleted);
         }
 
         var result = await roleManager.DeleteAsync(role);
@@ -104,6 +104,6 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             throw new BadRequestException(result.Errors);
         }
 
-        return MessagesAPI.RoleDeleted;
+        return MessagesApi.RoleDeleted;
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
@@ -41,7 +42,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Register new user";
 
             opt.Response(StatusCodes.Status200OK).Description = "User registered successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
 
             return opt;
         });
@@ -60,7 +61,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Login user";
 
             opt.Response(StatusCodes.Status200OK).Description = "User logged in successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             return opt;
         });
 
@@ -78,7 +79,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Refresh token user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Token refreshed successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             return opt;
         });
 
@@ -96,7 +97,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Impersonate user";
 
             opt.Response(StatusCodes.Status200OK).Description = "User impersonated successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             return opt;
         });
 
@@ -129,7 +130,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Forgot password";
 
             opt.Response(StatusCodes.Status200OK).Description = "Password reset link sent successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             return opt;
         });
 
@@ -147,7 +148,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Reset password";
 
             opt.Response(StatusCodes.Status200OK).Description = "Your password has been reset.";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad Request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             return opt;
         });
     }

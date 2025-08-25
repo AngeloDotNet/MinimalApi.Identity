@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
@@ -123,7 +124,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             opt.Description = "Delete module";
 
             opt.Response(StatusCodes.Status200OK).Description = "Module deleted successfully";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
             opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
 
