@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
@@ -61,7 +62,7 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
 
             opt.Response(StatusCodes.Status200OK).Description = "Role created";
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status409Conflict).Description = "Conflict";
 
             return opt;
@@ -82,7 +83,7 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
             opt.Description = "Assign role to user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Role assigned";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
             opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
 
@@ -104,7 +105,7 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
             opt.Description = "Revoke role from user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Role revoked";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
             opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
 
@@ -126,7 +127,7 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
             opt.Description = "Delete role";
 
             opt.Response(StatusCodes.Status200OK).Description = "Role deleted";
-            opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
+            opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
             opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
             opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
 
