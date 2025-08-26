@@ -7,23 +7,23 @@ namespace MinimalApi.Identity.PolicyManager.Extensions;
 
 public static class EndpointsHandler
 {
-    public static async Task<IResult> GetAllHandlerAsync([FromServices] IAuthPolicyService authPolicyService, HttpContext httpContext)
+    public static async Task<IResult> GetAllHandlerAsync([FromServices] IAuthPolicyService authPolicyService, CancellationToken cancellationToken)
     {
-        var result = await authPolicyService.GetAllPoliciesAsync(httpContext.RequestAborted);
+        var result = await authPolicyService.GetAllPoliciesAsync(cancellationToken);
         return Results.Ok(result);
     }
 
     public static async Task<IResult> CreateHandlerAsync([FromServices] IAuthPolicyService authPolicyService,
-        [FromBody] CreatePolicyModel inputModel, HttpContext httpContext)
+        [FromBody] CreatePolicyModel inputModel, CancellationToken cancellationToken)
     {
-        var result = await authPolicyService.CreatePolicyAsync(inputModel, httpContext.RequestAborted);
+        var result = await authPolicyService.CreatePolicyAsync(inputModel, cancellationToken);
         return Results.Ok(result);
     }
 
     public static async Task<IResult> DeleteHandlerAsync([FromServices] IAuthPolicyService authPolicyService,
-        [FromBody] DeletePolicyModel inputModel, HttpContext httpContext)
+        [FromBody] DeletePolicyModel inputModel, CancellationToken cancellationToken)
     {
-        var result = await authPolicyService.DeletePolicyAsync(inputModel, httpContext.RequestAborted);
+        var result = await authPolicyService.DeletePolicyAsync(inputModel, cancellationToken);
         return Results.Ok(result);
     }
 }

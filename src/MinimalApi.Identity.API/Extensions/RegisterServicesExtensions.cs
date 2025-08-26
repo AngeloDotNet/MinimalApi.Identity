@@ -73,22 +73,6 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    private static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
-    {
-        ArgumentNullException.ThrowIfNull(jsonOptions);
-
-        var options = new JsonOptions();
-
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.WriteIndented = true;
-
-        return options;
-    }
-
     public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
         if (featureFlagsOptions.EnabledFeatureLicense)
@@ -103,6 +87,22 @@ public static class RegisterServicesExtensions
         }
 
         return services;
+    }
+
+    private static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
+    {
+        ArgumentNullException.ThrowIfNull(jsonOptions);
+
+        var options = new JsonOptions();
+
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+
+        return options;
     }
 
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
@@ -196,6 +196,21 @@ public static class RegisterServicesExtensions
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
 
         await dbContext.Database.MigrateAsync();
+    }
+
+    public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options)
+    {
+        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+
+        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+
+        return options;
     }
 
     internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services,
