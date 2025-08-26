@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.PolicyManager.BackgroundServices;
 using MinimalApi.Identity.PolicyManager.HostedServices;
 using MinimalApi.Identity.PolicyManager.Services;
 using MinimalApi.Identity.PolicyManager.Validator;
