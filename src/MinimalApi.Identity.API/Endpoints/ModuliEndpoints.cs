@@ -41,8 +41,8 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Get all modules";
 
             opt.Response(StatusCodes.Status200OK).Description = "Modules retrieved successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -62,7 +62,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Create a new module";
 
             opt.Response(StatusCodes.Status200OK).Description = "Module created successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });
@@ -82,8 +82,8 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Assign a module to a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Module assigned successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -103,8 +103,8 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Revoke a module from a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Module revoked successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -125,8 +125,8 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
 
             opt.Response(StatusCodes.Status200OK).Description = "Module deleted successfully";
             opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
