@@ -214,10 +214,6 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the profile manager to a dedicated library
 - [ ] Move the configuration of the roles to a dedicated library
 - [ ] Add CancellationToken to API endpoints (where necessary)
-- [X] Move email sending logic to a dedicated library
-- [X] Modify email sending logic on a hosted service
-- [X] Changing the hosted service type to a background service in Email Manager
-- [X] Changing the hosted service type to a background service in Policy Manager
 - [ ] Add automatic creation of a default administrator account
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
@@ -227,9 +223,12 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Add support for the MySQL database 
 - [ ] Add support for the PostgreSQL database 
 - [ ] Add support for the SQLite database
-- [ ] Add support for the AzureSQL database
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
+
+### Future implementations
+
+- [ ] Add support for the AzureSQL database
 - [ ] Add support for multi tenancy
 - [ ] Add authentication support from third-party providers (e.g. GitHub, Azure)
 
