@@ -13,15 +13,26 @@ public class AuthorizationPolicyUpdater(IServiceScopeFactory serviceScopeFactory
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var timer = new System.Timers.Timer
+        ArgumentNullException.ThrowIfNull(serviceScopeFactory);
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(hostedOptions);
+
+        try
         {
-            Interval = TimeSpan.FromMinutes(hostedOptions.Value.IntervalAuthPolicyUpdaterMinutes).TotalMilliseconds
-        };
+            var timer = new System.Timers.Timer
+            {
+                Interval = TimeSpan.FromMinutes(hostedOptions.Value.IntervalAuthPolicyUpdaterMinutes).TotalMilliseconds
+            };
 
-        timer.Elapsed += Timer_ElapsedAsync;
-        timer.Start();
+            timer.Elapsed += Timer_ElapsedAsync;
+            timer.Start();
 
-        await Task.Delay(Timeout.Infinite, stoppingToken);
+            await Task.Delay(Timeout.Infinite, stoppingToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred in ExecuteAsync of {ServiceName}.", nameof(AuthorizationPolicyUpdater));
+        }
     }
 
     private async void Timer_ElapsedAsync(object? sender, ElapsedEventArgs e)
@@ -49,45 +60,3 @@ public class AuthorizationPolicyUpdater(IServiceScopeFactory serviceScopeFactory
         }
     }
 }
-
-//public class AuthorizationPolicyUpdater(IServiceProvider serviceProvider, ILogger<AuthorizationPolicyUpdater> logger,
-//    IOptions<HostedServiceOptions> hostedOptions) : IHostedService
-//{
-//    private Timer? timer;
-//    private readonly HostedServiceOptions options = hostedOptions.Value;
-
-//    public Task StartAsync(CancellationToken cancellationToken)
-//    {
-//        timer = new Timer(UpdateAuthorizationPolicyAsync, null, TimeSpan.Zero, TimeSpan.FromMinutes(options.IntervalAuthPolicyUpdaterMinutes));
-//        return Task.CompletedTask;
-//    }
-
-//    private async void UpdateAuthorizationPolicyAsync(object? state)
-//    {
-//        try
-//        {
-//            using var scope = serviceProvider.CreateScope();
-//            var authPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
-//            var result = await authPolicyService.UpdateAuthPoliciesAsync();
-
-//            if (result)
-//            {
-//                logger.LogInformation("Authorization policies updated successfully.");
-//            }
-//            else
-//            {
-//                logger.LogWarning("An error occurred while generating authorization policies.");
-//            }
-//        }
-//        catch (Exception ex)
-//        {
-//            logger.LogError(ex, "An exception occurred while updating authorization policies.");
-//        }
-//    }
-
-//    public Task StopAsync(CancellationToken cancellationToken)
-//    {
-//        timer?.Change(Timeout.Infinite, 0);
-//        return Task.CompletedTask;
-//    }
-//}
