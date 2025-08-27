@@ -16,7 +16,7 @@ namespace MinimalApi.Identity.EmailManager.BackgroundServices;
 public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOptions<HostedServiceOptions> hostedOptions,
     IOptions<SmtpOptions> smtpOptions, ILogger<BackgroundEmailSender> logger) : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var timer = new System.Timers.Timer
         {
@@ -26,7 +26,7 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         timer.Elapsed += Timer_ElapsedAsync;
         timer.Start();
 
-        await Task.Delay(Timeout.Infinite, cancellationToken);
+        await Task.Delay(Timeout.Infinite, stoppingToken);
     }
 
     private async void Timer_ElapsedAsync(object? sender, ElapsedEventArgs e)
@@ -43,15 +43,7 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         {
             foreach (var email in emailsToSend)
             {
-                if (email.RetrySender > smtpOptions.Value.MaxRetryAttempts)
-                {
-                    await emailService.UpdateEmailStatusAsync(email.Id, (int)EmailStatusType.Cancelled, CancellationToken.None);
-                    logger.LogWarning("Email with Id {EmailId} has been cancelled after reaching max retry attempts.", email.Id);
-
-                    continue;
-                }
-
-                if (email.RetrySender <= smtpOptions.Value.MaxRetryAttempts)
+                if (await CheckIfShouldRetryAsync(email, smtpOptions.Value.MaxRetryAttempts, emailService, logger))
                 {
                     try
                     {
@@ -59,29 +51,16 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
 
                         if (result)
                         {
-                            //email.TypeEmailStatusId = (int)EmailStatusType.Sent;
-                            //email.DateSent = DateTime.UtcNow;
-                            //email.RetrySender = email.RetrySender;
-                            //email.RetrySenderDate = email.RetrySenderDate;
-
-                            //await emailService.UpdateEmailAsync(email, CancellationToken.None);
                             await UpdateStatusEmailAsync(emailService, email, (int)EmailStatusType.Sent, DateTime.UtcNow, email.RetrySender, email.RetrySenderDate);
                         }
                         else
                         {
-                            //email.TypeEmailStatusId = (int)EmailStatusType.Failed;
-                            //email.DateSent = email.DateSent;
-                            //email.RetrySender = email.RetrySender + 1;
-                            //email.RetrySenderDate = DateTime.UtcNow;
-
-                            //await emailService.UpdateEmailAsync(email, CancellationToken.None);
                             await UpdateStatusEmailAsync(emailService, email, (int)EmailStatusType.Failed, email.DateSent, email.RetrySender + 1, DateTime.UtcNow);
                         }
                     }
                     catch (Exception ex)
                     {
                         email.TypeEmailStatusId = (int)EmailStatusType.Failed;
-                        //email.RetrySender++;
                         email.RetrySender = email.RetrySender + 1;
                         email.RetrySenderDate = DateTime.UtcNow;
                         email.RetrySenderErrorMessage = "Exception while sending email failed";
@@ -96,75 +75,25 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         await Task.Yield();
     }
 
-    //private Timer? timer;
-    //private readonly SmtpOptions options = smtpOptions.Value;
-    //private readonly HostedServiceOptions hostedOptions = hostedOptions.Value;
+    private static async Task<bool> CheckIfShouldRetryAsync(EmailSending email, int maxRetryAttempts, IEmailManagerService emailManagerService,
+        ILogger<BackgroundEmailSender> logger)
+    {
+        var result = false;
 
-    //public Task StartAsync(CancellationToken cancellationToken)
-    //{
-    //    timer = new Timer(AutomaticEmailSenderAsync, null, TimeSpan.Zero, TimeSpan.FromMinutes(hostedOptions.IntervalEmailSenderMinutes));
-    //    return Task.CompletedTask;
-    //}
+        if (email.RetrySender > maxRetryAttempts)
+        {
+            await emailManagerService.UpdateEmailStatusAsync(email.Id, (int)EmailStatusType.Cancelled, CancellationToken.None);
+            logger.LogWarning("Email with Id {EmailId} has exceeded the maximum retry attempts and has been marked as Cancelled.", email.Id);
+            result = false;
+        }
+        else
+        {
+            logger.LogInformation("Email with Id {EmailId} will be retried. Current attempt: {RetryAttempt}.", email.Id, email.RetrySender + 1);
+            result = true;
+        }
 
-    //private async void AutomaticEmailSenderAsync(object? state)
-    //{
-    //    using var scope = serviceProvider.CreateScope();
-
-    //    var emailService = scope.ServiceProvider.GetRequiredService<IEmailManagerService>();
-    //    var emailSender = scope.ServiceProvider.GetRequiredService<IMailKitEmailSender>();
-
-    //    var emails = await emailService.GetAllEmailsAsync(CancellationToken.None);
-    //    var emailsToSend = emails.GetEmailByStatus(EmailStatusType.Pending);
-
-    //    if (emailsToSend.Any())
-    //    {
-    //        foreach (var email in emailsToSend)
-    //        {
-    //            if (email.RetrySender == options.MaxRetryAttempts)
-    //            {
-    //                await emailService.UpdateEmailStatusAsync(email.Id, (int)EmailStatusType.Cancelled, CancellationToken.None);
-    //                continue;
-    //            }
-
-    //            try
-    //            {
-    //                var result = await emailSender.SendEmailAsync(email.EmailTo, email.Subject, email.Body);
-
-    //                if (result)
-    //                {
-    //                    //email.TypeEmailStatusId = (int)EmailStatusType.Sent;
-    //                    //email.DateSent = DateTime.UtcNow;
-    //                    //email.RetrySender = email.RetrySender;
-    //                    //email.RetrySenderDate = email.RetrySenderDate;
-
-    //                    //await emailService.UpdateEmailAsync(email, CancellationToken.None);
-    //                    await UpdateStatusEmailAsync(emailService, email, (int)EmailStatusType.Sent, DateTime.UtcNow, email.RetrySender, email.RetrySenderDate);
-    //                }
-    //                else
-    //                {
-    //                    //email.TypeEmailStatusId = (int)EmailStatusType.Failed;
-    //                    //email.DateSent = email.DateSent;
-    //                    //email.RetrySender = email.RetrySender + 1;
-    //                    //email.RetrySenderDate = DateTime.UtcNow;
-
-    //                    //await emailService.UpdateEmailAsync(email, CancellationToken.None);
-    //                    await UpdateStatusEmailAsync(emailService, email, (int)EmailStatusType.Failed, email.DateSent, email.RetrySender + 1, DateTime.UtcNow);
-    //                }
-    //            }
-    //            catch (Exception ex)
-    //            {
-    //                email.TypeEmailStatusId = (int)EmailStatusType.Failed;
-    //                //email.RetrySender++;
-    //                email.RetrySender = email.RetrySender + 1;
-    //                email.RetrySenderDate = DateTime.UtcNow;
-    //                email.RetrySenderErrorMessage = "Exception while sending email failed";
-    //                email.RetrySenderErrorDetails = ex.ToString();
-
-    //                await emailService.UpdateEmailAsync(email, CancellationToken.None);
-    //            }
-    //        }
-    //    }
-    //}
+        return result;
+    }
 
     private static async Task UpdateStatusEmailAsync(IEmailManagerService emailService, EmailSending email, int typeEmailStatusId, DateTime dateSent,
         int retrySender, DateTime? retrySenderDate)
@@ -176,10 +105,4 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
 
         await emailService.UpdateEmailAsync(email, CancellationToken.None);
     }
-
-    //public Task StopAsync(CancellationToken cancellationToken)
-    //{
-    //    timer?.Change(Timeout.Infinite, 0);
-    //    return Task.CompletedTask;
-    //}
 }

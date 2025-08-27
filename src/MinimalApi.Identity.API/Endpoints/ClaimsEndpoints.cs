@@ -41,8 +41,8 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Get all claims";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claims retrieved successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -63,7 +63,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim added successfully";
             opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });
@@ -83,8 +83,8 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Assign a claim to a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim assigned successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -104,8 +104,8 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             opt.Summary = "Revoke a claim from a user";
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim revoked successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
-            opt.Response(StatusCodes.Status404NotFound).Description = "Not found";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
+            opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
             return opt;
         });
@@ -126,7 +126,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
 
             opt.Response(StatusCodes.Status200OK).Description = "Claim deleted successfully";
             opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
 
             return opt;
         });

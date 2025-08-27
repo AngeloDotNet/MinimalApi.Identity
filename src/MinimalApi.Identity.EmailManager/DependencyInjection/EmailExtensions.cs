@@ -18,7 +18,6 @@ public static class EmailExtensions
                 options.Lifetime = ServiceLifetime.Transient;
             })
             .AddSingleton<IMailKitEmailSender, MailKitEmailSender>()
-            //.AddSingleton<IHostedService, BackgroundEmailSender>();
             .AddHostedService<BackgroundEmailSender>();
 
         return services;

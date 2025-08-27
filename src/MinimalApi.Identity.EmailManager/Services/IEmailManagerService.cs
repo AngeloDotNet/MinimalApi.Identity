@@ -5,8 +5,6 @@ namespace MinimalApi.Identity.EmailManager.Services;
 
 public interface IEmailManagerService
 {
-    //Task<IQueryable<EmailSending>> GetAllEmailsAsync(CancellationToken cancellationToken);
-    //Task<IQueryable<EmailSending>> GetAllEmailsAsync();
     IQueryable<EmailSending> GetAllEmailsAsync();
     Task<string> CreateEmailAsync(EmailSending model, CancellationToken cancellationToken);
     Task<string> UpdateEmailAsync(EmailSending model, CancellationToken cancellationToken);
