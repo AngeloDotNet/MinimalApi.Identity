@@ -25,7 +25,6 @@
     
     <ItemGroup>
         <PackageReference Include="Identity.Module.Core" />
-        <!--<PackageReference Include="MailKit" />-->
     </ItemGroup>    
     
     <ItemGroup>
