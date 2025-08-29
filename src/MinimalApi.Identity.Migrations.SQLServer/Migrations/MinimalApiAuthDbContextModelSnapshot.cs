@@ -441,119 +441,28 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
                             Id = 2,
                             Default = true,
                             Type = "Permission",
-                            Value = "AuthPolicyRead"
+                            Value = "FullName"
                         },
                         new
                         {
                             Id = 3,
                             Default = true,
                             Type = "Permission",
-                            Value = "AuthPolicyWrite"
+                            Value = "License"
                         },
                         new
                         {
                             Id = 4,
                             Default = true,
                             Type = "Permission",
-                            Value = "Claim"
+                            Value = "Module"
                         },
                         new
                         {
                             Id = 5,
                             Default = true,
                             Type = "Permission",
-                            Value = "ClaimRead"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "ClaimWrite"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "Licenza"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "LicenzaRead"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "LicenzaWrite"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "Modulo"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "ModuloRead"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "ModuloWrite"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "Profilo"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "ProfiloRead"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "ProfiloWrite"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "Ruolo"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "RuoloRead"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Default = true,
-                            Type = "Permission",
-                            Value = "RuoloWrite"
+                            Value = "Permission"
                         });
                 });
 
@@ -572,28 +481,37 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
                     b.Property<DateTime>("DateSent")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EmailSendingType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EmailTo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ErrorDetails")
+                    b.Property<int>("RetrySender")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("RetrySenderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RetrySenderErrorDetails")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ErrorMessage")
+                    b.Property<string>("RetrySenderErrorMessage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Sent")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TypeEmailSendingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeEmailStatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TypeEmailSendingId");
+
+                    b.HasIndex("TypeEmailStatusId");
 
                     b.ToTable("EmailSending", (string)null);
                 });
@@ -637,6 +555,94 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Module", (string)null);
+                });
+
+            modelBuilder.Entity("MinimalApi.Identity.Core.Entities.TypeEmailSending", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeEmailSending", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Email sent during user registration",
+                            Name = "RegisterUser"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Email sent for changing email address",
+                            Name = "ChangeEmail"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Email sent for password reset requests",
+                            Name = "ForgotPassword"
+                        });
+                });
+
+            modelBuilder.Entity("MinimalApi.Identity.Core.Entities.TypeEmailStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeEmailStatus", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Email has been sent successfully",
+                            Name = "Sent"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Email is pending to be sent",
+                            Name = "Pending"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Email sending failed",
+                            Name = "Failed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Email sending has been cancelled",
+                            Name = "Cancelled"
+                        });
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.UserLicense", b =>
@@ -761,6 +767,25 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MinimalApi.Identity.Core.Entities.EmailSending", b =>
+                {
+                    b.HasOne("MinimalApi.Identity.Core.Entities.TypeEmailSending", "TypeEmailSending")
+                        .WithMany("EmailSendings")
+                        .HasForeignKey("TypeEmailSendingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MinimalApi.Identity.Core.Entities.TypeEmailStatus", "TypeEmailStatus")
+                        .WithMany("EmailSendings")
+                        .HasForeignKey("TypeEmailStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TypeEmailSending");
+
+                    b.Navigation("TypeEmailStatus");
+                });
+
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.UserLicense", b =>
                 {
                     b.HasOne("MinimalApi.Identity.Core.Entities.License", "License")
@@ -837,6 +862,16 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.Module", b =>
                 {
                     b.Navigation("UserModules");
+                });
+
+            modelBuilder.Entity("MinimalApi.Identity.Core.Entities.TypeEmailSending", b =>
+                {
+                    b.Navigation("EmailSendings");
+                });
+
+            modelBuilder.Entity("MinimalApi.Identity.Core.Entities.TypeEmailStatus", b =>
+                {
+                    b.Navigation("EmailSendings");
                 });
 #pragma warning restore 612, 618
         }
