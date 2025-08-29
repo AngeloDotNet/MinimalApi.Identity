@@ -16,6 +16,17 @@ public class Program
 
         builder.Services.AddCors(options => options.AddPolicy("cors", builder
             => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+        //builder.Services.AddCors(options =>
+        //{
+        //    options.AddDefaultPolicy(builder =>
+        //    {
+        //        builder.WithOrigins("https://localhost:7263", "http://localhost:5263")
+        //                .SetIsOriginAllowed(_ => true)
+        //                .AllowAnyMethod()
+        //                .AllowAnyHeader()
+        //                .AllowCredentials();
+        //    });
+        //});
 
         var jwtOptions = new JwtOptions();
         var featureFlagsOptions = new FeatureFlagsOptions();
@@ -47,6 +58,17 @@ public class Program
 
         builder.Services.AddAuthorization(options =>
         {
+            //options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            //    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            //    .RequireAuthenticatedUser()
+            //    .Build();
+
+            //options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            //    .RequireAuthenticatedUser()
+            //    .Build();
+            options.AddDefaultSecurityOptions();
+
             // Here you can add additional authorization policies
         });
 
@@ -69,6 +91,7 @@ public class Program
 
         app.UseRouting();
         app.UseCors("cors");
+        //app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();

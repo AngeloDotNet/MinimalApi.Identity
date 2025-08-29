@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MinimalApi.Identity.Core.Database;
 
@@ -11,9 +12,11 @@ using MinimalApi.Identity.Core.Database;
 namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 {
     [DbContext(typeof(MinimalApiAuthDbContext))]
-    partial class MinimalApiAuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250815081728_AddNewEntitiesEmailManager")]
+    partial class AddNewEntitiesEmailManager
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,7 +295,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuthPolicy", (string)null);
+                    b.ToTable("AuthPolicy");
 
                     b.HasData(
                         new
@@ -426,7 +429,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClaimType", (string)null);
+                    b.ToTable("ClaimType");
 
                     b.HasData(
                         new
@@ -513,7 +516,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasIndex("TypeEmailStatusId");
 
-                    b.ToTable("EmailSending", (string)null);
+                    b.ToTable("EmailSending");
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.License", b =>
@@ -533,7 +536,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("License", (string)null);
+                    b.ToTable("License");
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.Module", b =>
@@ -554,7 +557,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Module", (string)null);
+                    b.ToTable("Module");
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.TypeEmailSending", b =>
@@ -575,7 +578,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeEmailSending", (string)null);
+                    b.ToTable("TypeEmailSending");
 
                     b.HasData(
                         new
@@ -616,7 +619,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeEmailStatus", (string)null);
+                    b.ToTable("TypeEmailStatus");
 
                     b.HasData(
                         new
@@ -657,7 +660,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasIndex("LicenseId");
 
-                    b.ToTable("UserLicense", (string)null);
+                    b.ToTable("UserLicense");
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.UserModule", b =>
@@ -672,7 +675,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("UserModule", (string)null);
+                    b.ToTable("UserModule");
                 });
 
             modelBuilder.Entity("MinimalApi.Identity.Core.Entities.UserProfile", b =>
@@ -705,7 +708,7 @@ namespace MinimalApi.Identity.Migrations.SQLServer.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserProfile", (string)null);
+                    b.ToTable("UserProfile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
