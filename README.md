@@ -1,8 +1,10 @@
 # .NET Modular Dynamic Identity Manager
 
+![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FAngeloDotNet%2FMinimalApi.Identity&label=Visitors&countColor=%23263759)
+
 A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.
 
-## 🏷️ Description
+## 🏷️ Introduction
 
 **MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and relational database (of your choice).
 
@@ -230,7 +232,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 - [ ] Add support for the AzureSQL database
 - [ ] Add support for multi tenancy
-- [ ] Add authentication support from third-party providers (e.g. GitHub, Azure)
+- [ ] Add authentication support from third-party providers (e.g. GitHub, Azure, KeyCloak)
 
 ## 📜 License
 
@@ -238,7 +240,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## ⭐ Give a Star
 
-Don't forget that if you find this project useful, put a ⭐ on GitHub to show your support and help others discover it.
+Don't forget that if you find this project helpful, please give it a ⭐ on GitHub to show your support and help others discover it.
 
 ## 🤝 Contributing
 
