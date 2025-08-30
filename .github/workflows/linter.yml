@@ -5,9 +5,9 @@ on:
       branches-ignore: [ main ]
       # Remove the line above to run when pushing to main  
       paths: [ 'src/**' ]
-    pull_request:   
-      branches: [ main, develop ]
-      paths: [ 'src/**' ]    
+#    pull_request:   
+#      branches: [ main, develop ]
+#      paths: [ 'src/**' ]    
     workflow_dispatch:
     
 jobs:
