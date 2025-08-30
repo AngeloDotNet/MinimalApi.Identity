@@ -27,10 +27,10 @@ public static class ProfilesEndpoints
     public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsLicenseGroup)
+            .MapGroup(EndpointGenerator.EndpointsProfilesGroup)
             .WithOpenApi(opt =>
             {
-                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsLicenseTag }];
+                opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsProfilesTag }];
                 return opt;
             });
 
