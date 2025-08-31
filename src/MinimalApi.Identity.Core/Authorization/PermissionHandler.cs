@@ -39,6 +39,11 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 }
             }
         }
+        else
+        {
+            logger.LogWarning("User is not authenticated");
+            throw new UnauthorizedAccessException("User is not authenticated");
+        }
 
         await Task.CompletedTask;
     }
