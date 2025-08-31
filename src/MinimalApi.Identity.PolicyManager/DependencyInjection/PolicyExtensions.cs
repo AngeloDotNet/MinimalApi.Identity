@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.DependencyInjection;
-using MinimalApi.Identity.PolicyManager.BackgroundServices;
-using MinimalApi.Identity.PolicyManager.HostedServices;
+using MinimalApi.Identity.PolicyManager.Provider;
 using MinimalApi.Identity.PolicyManager.Services;
 using MinimalApi.Identity.PolicyManager.Validator;
 
@@ -23,8 +23,17 @@ public static class PolicyExtensions
                 options.Lifetime = ServiceLifetime.Transient;
             })
             .ConfigureFluentValidation<CreatePolicyValidator>()
-            .AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
-            .AddHostedService<AuthorizationPolicyUpdater>();
+        //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+
+        //.AddSingleton<IAuthPolicyStore, AuthPolicyStore>()
+        //.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>()
+
+        //.AddHostedService<PolicyUpdateHostedService>()
+        //.AddHostedService<AuthorizationPolicyUpdater>()
+        ;
+
+        services.AddSingleton<IAuthorizationPolicyProvider, DynamicAuthorizationPolicyProvider>();
+        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
         return services;
     }
