@@ -45,8 +45,15 @@ public class Program
             options.Lifetime = ServiceLifetime.Transient; // This will register the services with a Transient lifetime.
         });
 
+        //var serviceProvider = builder.Services.BuildServiceProvider();
+        //await using var scope = serviceProvider.CreateAsyncScope();
+
+        //var iPolicyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
+        //var listPolicy = await iPolicyService.GetAllPoliciesAsync(CancellationToken.None);
+
         builder.Services.AddAuthorization(options =>
         {
+            //options.AddDefaultSecurityOptions(listPolicy);
             options.AddDefaultSecurityOptions();
 
             // Here you can add additional authorization policies

@@ -11,19 +11,8 @@ using MinimalApi.Identity.ProfileManager.Models;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-//public class ProfilesEndpoints : IEndpointRouteHandlerBuilder
 public static class ProfilesEndpoints
 {
-    //public static void MapEndpoints(IEndpointRouteBuilder endpoints)
-    //{
-    //    var apiGroup = endpoints
-    //        .MapGroup(EndpointGenerator.EndpointsProfilesGroup)
-    //        .RequireAuthorization()
-    //        .WithOpenApi(opt =>
-    //        {
-    //            opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsProfilesTag }];
-    //            return opt;
-    //        });
     public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -34,10 +23,6 @@ public static class ProfilesEndpoints
                 return opt;
             });
 
-        //apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IProfileService profileService) =>
-        //{
-        //    return TypedResults.Ok(await profileService.GetProfilesAsync());
-        //})
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<List<UserProfileModel>>(StatusCodes.Status200OK)
             .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -54,11 +39,6 @@ public static class ProfilesEndpoints
                 return opt;
             });
 
-        //apiGroup.MapGet(EndpointsApi.EndpointsGetProfile, async ([FromServices] IProfileService profileService,
-        //    [FromRoute] int userId) =>
-        //{
-        //    return TypedResults.Ok(await profileService.GetProfileAsync(userId));
-        //})
         apiGroup.MapGet(ProfileExtensions.EndpointsGetProfile, EndpointsHandler.GetProfileHandlerAsync)
         .Produces<UserProfileModel>(StatusCodes.Status200OK)
         .ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -74,11 +54,6 @@ public static class ProfilesEndpoints
             return opt;
         });
 
-        //apiGroup.MapPost(ProfileExtensions.EndpointsChangeEnableProfile, async ([FromServices] IProfileService profileService,
-        //    [FromBody] ChangeEnableProfileModel inputModel) =>
-        //{
-        //    return TypedResults.Ok(await profileService.ChangeEnablementStatusUserProfileAsync(inputModel));
-        //})
         apiGroup.MapPost(ProfileExtensions.EndpointsChangeEnableProfile, EndpointsHandler.ChangeUserStatusAsync)
             .Produces<UserProfileModel>(StatusCodes.Status200OK)
             .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -95,11 +70,6 @@ public static class ProfilesEndpoints
                 return opt;
             });
 
-        //apiGroup.MapPut(ProfileExtensions.EndpointsEditProfile, async ([FromServices] IProfileService profileService,
-        //    [FromBody] EditUserProfileModel inputModel) =>
-        //{
-        //    return TypedResults.Ok(await profileService.EditProfileAsync(inputModel));
-        //})
         apiGroup.MapPut(ProfileExtensions.EndpointsEditProfile, EndpointsHandler.EditProfileAsync)
             .Produces<string>(StatusCodes.Status200OK)
             .ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)

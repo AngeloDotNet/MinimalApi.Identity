@@ -14,9 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Configurations;
+using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Validator;
-using MinimalApi.Identity.Core.Authorization;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
@@ -27,6 +27,7 @@ using MinimalApi.Identity.Licenses.DependencyInjection;
 using MinimalApi.Identity.Licenses.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
+using MinimalApi.Identity.ProfileManager.DependencyInjection;
 
 namespace MinimalApi.Identity.API.Extensions;
 
@@ -48,14 +49,14 @@ public static class RegisterServicesExtensions
 
         services
             .AddScoped<SignInManager<ApplicationUser>>()
-            .AddScoped<IAuthorizationHandler, PermissionHandler>();
+            //.AddScoped<IAuthorizationHandler, PermissionHandler>()
+            ;
 
         services
             //.AccountManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
-        //.ProfileManagerRegistrationService()
-        ;
+            .ProfileManagerRegistrationService();
 
         services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
@@ -109,8 +110,8 @@ public static class RegisterServicesExtensions
     {
         app.MapEndpoints();
         //app.MapAccountEndpoints();
-        app.MapPolicyEndpoints();
-        //app.MapProfileEndpoints();
+        app.MapPolicyEndpoints()
+            .MapProfileEndpoints();
 
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
@@ -195,9 +196,22 @@ public static class RegisterServicesExtensions
         await using var scope = serviceProvider.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
 
-        await dbContext.Database.MigrateAsync();
+        var databaseExist = await dbContext.Database.CanConnectAsync();
+
+        if (!databaseExist)
+        {
+            await dbContext.Database.EnsureCreatedAsync();
+        }
+
+        var migrationsExist = (await dbContext.Database.GetPendingMigrationsAsync()).Any();
+
+        if (migrationsExist)
+        {
+            await dbContext.Database.MigrateAsync();
+        }
     }
 
+    //public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options, List<PolicyResponseModel> listPolicy)
     public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options)
     {
         options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -209,6 +223,11 @@ public static class RegisterServicesExtensions
             .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
             .RequireAuthenticatedUser()
             .Build();
+
+        //foreach (var policy in listPolicy)
+        //{
+        //    options.AddPolicy(policy.PolicyName, p => p.Requirements.Add(new PermissionRequirement(policy.PolicyPermissions)));
+        //}
 
         return options;
     }
@@ -223,7 +242,8 @@ public static class RegisterServicesExtensions
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(settings.SchemaName, options =>
+            //.AddJwtBearer(settings.SchemaName, options =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
