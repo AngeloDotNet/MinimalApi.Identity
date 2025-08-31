@@ -27,7 +27,7 @@ public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider
             return policy;
         }
 
-        // Fallback alle policy statiche
+        // Fallback to static policies
         return authorizationOptions.GetPolicy(policyName);
     }
 
