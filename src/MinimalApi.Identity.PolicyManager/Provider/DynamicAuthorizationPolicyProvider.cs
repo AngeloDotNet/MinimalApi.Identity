@@ -1,0 +1,37 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MinimalApi.Identity.Core.Authorization;
+using MinimalApi.Identity.PolicyManager.Services;
+
+namespace MinimalApi.Identity.PolicyManager.Provider;
+
+public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider, IOptions<AuthorizationOptions> authorizationOptions) : IAuthorizationPolicyProvider
+{
+    private readonly AuthorizationOptions authorizationOptions = authorizationOptions.Value;
+
+    public async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
+    {
+        using var scope = serviceProvider.CreateScope();
+
+        var policyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
+        var policies = await policyService.GetAllPoliciesAsync(CancellationToken.None); // Puoi passare un cancellation token reale se serve
+
+        var policyModel = policies.FirstOrDefault(p => p.PolicyName == policyName);
+
+        if (policyModel != null)
+        {
+            var permissionRequirement = new PermissionRequirement(policyModel.PolicyPermissions);
+            var policy = new AuthorizationPolicyBuilder().AddRequirements(permissionRequirement).Build();
+
+            return policy;
+        }
+
+        // Fallback alle policy statiche
+        return authorizationOptions.GetPolicy(policyName);
+    }
+
+    public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => Task.FromResult(authorizationOptions.DefaultPolicy);
+
+    public Task<AuthorizationPolicy?> GetFallbackPolicyAsync() => Task.FromResult(authorizationOptions.FallbackPolicy);
+}
