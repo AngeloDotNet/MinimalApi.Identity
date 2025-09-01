@@ -13,11 +13,11 @@ public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider
     public async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         using var scope = serviceProvider.CreateScope();
-
         var policyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
-        var policies = await policyService.GetAllPoliciesAsync(CancellationToken.None); // You can pass a real cancellation token if needed
 
-        var policyModel = policies.FirstOrDefault(p => p.PolicyName == policyName);
+        // You can pass a real cancellation token if needed
+        var policies = await policyService.GetAllPoliciesAsync(CancellationToken.None);
+        var policyModel = policies.Where(p => p.PolicyName == policyName).FirstOrDefault();
 
         if (policyModel != null)
         {
