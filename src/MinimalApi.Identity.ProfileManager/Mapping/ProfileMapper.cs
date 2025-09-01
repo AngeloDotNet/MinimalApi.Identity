@@ -16,16 +16,4 @@ internal static class ProfileMapper
             userProfile.LastDateChangePassword
         );
     }
-
-    //public static AuthPolicy ToEntityModel(this PolicyDetailsResponseModel model)
-    //{
-    //    return new AuthPolicy
-    //    {
-    //        PolicyName = model.PolicyName,
-    //        PolicyDescription = model.PolicyDescription,
-    //        PolicyPermissions = model.PolicyPermissions,
-    //        IsDefault = model.IsDefault,
-    //        IsActive = model.IsActive
-    //    };
-    //}
 }

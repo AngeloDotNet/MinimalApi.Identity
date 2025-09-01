@@ -36,11 +36,6 @@ public static class ProfileQuery
 
     public static async Task<string> CreateProfileAsync(CreateUserProfileModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        //var profile = new UserProfile(model.UserId, model.FirstName, model.LastName);
-
-        //profile.ChangeUserEnabled(true);
-        //profile.ChangeLastDateChangePassword(DateOnly.FromDateTime(DateTime.Now));
-
         var profile = new UserProfile
         {
             UserId = model.UserId,
@@ -64,9 +59,6 @@ public static class ProfileQuery
 
         profile.FirstName = model.FirstName;
         profile.LastName = model.LastName;
-
-        //profile.ChangeFirstName(model.FirstName);
-        //profile.ChangeLastName(model.LastName);
 
         dbContext.Set<UserProfile>().Update(profile);
         var result = await dbContext.SaveChangesAsync(cancellationToken);
@@ -100,7 +92,6 @@ public static class ProfileQuery
             .Where(x => x.UserId == model.UserId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
-        //profile.ChangeUserEnabled(model.IsEnabled);
         profile.IsEnabled = model.IsEnabled;
 
         dbContext.Set<UserProfile>().Update(profile);

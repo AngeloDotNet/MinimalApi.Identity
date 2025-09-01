@@ -22,18 +22,11 @@ public static class PolicyExtensions
                 options.StringEndsWith = "Service";
                 options.Lifetime = ServiceLifetime.Transient;
             })
-            .ConfigureFluentValidation<CreatePolicyValidator>()
-        //.AddSingleton<IHostedService, AuthorizationPolicyGeneration>()
+            .ConfigureFluentValidation<CreatePolicyValidator>();
 
-        //.AddSingleton<IAuthPolicyStore, AuthPolicyStore>()
-        //.AddSingleton<IAuthorizationPolicyProvider, CustomAuthorizationPolicyProvider>()
-
-        //.AddHostedService<PolicyUpdateHostedService>()
-        //.AddHostedService<AuthorizationPolicyUpdater>()
-        ;
-
-        services.AddSingleton<IAuthorizationPolicyProvider, DynamicAuthorizationPolicyProvider>();
-        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+        services
+            .AddSingleton<IAuthorizationPolicyProvider, DynamicAuthorizationPolicyProvider>()
+            .AddScoped<IAuthorizationHandler, PermissionHandler>();
 
         return services;
     }
