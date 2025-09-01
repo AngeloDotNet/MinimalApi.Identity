@@ -4,11 +4,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Identity.Module.API" Version="2.5.58" />
-    <PackageVersion Include="Identity.Module.Core" Version="2.5.46" />
+    <PackageVersion Include="Identity.Module.Core" Version="2.5.47" />
     <PackageVersion Include="Identity.Module.EmailManager" Version="2.5.13" />
     <PackageVersion Include="Identity.Module.Licenses" Version="1.0.44" />
-    <PackageVersion Include="Identity.Module.PolicyManager" Version="2.5.23" />
-    <PackageVersion Include="Identity.Module.ProfileManager" Version="2.5.17" />
+    <PackageVersion Include="Identity.Module.PolicyManager" Version="2.5.29" />
+    <PackageVersion Include="Identity.Module.ProfileManager" Version="2.5.18" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" PrivateAssets="All" />
     <PackageVersion Include="MailKit" Version="4.13.0" />
