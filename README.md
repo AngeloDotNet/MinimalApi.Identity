@@ -161,27 +161,15 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddCors(options => options.AddPolicy("cors", builder
-            => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-
-        var jwtOptions = new JwtOptions();
-        var featureFlagsOptions = new FeatureFlagsOptions();
-
-        builder.Configuration.Bind(nameof(JwtOptions), jwtOptions);
-        builder.Configuration.Bind(nameof(FeatureFlagsOptions), featureFlagsOptions);
-
-        var databaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
-        var migrationsAssembly = builder.Configuration.GetValue<string>("ConnectionStrings:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
-        var formatErrors = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
+        var programOptions = RegisterServicesExtensions.AddPublicOptions<Program>(new ProgramOptions(), builder.Configuration);
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, options =>
         {
-            options.DatabaseType = databaseType;
-            options.MigrationsAssembly = migrationsAssembly;
-            options.JwtOptions = jwtOptions;
-            options.FeatureFlags = featureFlagsOptions;
-            options.FormatErrorResponse = formatErrors;
+            options.DatabaseType = programOptions.DatabaseType;
+            options.MigrationsAssembly = programOptions.MigrationsAssembly;
+            options.JwtOptions = programOptions.JwtOptions;
+            options.FeatureFlags = programOptions.FeatureFlagsOptions;
+            options.FormatErrorResponse = programOptions.FormatErrors;
         });
 
         //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
@@ -296,8 +284,10 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Migrate FeatureFlagsOptions configuration to database
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
+- [X] Remove Nuget package centralization
 - [ ] Add Interceptors
 - [ ] Add centralized logging with Serilog
+- [ ] Fix the TODOs
 
 ### Future implementations
 
