@@ -24,16 +24,16 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-        <PackageReference Include="MailKit" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+        <PackageReference Include="MailKit" Version="4.13.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.19" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Scrutor" />
+        <PackageReference Include="Scrutor" Version="6.1.0" />
     </ItemGroup>
     
     <ItemGroup>
