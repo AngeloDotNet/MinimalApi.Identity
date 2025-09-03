@@ -25,18 +25,17 @@
 </ItemGroup>
 
 <ItemGroup>
-    <PackageReference Include="Identity.Module.Core" />
-    <PackageReference Include="Identity.Module.EmailManager" />
-    <PackageReference Include="Identity.Module.Licenses" />
-    <PackageReference Include="Identity.Module.PolicyManager" />
-    <PackageReference Include="Identity.Module.ProfileManager" />
-    <!--<PackageReference Include="Identity.Module.LicenseManager" />-->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.51" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.13" />
+    <PackageReference Include="Identity.Module.Licenses" Version="1.0.44" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.35" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
 </ItemGroup>
 
 <ItemGroup>
