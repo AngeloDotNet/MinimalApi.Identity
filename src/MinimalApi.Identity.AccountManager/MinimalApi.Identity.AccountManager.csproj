@@ -8,8 +8,7 @@
         <Company>Angelo Pirola</Company>
         <Product>Identity.Module.AccountManager</Product>
         <Title>Identity.Module.AccountManager</Title>
-        <Description>A custom implementation of modular dynamic identity manager for users, roles, claims and more for
-        access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and SQL Server.</Description>
+        <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
         <PackageId>Identity.Module.AccountManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
@@ -25,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.51" />
     </ItemGroup>
     
     <ItemGroup>
