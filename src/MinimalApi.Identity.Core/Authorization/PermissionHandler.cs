@@ -23,7 +23,8 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
             if (utente == null || user == null)
             {
                 logger.LogWarning("User {nameUser} not found", nameUser);
-                throw new UserUnknownException($"User {nameUser} not found");
+                //throw new UserUnknownException($"User {nameUser} not found");
+                throw new NotFoundException($"User {nameUser} not found");
             }
 
             foreach (var permissionRequirement in permissionsRequirements)
@@ -35,14 +36,15 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 else
                 {
                     logger.LogWarning("User {nameUser} does not have the required permissions", nameUser);
-                    throw new UserWithoutPermissionsException($"User {nameUser} does not have the required permissions");
+                    //throw new UserWithoutPermissionsException($"User {nameUser} does not have the required permissions");
+                    throw new UnauthorizeException($"User {nameUser} does not have the required permissions");
                 }
             }
         }
         else
         {
             logger.LogWarning("User is not authenticated");
-            throw new UnauthorizedAccessException("User is not authenticated");
+            throw new UnauthorizeException("User is not authenticated");
         }
 
         await Task.CompletedTask;
