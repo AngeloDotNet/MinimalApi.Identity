@@ -50,9 +50,6 @@ The configuration can be completely managed by adding this section to the _appse
 > [!WARNING]
 >  The library is still under development, so the configuration may change in future updates.
 
-> [!NOTE]
-> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ConnectionStrings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
-
 ```json
 "Kestrel": {
     "Limits": {
@@ -60,18 +57,17 @@ The configuration can be completely managed by adding this section to the _appse
     }
 },
 "ConnectionStrings": {
-    "DatabaseType": "sqlserver", // Options: "sqlserver"
+    "DatabaseType": "sqlserver",
     "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
     "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer"
 },
 "JwtOptions": {
-    "SchemaName": "Bearer",
     "Issuer": "[ISSUER]",
     "Audience": "[AUDIENCE]",
     "SecurityKey": "[SECURITY-KEY]", // Must be 512 characters long
-    "ClockSkew": "00:05:00", // Default: 5 minutes
-    "AccessTokenExpirationMinutes": 60, // 60 minutes
-    "RefreshTokenExpirationMinutes": 60, // 60 minutes
+    "ClockSkew": "00:05:00", 
+    "AccessTokenExpirationMinutes": 60, 
+    "RefreshTokenExpirationMinutes": 60, 
     "RequireUniqueEmail": true,
     "RequireDigit": true,
     "RequiredLength": 8,
@@ -82,7 +78,7 @@ The configuration can be completely managed by adding this section to the _appse
     "RequireConfirmedEmail": true,
     "MaxFailedAccessAttempts": 3,
     "AllowedForNewUsers": true,
-    "DefaultLockoutTimeSpan": "00:05:00" // 5 minutes
+    "DefaultLockoutTimeSpan": "00:05:00" 
 },
 "SmtpOptions": {
     "Host": "smtp.example.org",
@@ -102,8 +98,7 @@ The configuration can be completely managed by adding this section to the _appse
     "EnabledFeatureModule": true
 },
 "HostedServiceOptions": {
-    "IntervalAuthPolicyUpdaterMinutes": 5,
-    "IntervalEmailSenderMinutes": 1
+    "IntervalEmailSenderMinutes": 5
 },
 "UsersOptions": {
     "AssignAdminEmail": "admin@example.org",
@@ -117,6 +112,9 @@ The configuration can be completely managed by adding this section to the _appse
     "MaxLengthDescription": 100
 }
 ```
+
+> [!NOTE]
+> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ConnectionStrings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
 
 ## 🗃️ Database
 
@@ -138,11 +136,11 @@ After setting the type of database you want to use, modify the corresponding con
 To create database migrations select `MinimalApi.Identity.Core` as the default project from the drop-down menu in the `Package Manager Console`
 and run the command: `Add-Migration MIGRATION-NAME`
 
+Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`
+
 > [!NOTE]
 > if you use a separate project for migrations (It is recommended to add a reference in the project name to the database used, in this case it is SQL Server), 
 > make sure to set the `-Project` parameter to the name of that project.
-
-Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations.SQLServer`
 
 ## 🔰 Feature Flags
 
@@ -153,7 +151,83 @@ Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations
 > [!WARNING]
 > The library is still under development, so the Program.cs configuration may change in future updates.
 
+<!--
 An example configuration of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
+-->
+
+```csharp
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(options => options.AddPolicy("cors", builder
+            => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+        var jwtOptions = new JwtOptions();
+        var featureFlagsOptions = new FeatureFlagsOptions();
+
+        builder.Configuration.Bind(nameof(JwtOptions), jwtOptions);
+        builder.Configuration.Bind(nameof(FeatureFlagsOptions), featureFlagsOptions);
+
+        var databaseType = builder.Configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
+        var migrationsAssembly = builder.Configuration.GetValue<string>("ConnectionStrings:MigrationsAssembly") ?? typeof(Program).Assembly.FullName!;
+        var formatErrors = builder.Configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
+
+        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, options =>
+        {
+            options.DatabaseType = databaseType;
+            options.MigrationsAssembly = migrationsAssembly;
+            options.JwtOptions = jwtOptions;
+            options.FeatureFlags = featureFlagsOptions;
+            options.FormatErrorResponse = formatErrors;
+        });
+
+        //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
+        //but create one (or more) duplicates of this configuration, modifying it as needed.
+        builder.Services.AddRegisterServices(options =>
+        {
+            options.Interfaces = [typeof(IAuthService)]; // Register your interfaces here, but do not remove the IAuthService service.
+            options.StringEndsWith = "Service"; // This will register all services that end with "Service" in the assembly.
+            options.Lifetime = ServiceLifetime.Transient; // This will register the services with a Transient lifetime.
+        });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddDefaultSecurityOptions();
+
+            // Here you can add additional authorization policies
+        });
+
+        var app = builder.Build();
+        await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
+
+        app.UseHttpsRedirection();
+        app.UseStatusCodePages();
+
+        app.UseMiddleware<MinimalApiExceptionMiddleware>();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1");
+            });
+        }
+
+        app.UseRouting();
+        app.UseCors("cors");
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseMapEndpoints(featureFlagsOptions);
+        await app.RunAsync();
+    }
+}
+```
 
 ## 🔐 Authentication
 
@@ -189,9 +263,9 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 |[Identity.Module.Licenses](https://www.nuget.org/packages/Identity.Module.Licenses)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses)|
 |[Identity.Module.ModuleManager]()|Dependence|Coming soon|
 |[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|
-|[Identity.Module.ProfileManager]()|Dependence|Coming soon|
+|[Identity.Module.ProfileManager](https://www.nuget.org/packages/Identity.Module.ProfileManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ProfileManager)](https://www.nuget.org/packages/Identity.Module.ProfileManager)|
 |[Identity.Module.RolesManager]()|Dependence|Coming soon|
-|[Identity.Module.Results]()|Dependence|Coming soon|
+|[Identity.Module.Shared]()|Dependence|Coming soon|
 
 ## 🏆 Badges
 
@@ -222,6 +296,8 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Migrate FeatureFlagsOptions configuration to database
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
+- [ ] Add Interceptors
+- [ ] Add centralized logging with Serilog
 
 ### Future implementations
 
