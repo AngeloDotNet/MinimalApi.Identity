@@ -28,8 +28,9 @@
     <PackageReference Include="Identity.Module.Core" />
     <PackageReference Include="Identity.Module.EmailManager" />
     <PackageReference Include="Identity.Module.Licenses" />
-    <!--<PackageReference Include="Identity.Module.LicenseManager" />-->
     <PackageReference Include="Identity.Module.PolicyManager" />
+    <PackageReference Include="Identity.Module.ProfileManager" />
+    <!--<PackageReference Include="Identity.Module.LicenseManager" />-->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
