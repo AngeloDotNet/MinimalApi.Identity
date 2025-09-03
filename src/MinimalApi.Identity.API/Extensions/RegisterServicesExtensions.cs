@@ -20,6 +20,7 @@ using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
@@ -40,6 +41,7 @@ public static class RegisterServicesExtensions
         configure(settings);
 
         services
+            .AddCorsConfiguration()
             .AddProblemDetails()
             .AddHttpContextAccessor()
             .AddSwaggerConfiguration(settings.FeatureFlags)
@@ -48,9 +50,7 @@ public static class RegisterServicesExtensions
             .AddRegisterFeatureFlags(settings.FeatureFlags);
 
         services
-            .AddScoped<SignInManager<ApplicationUser>>()
-            //.AddScoped<IAuthorizationHandler, PermissionHandler>()
-            ;
+            .AddScoped<SignInManager<ApplicationUser>>();
 
         services
             //.AccountManagerRegistrationService()
@@ -88,22 +88,6 @@ public static class RegisterServicesExtensions
         }
 
         return services;
-    }
-
-    private static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
-    {
-        ArgumentNullException.ThrowIfNull(jsonOptions);
-
-        var options = new JsonOptions();
-
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.WriteIndented = true;
-
-        return options;
     }
 
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
@@ -211,7 +195,6 @@ public static class RegisterServicesExtensions
         }
     }
 
-    //public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options, List<PolicyResponseModel> listPolicy)
     public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options)
     {
         options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -224,10 +207,42 @@ public static class RegisterServicesExtensions
             .RequireAuthenticatedUser()
             .Build();
 
-        //foreach (var policy in listPolicy)
-        //{
-        //    options.AddPolicy(policy.PolicyName, p => p.Requirements.Add(new PermissionRequirement(policy.PolicyPermissions)));
-        //}
+        return options;
+    }
+
+    public static ProgramOptions AddPublicOptions<T>(this ProgramOptions options, IConfiguration configuration) where T : class
+    {
+        var jwtOptions = new JwtOptions();
+        var featureFlagsOptions = new FeatureFlagsOptions();
+
+        configuration.Bind(nameof(JwtOptions), jwtOptions);
+        configuration.Bind(nameof(FeatureFlagsOptions), featureFlagsOptions);
+
+        var databaseType = configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
+        var migrationsAssembly = configuration.GetValue<string>("ConnectionStrings:MigrationsAssembly") ?? typeof(T).Assembly.FullName!;
+        var formatErrors = configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
+
+        options.JwtOptions = jwtOptions;
+        options.FeatureFlagsOptions = featureFlagsOptions;
+        options.DatabaseType = databaseType;
+        options.MigrationsAssembly = migrationsAssembly;
+        options.FormatErrors = formatErrors;
+
+        return options;
+    }
+
+    internal static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
+    {
+        ArgumentNullException.ThrowIfNull(jsonOptions);
+
+        var options = new JsonOptions();
+
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
 
         return options;
     }
@@ -242,7 +257,6 @@ public static class RegisterServicesExtensions
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //.AddJwtBearer(settings.SchemaName, options =>
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.SaveToken = true;
@@ -284,5 +298,11 @@ public static class RegisterServicesExtensions
         });
 
         return services;
+    }
+
+    internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
+    {
+        return services.AddCors(options => options.AddPolicy("cors", builder
+            => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
     }
 }
