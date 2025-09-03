@@ -11,5 +11,4 @@ public class SmtpOptions
     public string Password { get; init; } = null!;
     public string Sender { get; init; } = null!;
     public int MaxRetryAttempts { get; init; } = 10; // Default: 10 attempts
-    //public TimeSpan RetryDelay { get; init; } = TimeSpan.FromSeconds(30); // Default: 30 seconds delay between retries
 }
