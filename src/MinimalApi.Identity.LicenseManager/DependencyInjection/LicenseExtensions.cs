@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
-using MinimalApi.Identity.LicenseManager.Services.Interfaces;
+using MinimalApi.Identity.LicenseManager.Services;
 using MinimalApi.Identity.LicenseManager.Validator;
 
 namespace MinimalApi.Identity.LicenseManager.DependencyInjection;
@@ -15,7 +15,7 @@ public static class LicenseExtensions
     public const string EndpointsRevokeLicense = "/revoke-license";
     public const string EndpointsDeleteLicense = "/delete-license";
 
-    public static IServiceCollection LicenseRegistrationService(this IServiceCollection services)
+    public static IServiceCollection LicenseManagerRegistrationService(this IServiceCollection services)
     {
         services
             .AddRegisterServices(options =>
