@@ -53,10 +53,14 @@ public static class RegisterServicesExtensions
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
-            //.AccountManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService();
+
+        //TODO: Missing services to register
+        //.AccountManagerRegistrationService()
+        //.ClaimsManagerRegistrationService()
+        //.RolesManagerRegistrationService()
 
         services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
@@ -93,9 +97,13 @@ public static class RegisterServicesExtensions
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
     {
         app.MapEndpoints();
+        app.MapPolicyEndpoints();
+        app.MapProfileEndpoints();
+
+        //TODO: Missing services to register
         //app.MapAccountEndpoints();
-        app.MapPolicyEndpoints()
-            .MapProfileEndpoints();
+        //app.MapClaimsEndpoints();
+        //app.MapRolesEndpoints();
 
         if (featureFlagsOptions.EnabledFeatureLicense)
         {

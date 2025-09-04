@@ -110,12 +110,13 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
             NotFoundException => HttpStatusCode.NotFound,
 
-            UserIsLockedException or
-            UserTokenIsInvalidException or
-            UserUnknownException or
-            UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
+            //UserIsLockedException or
+            //UserTokenIsInvalidException or
+            //UserUnknownException or
+            //UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
 
-            UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+            //UnauthorizedAccessException or
+            UnauthorizeException => HttpStatusCode.Unauthorized,
 
             ValidationModelException => HttpStatusCode.UnprocessableEntity,
             _ => HttpStatusCode.InternalServerError
@@ -138,7 +139,8 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             UserUnknownException => MessagesExceptions.UserNotAuthenticated,
             UserWithoutPermissionsException => MessagesExceptions.UserNotHavePermission,
 
-            UnauthorizedAccessException => MessagesExceptions.UserNotAuthenticated,
+            //UnauthorizedAccessException => MessagesExceptions.UserNotAuthenticated,
+            UnauthorizeException => MessagesExceptions.UserNotAuthenticated,
 
             ValidationModelException validationModelException => validationModelException.Message,
             _ => MessagesExceptions.UnexpectedError
