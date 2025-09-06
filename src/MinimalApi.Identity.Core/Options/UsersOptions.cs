@@ -5,7 +5,7 @@ namespace MinimalApi.Identity.Core.Options;
 public class UsersOptions
 {
     [Required]
-    public string AssingAdminUsername { get; init; } = null!;
+    public string AssignAdminUsername { get; init; } = null!;
 
     [Required, EmailAddress]
     public string AssignAdminEmail { get; init; } = null!;
