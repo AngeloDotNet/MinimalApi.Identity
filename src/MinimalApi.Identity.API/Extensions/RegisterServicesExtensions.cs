@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MinimalApi.Identity.AccountManager.DependencyInjection;
+using MinimalApi.Identity.AccountManager.Endpoints;
 using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Options;
@@ -49,16 +51,19 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions)
             .AddRegisterFeatureFlags(settings.FeatureFlags);
 
+        //TODO: Add registration for AuthenticationManager
+        //services.AuthManagerRegistrationService();
+
         services
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
+            .AccountManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService();
 
         //TODO: Missing services to register
-        //.AccountManagerRegistrationService()
         //.ClaimsManagerRegistrationService()
         //.RolesManagerRegistrationService()
 
@@ -97,11 +102,11 @@ public static class RegisterServicesExtensions
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
     {
         app.MapEndpoints();
+        app.MapAccountEndpoints();
         app.MapPolicyEndpoints();
         app.MapProfileEndpoints();
 
         //TODO: Missing services to register
-        //app.MapAccountEndpoints();
         //app.MapClaimsEndpoints();
         //app.MapRolesEndpoints();
 

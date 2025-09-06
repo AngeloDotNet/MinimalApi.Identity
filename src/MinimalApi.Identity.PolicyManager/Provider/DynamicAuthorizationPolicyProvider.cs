@@ -17,7 +17,7 @@ public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider
 
         // You can pass a real cancellation token if needed
         var policies = await policyService.GetAllPoliciesAsync(CancellationToken.None);
-        var policyModel = policies.Where(p => p.PolicyName == policyName).FirstOrDefault();
+        var policyModel = policies.FirstOrDefault(policy => policy.PolicyName == policyName);
 
         if (policyModel != null)
         {
