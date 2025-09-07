@@ -9,6 +9,9 @@ public class EmailManagerService(MinimalApiAuthDbContext dbContext) : IEmailMana
 {
     public IQueryable<EmailSending> GetAllEmailsAsync() => EmailQuery.GetAllEmailsAsync(dbContext);
 
+    public async Task<string> GenerateAutomaticEmailAsync(EmailSending model, CancellationToken cancellationToken)
+        => await EmailQuery.CreateEmailAsync(model, dbContext, cancellationToken);
+
     public async Task<string> CreateEmailAsync(EmailSending model, CancellationToken cancellationToken)
         => await EmailQuery.CreateEmailAsync(model, dbContext, cancellationToken);
 
