@@ -26,8 +26,9 @@
 
 <ItemGroup>
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.7" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.56" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.14" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.2" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.57" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.17" />
     <PackageReference Include="Identity.Module.Licenses" Version="1.0.44" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.40" />
     <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.24" />

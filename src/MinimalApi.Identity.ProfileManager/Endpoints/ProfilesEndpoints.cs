@@ -34,7 +34,7 @@ public static class ProfilesEndpoints
                 opt.Description = "Get all profiles";
 
                 opt.Response(StatusCodes.Status200OK).Description = "List of users profiles";
-                opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+                opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
                 opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
                 return opt;
@@ -50,7 +50,7 @@ public static class ProfilesEndpoints
             opt.Description = "Get user profile by username";
 
             opt.Response(StatusCodes.Status200OK).Description = "User profile retrieved successfully";
-            opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+            opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
             opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
             return opt;
         });
@@ -66,7 +66,7 @@ public static class ProfilesEndpoints
 
                 opt.Response(StatusCodes.Status200OK).Description = "User profile retrieved successfully";
                 opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
-                opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+                opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
                 opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
                 return opt;
             });
@@ -83,7 +83,7 @@ public static class ProfilesEndpoints
 
                 opt.Response(StatusCodes.Status200OK).Description = "User profile updated successfully";
                 opt.Response(StatusCodes.Status400BadRequest).Description = "Bad request";
-                opt.Response(StatusCodes.Status401Unauthorized).Description = "Unauthorized";
+                opt.Response(StatusCodes.Status401Unauthorized).Description = ConstantsConfiguration.Unauthorized;
                 opt.Response(StatusCodes.Status404NotFound).Description = ConstantsConfiguration.NotFound;
 
                 return opt;
