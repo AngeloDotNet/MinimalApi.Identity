@@ -19,6 +19,7 @@ using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Validator;
+using MinimalApi.Identity.AuthManager.DependencyInjection;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
@@ -51,14 +52,12 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions)
             .AddRegisterFeatureFlags(settings.FeatureFlags);
 
-        //TODO: Add registration for AuthenticationManager
-        //services.AuthManagerRegistrationService();
-
         services
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
             .AccountManagerRegistrationService()
+            .AuthManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService();
