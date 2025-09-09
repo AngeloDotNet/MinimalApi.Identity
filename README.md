@@ -101,6 +101,7 @@ The configuration can be completely managed by adding this section to the _appse
     "IntervalEmailSenderMinutes": 5
 },
 "UsersOptions": {
+    "AssignAdminUsername": "admin",
     "AssignAdminEmail": "admin@example.org",
     "AssignAdminPassword": "StrongPassword",
     "PasswordExpirationDays": 90
@@ -150,10 +151,6 @@ Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations
 
 > [!WARNING]
 > The library is still under development, so the Program.cs configuration may change in future updates.
-
-<!--
-An example configuration of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs)
--->
 
 ```csharp
 public class Program
@@ -226,14 +223,11 @@ This library currently supports the following authentication types:
 
 ### 🧑‍💼 Administrator Account
 
-🚧 coming soon
-
-<!--
 A default administrator account is created automatically with the following configuration:
 
-- Username: Set via `UsersOptions:AssignAdminRoleOnRegistration`
-- Password: Set via `AppSettings:AdministratorApiKey`
--->
+- Email: set via `UsersOptions:AssignAdminEmail`
+- Username: set via `UsersOptions:AssingAdminUsername`
+- Password: set via `UsersOptions:AssignAdminPassword`
 
 ## 📚 API Reference
 
@@ -244,16 +238,17 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 |Name|Type|Version|
 |----|----|-------|
 |[Identity.Module.API](https://www.nuget.org/packages/Identity.Module.API)|Main|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.API)](https://www.nuget.org/packages/Identity.Module.API)
-|[Identity.Module.AccountManager]()|Dependence|Coming soon|
-|[Identity.Module.ClaimsManager]()|Dependence|Coming soon|
+|[Identity.Module.AccountManager](https://www.nuget.org/packages/Identity.Module.AccountManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.AccountManager)](https://www.nuget.org/packages/Identity.Module.AccountManager)|
+|[Identity.Module.AuthManager](https://www.nuget.org/packages/Identity.Module.AuthManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.AuthManager)](https://www.nuget.org/packages/Identity.Module.AuthManager)|
+|[Identity.Module.ClaimsManager](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ClaimsManager)](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|
 |[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|
 |[Identity.Module.EmailManager](https://www.nuget.org/packages/Identity.Module.EmailManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.EmailManager)](https://www.nuget.org/packages/Identity.Module.EmailManager)|
 |[Identity.Module.Licenses](https://www.nuget.org/packages/Identity.Module.Licenses)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses)|
-|[Identity.Module.ModuleManager]()|Dependence|Coming soon|
+|[Identity.Module.ModuleManager](https://www.nuget.org/packages/Identity.Module.ModuleManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ModuleManager)](https://www.nuget.org/packages/Identity.Module.ModuleManager)|
 |[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|
 |[Identity.Module.ProfileManager](https://www.nuget.org/packages/Identity.Module.ProfileManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ProfileManager)](https://www.nuget.org/packages/Identity.Module.ProfileManager)|
-|[Identity.Module.RolesManager]()|Dependence|Coming soon|
-|[Identity.Module.Shared]()|Dependence|Coming soon|
+|[Identity.Module.RolesManager](https://www.nuget.org/packages/Identity.Module.RolesManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.RolesManager)](https://www.nuget.org/packages/Identity.Module.RolesManager)|
+|[Identity.Module.Shared](https://www.nuget.org/packages/Identity.Module.Shared)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Shared)](https://www.nuget.org/packages/Identity.Module.Shared)|
 
 ## 🏆 Badges
 
@@ -277,17 +272,15 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Move the configuration of the roles to a dedicated library
 - [ ] Add CancellationToken to API endpoints (where necessary)
-- [ ] Add automatic creation of a default administrator account
 - [ ] Replacing exceptions with implementation of operation results 
-- [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Migrate SmtpOptions configuration to database
-- [ ] Migrate FeatureFlagsOptions configuration to database
-- [ ] Add endpoints for two-factor authentication and management
-- [ ] Add endpoints for downloading and deleting personal data
-- [X] Remove Nuget package centralization
-- [ ] Add Interceptors
 - [ ] Add centralized logging with Serilog
 - [ ] Fix the TODOs
+- [ ] Migrate SmtpOptions configuration to database
+- [ ] Migrate FeatureFlagsOptions configuration to database
+- [ ] Replacing the hosted service email sender using Coravel jobs
+- [ ] Add endpoints for two-factor authentication and management
+- [ ] Add endpoints for downloading and deleting personal data
+- [ ] Code Review and Refactoring
 
 ### Future implementations
 
@@ -296,7 +289,9 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Add support for the SQLite database
 - [ ] Add support for the AzureSQL database
 - [ ] Add support for multi tenancy
-- [ ] Add authentication support from third-party providers (e.g. GitHub, Azure, KeyCloak)
+- [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+- [ ] Migrate your repository to .NET 10
+- [ ] Change the entity ID type from INT to GUID
 
 ## 📜 License
 
