@@ -29,13 +29,21 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             {
                 FirstName = "Application",
                 LastName = "Admin"
-            }
+            },
+            EmailConfirmed = true,
+            LockoutEnabled = false,
+            TwoFactorEnabled = false
         };
 
         await CheckCreateUserAsync(administratorUser, usersOptions.AssignAdminPassword, nameof(DefaultRoles.Admin));
 
         async Task CheckCreateUserAsync(ApplicationUser user, string password, params string[] roles)
         {
+            if (user.Email is null)
+            {
+                throw new InvalidOperationException("User email cannot be null");
+            }
+
             var dbUser = await userManager.FindByEmailAsync(user.Email);
 
             if (dbUser == null)
