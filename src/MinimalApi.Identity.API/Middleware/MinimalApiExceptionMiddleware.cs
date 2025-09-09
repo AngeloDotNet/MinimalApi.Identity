@@ -103,21 +103,10 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         => exception switch
         {
             ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
-
             BadRequestException => HttpStatusCode.BadRequest,
-
             ConflictException => HttpStatusCode.Conflict,
-
             NotFoundException => HttpStatusCode.NotFound,
-
-            //UserIsLockedException or
-            //UserTokenIsInvalidException or
-            //UserUnknownException or
-            //UserWithoutPermissionsException => HttpStatusCode.Unauthorized,
-
-            //UnauthorizedAccessException or
             UnauthorizeException => HttpStatusCode.Unauthorized,
-
             ValidationModelException => HttpStatusCode.UnprocessableEntity,
             _ => HttpStatusCode.InternalServerError
         };
@@ -127,21 +116,10 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         {
             ArgumentOutOfRangeException argumentOutOfRangeException => argumentOutOfRangeException.Message,
             ArgumentNullException argumentNullException => argumentNullException.Message,
-
             BadRequestException badRequestException => badRequestException.Message,
-
             ConflictException conflictException => conflictException.Message,
-
             NotFoundException notFoundException => notFoundException.Message,
-
-            UserIsLockedException => MessagesApi.UserLockedOut,
-            UserTokenIsInvalidException userTokenIsInvalidException => userTokenIsInvalidException.Message,
-            UserUnknownException => MessagesExceptions.UserNotAuthenticated,
-            UserWithoutPermissionsException => MessagesExceptions.UserNotHavePermission,
-
-            //UnauthorizedAccessException => MessagesExceptions.UserNotAuthenticated,
             UnauthorizeException => MessagesExceptions.UserNotAuthenticated,
-
             ValidationModelException validationModelException => validationModelException.Message,
             _ => MessagesExceptions.UnexpectedError
         };

@@ -19,11 +19,15 @@ using MinimalApi.Identity.Core.Models;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.Core.Utility.Messages;
+using MinimalApi.Identity.EmailManager.Services;
+using MinimalApi.Identity.ProfileManager.Models;
+using MinimalApi.Identity.ProfileManager.Services;
 
 namespace MinimalApi.Identity.API.Services;
 
 public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, IModuleService moduleService) : IAuthService
+    SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, IModuleService moduleService,
+    IProfileService profileService, IEmailManagerService emailManager) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
@@ -48,21 +52,21 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
         }
 
-        //TODO: Integrate profile service to get user profile
-        //var profileUser = await profileService.GetProfileAsync(user.Id) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
+        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None)
+            ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
-        //if (!profileUser.IsEnabled)
-        //{
-        //    throw new BadRequestException(MessagesApi.UserNotEnableLogin);
-        //}
+        if (!profileUser.IsEnabled)
+        {
+            throw new BadRequestException(MessagesApi.UserNotEnableLogin);
+        }
 
-        //var lastDateChangePassword = profileUser.LastDateChangePassword;
-        //var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
+        var lastDateChangePassword = profileUser.LastDateChangePassword;
+        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
 
-        //if (lastDateChangePassword == null || checkLastDateChangePassword)
-        //{
-        //    throw new BadRequestException(MessagesApi.UserForcedChangePassword);
-        //}
+        if (lastDateChangePassword == null || checkLastDateChangePassword)
+        {
+            throw new BadRequestException(MessagesApi.UserForcedChangePassword);
+        }
 
         await userManager.UpdateSecurityStampAsync(user);
 
@@ -103,8 +107,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         if (result.Succeeded)
         {
-            //TODO: Integrate profile service to create user profile
-            //await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname));
+            await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None);
 
             var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value) ? DefaultRoles.Admin : DefaultRoles.User;
             var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString());
@@ -130,8 +133,18 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
                 "It is recommended to copy and paste for simplicity.";
 
-            //TODO: Integrate email sender service to send emails
-            //await emailSender.SendEmailAsync(user.Email!, "Confirm your email", messageText, EmailSendingType.RegisterUser);
+            var emailModel = new EmailSending
+            {
+                EmailTo = user.Email!,
+                Subject = "Confirm your email",
+                Body = messageText,
+                TypeEmailSendingId = (int)EmailSendingType.RegisterUser,
+                TypeEmailStatusId = (int)EmailStatusType.Pending,
+                DateSent = DateTime.UtcNow,
+                RetrySender = 0
+            };
+
+            await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
 
             return MessagesApi.UserCreated;
         }
@@ -233,8 +246,18 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         var messageText = $"To reset your password, you will need to indicate this code: {encodedToken}. " +
             "It is recommended to copy and paste for simplicity.";
 
-        //TODO: Integrate email sender service to send emails
-        //await emailSender.SendEmailAsync(user.Email!, "Reset Password", messageText, EmailSendingType.ForgotPassword);
+        var emailModel = new EmailSending
+        {
+            EmailTo = user.Email!,
+            Subject = "Reset Password",
+            Body = messageText,
+            TypeEmailSendingId = (int)EmailSendingType.ForgotPassword,
+            TypeEmailStatusId = (int)EmailStatusType.Pending,
+            DateSent = DateTime.UtcNow,
+            RetrySender = 0
+        };
+
+        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
 
         return MessagesApi.SendEmailResetPassword;
     }

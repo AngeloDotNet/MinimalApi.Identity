@@ -25,13 +25,13 @@
 </ItemGroup>
 
 <ItemGroup>
-    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.7" />
-    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.2" />
+    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.8" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.5" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.57" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.17" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.18" />
     <PackageReference Include="Identity.Module.Licenses" Version="1.0.44" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.40" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.24" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.41" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.27" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
