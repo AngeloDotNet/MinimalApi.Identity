@@ -25,8 +25,6 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
         {
             return roles;
         }
-
-        //return roles.Count == 0 ? throw new NotFoundRoleException(MessagesAPI.RolesNotFound) : roles;
     }
 
     public async Task<string> CreateRoleAsync(CreateRoleModel model)
