@@ -4,6 +4,5 @@ namespace MinimalApi.Identity.API.Constants;
 
 public static class CustomClaimTypes
 {
-    public const string FullName = nameof(ClaimsType.FullName);
     public const string Module = nameof(ClaimsType.Module);
 }

@@ -226,7 +226,7 @@ This library currently supports the following authentication types:
 A default administrator account is created automatically with the following configuration:
 
 - Email: set via `UsersOptions:AssignAdminEmail`
-- Username: set via `UsersOptions:AssingAdminUsername`
+- Username: set via `UsersOptions:AssignAdminUsername`
 - Password: set via `UsersOptions:AssignAdminPassword`
 
 ## 📚 API Reference

@@ -1,6 +1,4 @@
-﻿using MinimalApi.Identity.Core.Enums;
-
-namespace MinimalApi.Identity.API.Models;
+﻿namespace MinimalApi.Identity.API.Models;
 
 public record class RegisterModel(string Firstname, string Lastname, string Username, string Email, string Password);
 public record class LoginModel(string Username, string Password, bool RememberMe);
@@ -8,14 +6,6 @@ public record class ForgotPasswordModel(string Email);
 public record class ResetPasswordModel(string Email, string Password, string ConfirmPassword);
 public record class RefreshTokenModel(string AccessToken, string RefreshToken);
 public record class ImpersonateUserModel(int UserId);
-
-public record class CreateUserProfileModel(int UserId, string FirstName, string LastName);
-public record class EditUserProfileModel(int UserId, string FirstName, string LastName);
-public record class ChangeEnableProfileModel(int UserId, bool IsEnabled);
-public record class UserProfileModel(int UserId, string Email, string FirstName, string LastName, bool IsEnabled, DateOnly? LastDateChangePassword)
-{
-    public string FullName => $"{FirstName} {LastName}";
-}
 
 public record class CreateModuleModel(string Name, string Description);
 public record class AssignModuleModel(int UserId, int ModuleId);
@@ -31,6 +21,3 @@ public record class CreateClaimModel(string Type, string Value);
 public record class AssignClaimModel(int UserId, string Type, string Value);
 public record class RevokeClaimModel(int UserId, string Type, string Value);
 public record class DeleteClaimModel(string Type, string Value);
-
-public record class MailKitSenderModel(string emailTo, string emailSubject, string emailMessage, EmailSendingType emailSendingType);
-public record class SavingEmailModel(string emailTo, string emailSubject, string emailMessage, EmailSendingType emailSendingType, bool sent, string? errorMessage, string? errorDetails);
