@@ -32,31 +32,52 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             },
             EmailConfirmed = true,
             LockoutEnabled = false,
-            TwoFactorEnabled = false
+            TwoFactorEnabled = false,
+            RefreshToken = null!
         };
 
-        await CheckCreateUserAsync(administratorUser, usersOptions.AssignAdminPassword, nameof(DefaultRoles.Admin));
+        await CheckCreateUserAsync(userManager, administratorUser, usersOptions.AssignAdminPassword, nameof(DefaultRoles.Admin));
 
-        async Task CheckCreateUserAsync(ApplicationUser user, string password, params string[] roles)
-        {
-            if (user.Email is null)
-            {
-                throw new InvalidOperationException("User email cannot be null");
-            }
+        //async Task CheckCreateUserAsync(ApplicationUser user, string password, params string[] roles)
+        //{
+        //    if (user.Email is null)
+        //    {
+        //        throw new InvalidOperationException("User email cannot be null");
+        //    }
 
-            var dbUser = await userManager.FindByEmailAsync(user.Email);
+        //    var dbUser = await userManager.FindByEmailAsync(user.Email);
 
-            if (dbUser == null)
-            {
-                var result = await userManager.CreateAsync(user, password);
+        //    if (dbUser == null)
+        //    {
+        //        var result = await userManager.CreateAsync(user, password);
 
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRolesAsync(user, roles);
-                }
-            }
-        }
+        //        if (result.Succeeded)
+        //        {
+        //            await userManager.AddToRolesAsync(user, roles);
+        //        }
+        //    }
+        //}
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    internal static async Task CheckCreateUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, string password, params string[] roles)
+    {
+        if (user.Email is null)
+        {
+            throw new InvalidOperationException("User email cannot be null");
+        }
+
+        var dbUser = await userManager.FindByEmailAsync(user.Email);
+
+        if (dbUser == null)
+        {
+            var result = await userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRolesAsync(user, roles);
+            }
+        }
+    }
 }
