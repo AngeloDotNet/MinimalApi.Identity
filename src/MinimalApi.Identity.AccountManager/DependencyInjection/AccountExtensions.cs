@@ -8,8 +8,6 @@ namespace MinimalApi.Identity.AccountManager.DependencyInjection;
 public static class AccountExtensions
 {
     public const string EndpointChangeEmail = "/change-email";
-    //public const string EndpointsConfirmEmail = "/confirm-email/{userId}/{token}";
-    //public const string EndpointsConfirmEmailChange = "/confirm-email-change/{userId}/{email}/{token}";
 
     public static IServiceCollection AccountManagerRegistrationService(this IServiceCollection services)
     {
