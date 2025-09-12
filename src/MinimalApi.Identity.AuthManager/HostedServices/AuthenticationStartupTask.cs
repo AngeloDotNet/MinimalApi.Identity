@@ -33,7 +33,7 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             EmailConfirmed = true,
             LockoutEnabled = false,
             TwoFactorEnabled = false,
-            RefreshToken = null!
+            RefreshToken = ""
         };
 
         await CheckCreateUserAsync(userManager, administratorUser, usersOptions.AssignAdminPassword, nameof(DefaultRoles.Admin));
