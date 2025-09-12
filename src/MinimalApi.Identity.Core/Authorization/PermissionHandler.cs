@@ -23,7 +23,6 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
             if (utente == null || user == null)
             {
                 logger.LogWarning("User {nameUser} not found", nameUser);
-                //throw new UserUnknownException($"User {nameUser} not found");
                 throw new NotFoundException($"User {nameUser} not found");
             }
 
@@ -36,7 +35,6 @@ public class PermissionHandler(ILogger<PermissionHandler> logger, UserManager<Ap
                 else
                 {
                     logger.LogWarning("User {nameUser} does not have the required permissions", nameUser);
-                    //throw new UserWithoutPermissionsException($"User {nameUser} does not have the required permissions");
                     throw new UnauthorizeException($"User {nameUser} does not have the required permissions");
                 }
             }
