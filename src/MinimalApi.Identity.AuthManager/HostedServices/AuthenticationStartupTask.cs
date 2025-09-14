@@ -28,7 +28,9 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             UserProfile = new UserProfile
             {
                 FirstName = "Application",
-                LastName = "Admin"
+                LastName = "Admin",
+                IsEnabled = true,
+                LastDateChangePassword = DateOnly.FromDateTime(DateTime.UtcNow.Date) //TODO: Refactoring with ConstantsConfiguration DateOnlyToDay
             },
             EmailConfirmed = true,
             LockoutEnabled = false,
