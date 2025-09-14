@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Manager/">
     <Project Path="src/MinimalApi.Identity.AccountManager/MinimalApi.Identity.AccountManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.AuthManager/MinimalApi.Identity.AuthManager.csproj" Id="65a70cce-da5d-47f5-8afa-e53e759e12f4" />
     <Project Path="src/MinimalApi.Identity.EmailManager/MinimalApi.Identity.EmailManager.csproj" />
     <Project Path="src/MinimalApi.Identity.LicenseManager/MinimalApi.Identity.LicenseManager.csproj" />
     <Project Path="src/MinimalApi.Identity.PolicyManager/MinimalApi.Identity.PolicyManager.csproj" />
@@ -11,6 +12,7 @@
     <File Path=".github/copilot-instructions.md" />
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
+    <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
