@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Options;
@@ -30,7 +31,7 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
                 FirstName = "Application",
                 LastName = "Admin",
                 IsEnabled = true,
-                LastDateChangePassword = DateOnly.FromDateTime(DateTime.UtcNow.Date) //TODO: Refactoring with ConstantsConfiguration DateOnlyToDay
+                LastDateChangePassword = ConstantsConfiguration.DateOnlyToday //DateOnly.FromDateTime(DateTime.UtcNow.Date)
             },
             EmailConfirmed = true,
             LockoutEnabled = false,

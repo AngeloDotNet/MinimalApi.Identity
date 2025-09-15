@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
 using MinimalApi.Identity.AccountManager.Endpoints;
-using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
+using MinimalApi.Identity.Core.Configurations;
+using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
@@ -68,6 +68,7 @@ public static class RegisterServicesExtensions
 
         services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
+            .Configure<JwtOptions>(options => configuration.GetSection(nameof(JwtOptions)).Bind(options))
             .Configure<HostedServiceOptions>(options => configuration.GetSection(nameof(HostedServiceOptions)).Bind(options))
             .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
             .Configure<UsersOptions>(options => configuration.GetSection(nameof(UsersOptions)).Bind(options))
@@ -243,18 +244,29 @@ public static class RegisterServicesExtensions
         return options;
     }
 
+    public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
+    {
+        var section = configuration.GetSection(sectionName);
+        var settings = section.Get<T>();
+        services.Configure<T>(section);
+
+        return settings;
+    }
+
     internal static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
     {
         ArgumentNullException.ThrowIfNull(jsonOptions);
 
         var options = new JsonOptions();
 
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.WriteIndented = true;
+        options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+        //options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        //options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        //options.JsonSerializerOptions.WriteIndented = true;
 
         return options;
     }
