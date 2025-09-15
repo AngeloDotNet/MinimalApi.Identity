@@ -30,8 +30,8 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 <!--
 As an alternative to SQL Server you can use one of these databases:
 
-- PostgreSQL
-- MySQL
+- PostgreSQL - Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/Postgres-16))
+- MySQL - Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/MySQL-Server-8_0_34))
 - SQLite
 -->
 
