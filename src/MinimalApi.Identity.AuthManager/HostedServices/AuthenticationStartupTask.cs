@@ -31,7 +31,7 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
                 FirstName = "Application",
                 LastName = "Admin",
                 IsEnabled = true,
-                LastDateChangePassword = ConstantsConfiguration.DateOnlyToday //DateOnly.FromDateTime(DateTime.UtcNow.Date)
+                LastDateChangePassword = ConstantsConfiguration.DateOnlyToday
             },
             EmailConfirmed = true,
             LockoutEnabled = false,

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Configurations;
@@ -47,7 +46,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsCreateClaim, async ([FromServices] IClaimsService claimsService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsCreateClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] CreateClaimModel inputModel) =>
         {
             return await claimsService.CreateClaimAsync(inputModel);
@@ -68,7 +67,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAssignClaim, async ([FromServices] IClaimsService claimsService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] AssignClaimModel inputModel) =>
         {
             return await claimsService.AssignClaimAsync(inputModel);
@@ -89,7 +88,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapDelete(EndpointsApi.EndpointsRevokeClaim, async ([FromServices] IClaimsService claimService,
+        apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeClaim, async ([FromServices] IClaimsService claimService,
             [FromBody] RevokeClaimModel inputModel) =>
         {
             return await claimService.RevokeClaimAsync(inputModel);
@@ -110,7 +109,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapDelete(EndpointsApi.EndpointsDeleteClaim, async ([FromServices] IClaimsService claimsService,
+        apiGroup.MapDelete(ConstantsConfiguration.EndpointsDeleteClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] DeleteClaimModel inputModel) =>
         {
             return await claimsService.DeleteClaimAsync(inputModel);

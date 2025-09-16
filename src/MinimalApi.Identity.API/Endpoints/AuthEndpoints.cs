@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Configurations;
@@ -28,7 +27,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
                 return opt;
             });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAuthRegister, [AllowAnonymous] async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthRegister, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] RegisterModel inputModel) =>
         {
             return await authService.RegisterAsync(inputModel);
@@ -47,7 +46,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAuthLogin, [AllowAnonymous] async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogin, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] LoginModel inputModel) =>
         {
             return await authService.LoginAsync(inputModel);
@@ -65,7 +64,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAuthRefreshToken, [AllowAnonymous] async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthRefreshToken, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] RefreshTokenModel inputModel) =>
         {
             return await authService.RefreshTokenAsync(inputModel);
@@ -83,7 +82,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsImpersonateUser, async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsImpersonateUser, async ([FromServices] IAuthService authService,
             [FromBody] ImpersonateUserModel inputModel) =>
         {
             return await authService.ImpersonateAsync(inputModel);
@@ -101,7 +100,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAuthLogout, [AllowAnonymous] async ([FromServices] IAuthService authService) =>
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogout, [AllowAnonymous] async ([FromServices] IAuthService authService) =>
         {
             return await authService.LogoutAsync();
         })
@@ -116,7 +115,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsForgotPassword, async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsForgotPassword, async ([FromServices] IAuthService authService,
             [FromBody] ForgotPasswordModel inputModel) =>
         {
             return await authService.ForgotPasswordAsync(inputModel);
@@ -134,7 +133,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsResetPassword, async ([FromServices] IAuthService authService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPassword, async ([FromServices] IAuthService authService,
             [FromBody] ResetPasswordModel inputModel, [FromRoute] string code) =>
         {
             return await authService.ResetPasswordAsync(inputModel, code);
