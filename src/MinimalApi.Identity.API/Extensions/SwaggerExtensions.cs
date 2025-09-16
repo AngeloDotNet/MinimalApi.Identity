@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Swagger;
 using MinimalApi.Identity.Core.Configurations;
+using MinimalApi.Identity.Core.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MinimalApi.Identity.API.Extensions;
