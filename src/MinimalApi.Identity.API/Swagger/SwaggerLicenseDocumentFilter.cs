@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Options;
+using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Utility.Generators;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
