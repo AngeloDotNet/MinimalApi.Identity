@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Constants;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Configurations;
@@ -47,7 +46,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsCreateModule, async ([FromServices] IModuleService moduleService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsCreateModule, async ([FromServices] IModuleService moduleService,
             [FromBody] CreateModuleModel inputModel) =>
         {
             return await moduleService.CreateModuleAsync(inputModel);
@@ -67,7 +66,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapPost(EndpointsApi.EndpointsAssignModule, async ([FromServices] IModuleService moduleService,
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignModule, async ([FromServices] IModuleService moduleService,
             [FromBody] AssignModuleModel inputModel) =>
         {
             return await moduleService.AssignModuleAsync(inputModel);
@@ -88,7 +87,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapDelete(EndpointsApi.EndpointsRevokeModule, async ([FromServices] IModuleService moduleService,
+        apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeModule, async ([FromServices] IModuleService moduleService,
             [FromBody] RevokeModuleModel inputModel) =>
         {
             return await moduleService.RevokeModuleAsync(inputModel);
@@ -109,7 +108,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             return opt;
         });
 
-        apiGroup.MapDelete(EndpointsApi.EndpointsDeleteModule, async ([FromServices] IModuleService moduleService,
+        apiGroup.MapDelete(ConstantsConfiguration.EndpointsDeleteModule, async ([FromServices] IModuleService moduleService,
             [FromBody] DeleteModuleModel inputModel) =>
         {
             return await moduleService.DeleteModuleAsync(inputModel);
