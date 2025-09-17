@@ -26,12 +26,12 @@
 
 <ItemGroup>
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.13" />
-    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.15" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.67" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.16" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.69" />
     <PackageReference Include="Identity.Module.EmailManager" Version="2.5.19" />
     <PackageReference Include="Identity.Module.Licenses" Version="1.0.44" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.42" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.28" />
+    <!--<PackageReference Include="Identity.Module.ProfileManager" Version="2.5.28" />-->
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
@@ -46,6 +46,10 @@
         <PackagePath></PackagePath>
     </None>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+</ItemGroup>
+
+<ItemGroup>
+  <ProjectReference Include="..\MinimalApi.Identity.ProfileManager\MinimalApi.Identity.ProfileManager.csproj" />
 </ItemGroup>
 
 </Project>
