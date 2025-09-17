@@ -78,6 +78,10 @@ public static class RegisterServicesExtensions
             case "List":
                 services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.List);
                 break;
+            default:
+                // Optionally, log a warning here about the unexpected value.
+                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.Default);
+                break;
         }
 
         services
