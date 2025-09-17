@@ -3,17 +3,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.EmailManager.SenderEmail;
 using MinimalApi.Identity.EmailManager.Services;
 
 namespace MinimalApi.Identity.EmailManager.BackgroundServices;
 
-public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOptions<HostedServiceOptions> hostedOptions,
+public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOptions<AppSettings> hostedOptions,
     IOptions<SmtpOptions> smtpOptions, ILogger<BackgroundEmailSender> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

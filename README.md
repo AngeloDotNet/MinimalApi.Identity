@@ -57,9 +57,7 @@ The configuration can be completely managed by adding this section to the _appse
     }
 },
 "ConnectionStrings": {
-    "DatabaseType": "sqlserver",
-    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
-    "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer"
+    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
 },
 "JwtOptions": {
     "Issuer": "[ISSUER]",
@@ -89,28 +87,21 @@ The configuration can be completely managed by adding this section to the _appse
     "Sender": "MyApplication <noreply@example.org>",
     "MaxRetryAttempts": 10
 },
-"ApplicationOptions": {
-    
-    "ErrorResponseFormat": "List"
-},
-"FeatureFlagsOptions": {
-    "EnabledFeatureLicense": true,
-    "EnabledFeatureModule": true
-},
-"HostedServiceOptions": {
-    "IntervalEmailSenderMinutes": 5
-},
-"UsersOptions": {
+"AppSettings": {
     "AssignAdminUsername": "admin",
     "AssignAdminEmail": "admin@example.org",
     "AssignAdminPassword": "StrongPassword",
-    "PasswordExpirationDays": 90
-},
-"ValidationOptions": {
-    "MinLength": 3,
-    "MaxLength": 50,
-    "MinLengthDescription": 5,
-    "MaxLengthDescription": 100
+    "PasswordExpirationDays": 90,
+    "IntervalEmailSenderMinutes": 5,
+    "ErrorResponseFormat": "List",
+    "EnabledFeatureLicense": true,
+    "EnabledFeatureModule": true,
+    "ValidateMinLength": 3,
+    "ValidateMaxLength": 50,
+    "ValidateMinLengthDescription": 5,
+    "ValidateMaxLengthDescription": 100,
+    "DatabaseType": "sqlserver",
+    "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer"
 }
 ```
 
@@ -157,17 +148,10 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        var programOptions = RegisterServicesExtensions.AddPublicOptions<Program>(new ProgramOptions(), builder.Configuration);
+        var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
+        var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
 
-        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, options =>
-        {
-            options.DatabaseType = programOptions.DatabaseType;
-            options.MigrationsAssembly = programOptions.MigrationsAssembly;
-            options.JwtOptions = programOptions.JwtOptions;
-            options.FeatureFlags = programOptions.FeatureFlagsOptions;
-            options.FormatErrorResponse = programOptions.FormatErrors;
-        });
+        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
 
         //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
         //but create one (or more) duplicates of this configuration, modifying it as needed.
@@ -208,7 +192,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseMapEndpoints(featureFlagsOptions);
+        app.UseMapEndpoints(appSettings);
         await app.RunAsync();
     }
 }
@@ -271,7 +255,6 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the claims to a dedicated library
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Move the configuration of the roles to a dedicated library
-- [ ] Add CancellationToken to API endpoints (where necessary)
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Add centralized logging with Serilog
 - [ ] Fix the TODOs

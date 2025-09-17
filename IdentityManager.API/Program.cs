@@ -1,9 +1,10 @@
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
-using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 
 namespace IdentityManager.API;
 
@@ -12,17 +13,11 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var programOptions = RegisterServicesExtensions.AddPublicOptions<Program>(new ProgramOptions(), builder.Configuration);
 
-        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, options =>
-        {
-            options.DatabaseType = programOptions.DatabaseType;
-            options.MigrationsAssembly = programOptions.MigrationsAssembly;
-            options.JwtOptions = programOptions.JwtOptions;
-            options.FeatureFlags = programOptions.FeatureFlagsOptions;
-            options.FormatErrorResponse = programOptions.FormatErrors;
-        });
+        var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
+        var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
 
+        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
         builder.Services.AddRegisterServices(options =>
         {
             options.Interfaces = [typeof(IAuthService)];
@@ -58,7 +53,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseMapEndpoints(programOptions.FeatureFlagsOptions);
+        app.UseMapEndpoints(appSettings);
         await app.RunAsync();
     }
 }

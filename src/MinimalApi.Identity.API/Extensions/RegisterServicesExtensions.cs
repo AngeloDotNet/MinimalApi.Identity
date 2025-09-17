@@ -79,7 +79,6 @@ public static class RegisterServicesExtensions
                 services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.List);
                 break;
             default:
-                // Optionally, log a warning here about the unexpected value.
                 services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.Default);
                 break;
         }
@@ -153,98 +152,118 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         string databaseType, string migrationAssembly) where TDbContext : DbContext
     {
-        if (databaseType is not null)
+        if (databaseType is null)
         {
-            if (databaseType.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
+            throw new InvalidOperationException("Database type is not configured.");
+        }
+
+        var dbType = databaseType.ToLowerInvariant();
+        var sqlConnection = dbType switch
+        {
+            "sqlserver" => configuration.GetConnectionString("SQLServer"),
+            //"postgresql" => configuration.GetConnectionString("PostgreSQL"),
+            //"mysql" => configuration.GetConnectionString("MySQL"),
+            //"sqlite" => configuration.GetConnectionString("SQLite"),
+            _ => null
+        } ?? throw new InvalidOperationException($"Connection string for '{databaseType}' is not configured.");
+
+        Action<DbContextOptionsBuilder> optionsAction = dbType switch
+        {
+            "sqlserver" => options => options.UseSqlServer(sqlConnection, opt =>
             {
-                var sqlConnection = configuration.GetConnectionString("SQLServer") ?? "SQLServer connection string is not configured.";
-
-                services.AddDbContext<TDbContext>(options =>
-                    options.UseSqlServer(sqlConnection, opt =>
-                    {
-                        opt.MigrationsAssembly(migrationAssembly);
-                        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    }));
-            }
-
-            //if (databaseType.Equals("postgresql", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //var sqlConnection = configuration.GetConnectionString("PostgreSQL");
-            //services.AddDbContext<TDbContext>(options => options.UseNpgsql(sqlConnection, opt =>
+                opt.MigrationsAssembly(migrationAssembly);
+                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            }),
+            //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
             //{
             //    opt.MigrationsAssembly(migrationAssembly);
             //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
             //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //}));
-            //}
-
-            //if (databaseType.Equals("mysql", StringComparison.InvariantCultureIgnoreCase))
+            //}),
+            //"mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
             //{
-            //    var sqlConnection = configuration.GetConnectionString("MySQL");
-            //    services.AddDbContext<TDbContext>(options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
-            //    {
-            //        opt.MigrationsAssembly(migrationAssembly);
-            //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //    }));
-            //}
-
-            //if (databaseType.Equals("sqlite", StringComparison.InvariantCultureIgnoreCase))
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //}),
+            //"sqlite" => options => options.UseSqlite(sqlConnection, opt =>
             //{
-            //    var sqlConnection = configuration.GetConnectionString("SQLite");
-            //    services.AddDbContext<TDbContext>(options => options.UseSqlite(sqlConnection, opt =>
-            //    {
-            //        opt.MigrationsAssembly(migrationAssembly);
-            //        opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //    }));
-            //}
-        }
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //}),
+            _ => _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
+        };
+
+        services.AddDbContext<TDbContext>(optionsAction);
 
         return services;
     }
 
     public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         await using var scope = serviceProvider.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
 
-        var databaseExist = await dbContext.Database.CanConnectAsync();
+        // Try to migrate directly; EnsureCreated is not needed if using migrations.
+        var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
 
-        if (!databaseExist)
+        if (pendingMigrations.Any())
         {
-            await dbContext.Database.EnsureCreatedAsync();
+            await dbContext.Database.MigrateAsync().ConfigureAwait(false);
         }
-
-        var migrationsExist = (await dbContext.Database.GetPendingMigrationsAsync()).Any();
-
-        if (migrationsExist)
+        else
         {
-            await dbContext.Database.MigrateAsync();
+            // Only ensure created if no migrations exist (e.g., for in-memory or initial setup)
+            var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
+
+            if (!canConnect)
+            {
+                await dbContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
+            }
         }
     }
 
     public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options)
     {
-        options.DefaultPolicy = new AuthorizationPolicyBuilder()
-            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-            .RequireAuthenticatedUser()
-            .Build();
+        ArgumentNullException.ThrowIfNull(options);
 
-        options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        var policyBuilder = new AuthorizationPolicyBuilder()
             .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-            .RequireAuthenticatedUser()
-            .Build();
+            .RequireAuthenticatedUser();
+
+        var policy = policyBuilder.Build();
+
+        options.DefaultPolicy = policy;
+        options.FallbackPolicy = policy;
 
         return options;
     }
 
+    //public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
+    //{
+    //    var section = configuration.GetSection(sectionName);
+    //    var settings = section.Get<T>();
+    //    services.Configure<T>(section);
+
+    //    return settings;
+    //}
+
     public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(sectionName);
+
         var section = configuration.GetSection(sectionName);
-        var settings = section.Get<T>();
         services.Configure<T>(section);
+
+        // Avoid double-binding: use Bind to avoid extra allocations and reflection
+        var settings = Activator.CreateInstance<T>();
+        section.Bind(settings);
 
         return settings;
     }
@@ -262,13 +281,20 @@ public static class RegisterServicesExtensions
         return options;
     }
 
-    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services,
-        JwtOptions settings) where TDbContext : DbContext where TEntityUser : class
+    internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions settings)
+        where TDbContext : DbContext
+        where TEntityUser : class
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(settings);
+
         services
             .AddIdentity<TEntityUser, ApplicationRole>()
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
+
+        var securityKeyBytes = Encoding.UTF8.GetBytes(settings.SecurityKey);
+        var signingKey = new SymmetricSecurityKey(securityKeyBytes);
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -284,7 +310,7 @@ public static class RegisterServicesExtensions
                     ValidAudience = settings.Audience,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.SecurityKey)),
+                    IssuerSigningKey = signingKey,
                     RequireExpirationTime = true,
                     ClockSkew = settings.ClockSkew
                 };
@@ -293,23 +319,17 @@ public static class RegisterServicesExtensions
         services.Configure<IdentityOptions>(options =>
         {
             options.User.RequireUniqueEmail = settings.RequireUniqueEmail;
-            options.Password = new PasswordOptions
-            {
-                RequireDigit = settings.RequireDigit,
-                RequiredLength = settings.RequiredLength,
-                RequireUppercase = settings.RequireUppercase,
-                RequireLowercase = settings.RequireLowercase,
-                RequireNonAlphanumeric = settings.RequireNonAlphanumeric,
-                RequiredUniqueChars = settings.RequiredUniqueChars
-            };
+            options.Password.RequireDigit = settings.RequireDigit;
+            options.Password.RequiredLength = settings.RequiredLength;
+            options.Password.RequireUppercase = settings.RequireUppercase;
+            options.Password.RequireLowercase = settings.RequireLowercase;
+            options.Password.RequireNonAlphanumeric = settings.RequireNonAlphanumeric;
+            options.Password.RequiredUniqueChars = settings.RequiredUniqueChars;
 
             options.SignIn.RequireConfirmedEmail = settings.RequireConfirmedEmail;
-            options.Lockout = new LockoutOptions
-            {
-                MaxFailedAccessAttempts = settings.MaxFailedAccessAttempts,
-                AllowedForNewUsers = settings.AllowedForNewUsers,
-                DefaultLockoutTimeSpan = settings.DefaultLockoutTimeSpan
-            };
+            options.Lockout.MaxFailedAccessAttempts = settings.MaxFailedAccessAttempts;
+            options.Lockout.AllowedForNewUsers = settings.AllowedForNewUsers;
+            options.Lockout.DefaultLockoutTimeSpan = settings.DefaultLockoutTimeSpan;
         });
 
         return services;
