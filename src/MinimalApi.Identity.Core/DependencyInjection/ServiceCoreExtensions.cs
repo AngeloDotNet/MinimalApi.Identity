@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Filters;
-using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 
 namespace MinimalApi.Identity.Core.DependencyInjection;
 
@@ -37,7 +37,8 @@ public static class ServiceCoreExtensions
     public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
         => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
 
-    public static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
+    //public static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
+    public static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<AppSettings> configureOptions)
         => services.Configure(configureOptions);
 
     public static IServiceCollection AddRegisterServices(this IServiceCollection services, Action<ServiceRegistrationConfiguration> configure)
@@ -78,8 +79,8 @@ public static class ServiceCoreExtensions
 
     internal static Assembly FindImplementationInterfaces(Type interfaceType)
     {
-        var implementationType = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes()).FirstOrDefault(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
+        var implementationType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+            .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
             ?? throw new InvalidOperationException($"No implementation found for interface {interfaceType.FullName}");
 
         return interfaceType.Assembly;
