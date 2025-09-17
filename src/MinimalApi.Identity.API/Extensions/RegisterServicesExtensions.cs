@@ -15,10 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
 using MinimalApi.Identity.AccountManager.Endpoints;
 using MinimalApi.Identity.API.Endpoints;
-using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
-using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
@@ -26,6 +24,7 @@ using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.Licenses.DependencyInjection;
 using MinimalApi.Identity.Licenses.Endpoints;
@@ -38,19 +37,22 @@ namespace MinimalApi.Identity.API.Extensions;
 public static class RegisterServicesExtensions
 {
     public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
-        Action<DefaultServicesConfiguration> configure) where TDbContext : DbContext
+        AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
     {
-        var settings = new DefaultServicesConfiguration(services);
-        configure(settings);
+        var activeModules = new FeatureFlagsOptions
+        {
+            EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
+            EnabledFeatureModule = appSettings.EnabledFeatureModule
+        };
 
         services
             .AddCorsConfiguration()
             .AddProblemDetails()
             .AddHttpContextAccessor()
-            .AddSwaggerConfiguration(settings.FeatureFlags)
-            .AddDatabaseContext<TDbContext>(configuration, settings.DatabaseType, settings.MigrationsAssembly)
-            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(settings.JwtOptions)
-            .AddRegisterFeatureFlags(settings.FeatureFlags);
+            .AddSwaggerConfiguration(activeModules)
+            .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
+            .AddRegisterFeatureFlags(activeModules);
 
         services
             .AddScoped<SignInManager<ApplicationUser>>();
@@ -66,18 +68,23 @@ public static class RegisterServicesExtensions
         //.ClaimsManagerRegistrationService()
         //.RolesManagerRegistrationService()
 
+        var errorFormat = appSettings.ErrorResponseFormat;
+
+        switch (errorFormat)
+        {
+            case "Default":
+                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.Default);
+                break;
+            case "List":
+                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.List);
+                break;
+        }
+
         services
             .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
-            .Configure<JwtOptions>(options => configuration.GetSection(nameof(JwtOptions)).Bind(options))
-            .Configure<HostedServiceOptions>(options => configuration.GetSection(nameof(HostedServiceOptions)).Bind(options))
             .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
-            .Configure<UsersOptions>(options => configuration.GetSection(nameof(UsersOptions)).Bind(options))
-            .Configure<ValidationOptions>(options => configuration.GetSection(nameof(ValidationOptions)).Bind(options))
-
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel").Bind(options))
-
-            .ConfigureValidation(options => options.ErrorResponseFormat = settings.FormatErrorResponse)
             .ConfigureFluentValidation<LoginValidator>();
 
         return services;
@@ -99,8 +106,14 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions featureFlagsOptions)
+    public static void UseMapEndpoints(this WebApplication app, AppSettings appSettings)
     {
+        var activeModules = new FeatureFlagsOptions
+        {
+            EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
+            EnabledFeatureModule = appSettings.EnabledFeatureModule
+        };
+
         app.MapEndpoints();
         app.MapAccountEndpoints();
         app.MapPolicyEndpoints();
@@ -110,12 +123,12 @@ public static class RegisterServicesExtensions
         //app.MapClaimsEndpoints();
         //app.MapRolesEndpoints();
 
-        if (featureFlagsOptions.EnabledFeatureLicense)
+        if (activeModules.EnabledFeatureLicense)
         {
             app.MapLicenseEndpoints();
         }
 
-        if (featureFlagsOptions.EnabledFeatureModule)
+        if (activeModules.EnabledFeatureModule)
         {
             //app.MapModuleEndpoints();
         }
@@ -223,27 +236,6 @@ public static class RegisterServicesExtensions
         return options;
     }
 
-    public static ProgramOptions AddPublicOptions<T>(this ProgramOptions options, IConfiguration configuration) where T : class
-    {
-        var jwtOptions = new JwtOptions();
-        var featureFlagsOptions = new FeatureFlagsOptions();
-
-        configuration.Bind(nameof(JwtOptions), jwtOptions);
-        configuration.Bind(nameof(FeatureFlagsOptions), featureFlagsOptions);
-
-        var databaseType = configuration.GetValue<string>("ConnectionStrings:DatabaseType") ?? "sqlserver";
-        var migrationsAssembly = configuration.GetValue<string>("ConnectionStrings:MigrationsAssembly") ?? typeof(T).Assembly.FullName!;
-        var formatErrors = configuration.GetValue<ErrorResponseFormat>("ApplicationOptions:ErrorResponseFormat");
-
-        options.JwtOptions = jwtOptions;
-        options.FeatureFlagsOptions = featureFlagsOptions;
-        options.DatabaseType = databaseType;
-        options.MigrationsAssembly = migrationsAssembly;
-        options.FormatErrors = formatErrors;
-
-        return options;
-    }
-
     public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
     {
         var section = configuration.GetSection(sectionName);
@@ -260,13 +252,8 @@ public static class RegisterServicesExtensions
         var options = new JsonOptions();
 
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        //options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
-        //options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        //options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        //options.JsonSerializerOptions.WriteIndented = true;
 
         return options;
     }
