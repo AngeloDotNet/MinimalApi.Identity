@@ -9,7 +9,7 @@ internal static class ProfileMapper
     {
         return new UserProfileModel(
             userProfile.UserId,
-            userProfile.User.Email!,
+            //userProfile.User.Email!,
             userProfile.FirstName,
             userProfile.LastName,
             userProfile.IsEnabled,
