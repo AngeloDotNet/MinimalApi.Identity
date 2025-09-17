@@ -37,7 +37,6 @@ public static class ServiceCoreExtensions
     public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
         => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
 
-    //public static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<ValidationOptions> configureOptions)
     public static IServiceCollection ConfigureValidation(this IServiceCollection services, Action<AppSettings> configureOptions)
         => services.Configure(configureOptions);
 
