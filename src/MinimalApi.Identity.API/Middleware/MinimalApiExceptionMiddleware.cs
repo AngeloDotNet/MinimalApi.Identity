@@ -24,11 +24,11 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
     {
         try
         {
-            await next(httpContext);
+            await next(httpContext).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(httpContext, ex, validationOptions);
+            await HandleExceptionAsync(httpContext, ex, validationOptions).ConfigureAwait(false);
         }
     }
 
@@ -40,16 +40,30 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
         if (exception is ValidationModelException validationException)
         {
-            problemDetails.Extensions["errors"] = validationOptions.ErrorResponseFormat == ErrorResponseFormat.List
-                ? validationException.Errors.SelectMany(e
-                    => e.Value.Select(m => new { Name = e.Key, Message = m })).ToArray() : validationException.Errors;
+            if (validationOptions.ErrorResponseFormat == ErrorResponseFormat.List)
+            {
+                var errorList = new List<object>();
+                foreach (var e in validationException.Errors)
+                {
+                    foreach (var m in e.Value)
+                    {
+                        errorList.Add(new { Name = e.Key, Message = m });
+                    }
+                }
+
+                problemDetails.Extensions["errors"] = errorList;
+            }
+            else
+            {
+                problemDetails.Extensions["errors"] = validationException.Errors;
+            }
         }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
         var json = JsonSerializer.Serialize(problemDetails);
-        await context.Response.WriteAsync(json);
+        await context.Response.WriteAsync(json).ConfigureAwait(false);
     }
 
     public static ProblemDetails CreateProblemDetails(HttpContext context, HttpStatusCode statusCode, string detail)
@@ -63,37 +77,48 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
             Type = type,
             Title = MessagesExceptions.ProblemDetailsMessageTitle,
             Instance = $"{context.Request.Method} {context.Request.Path}",
-            Detail = detail,
-            Extensions = {
-                    ["traceId"] = context.Features.Get<IHttpActivityFeature>()?.Activity.Id,
-                    ["requestId"] = context.TraceIdentifier,
-                    ["dateTime"] = DateTime.UtcNow
-                }
+            Detail = detail
         };
 
-        if (context.RequestServices.GetRequiredService<IHostEnvironment>().IsDevelopment())
+        var extensions = problemDetails.Extensions;
+        extensions["traceId"] = context.Features.Get<IHttpActivityFeature>()?.Activity?.Id;
+        extensions["requestId"] = context.TraceIdentifier;
+        extensions["dateTime"] = DateTime.UtcNow;
+
+        var env = context.RequestServices.GetService<IHostEnvironment>();
+        if (env is not null && env.IsDevelopment())
         {
             var stackTrace = context.Features.Get<IExceptionHandlerFeature>()?.Error?.StackTrace;
-
             if (!string.IsNullOrEmpty(stackTrace))
             {
-                problemDetails.Extensions["stackTrace"] = stackTrace;
+                extensions["stackTrace"] = stackTrace;
             }
         }
 
         if (user?.Identity?.IsAuthenticated == true)
         {
-            var claims = user.Claims.ToDictionary(c => c.Type, c => c.Value);
-
-            if (claims.TryGetValue(ClaimTypes.NameIdentifier, out var userId))
+            // Avoid ToDictionary allocation if not needed
+            string? userId = null, userName = null;
+            foreach (var claim in user.Claims)
             {
-                problemDetails.Extensions["userId"] = userId;
+                if (userId is null && claim.Type == ClaimTypes.NameIdentifier)
+                {
+                    userId = claim.Value;
+                }
+                else if (userName is null && claim.Type == ClaimTypes.Name)
+                {
+                    userName = claim.Value;
+                }
+
+                if (userId is not null && userName is not null)
+                    break;
             }
 
-            if (claims.TryGetValue(ClaimTypes.Name, out var userName))
-            {
-                problemDetails.Extensions["userName"] = userName;
-            }
+            if (userId is not null)
+                extensions["userId"] = userId;
+
+            if (userName is not null)
+                extensions["userName"] = userName;
         }
 
         return problemDetails;
