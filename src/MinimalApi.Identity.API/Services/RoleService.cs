@@ -15,21 +15,15 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
     {
         var roles = await roleManager.Roles
             .Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
-            .ToListAsync();
+            .ToListAsync()
+            .ConfigureAwait(false);
 
-        if (roles.Count == 0)
-        {
-            return Enumerable.Empty<RoleResponseModel>().ToList();
-        }
-        else
-        {
-            return roles;
-        }
+        return roles;
     }
 
     public async Task<string> CreateRoleAsync(CreateRoleModel model)
     {
-        if (await roleManager.RoleExistsAsync(model.Role))
+        if (await roleManager.RoleExistsAsync(model.Role).ConfigureAwait(false))
         {
             throw new ConflictException(MessagesApi.RoleExists);
         }
@@ -40,7 +34,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             Default = false
         };
 
-        var result = await roleManager.CreateAsync(newRole);
+        var result = await roleManager.CreateAsync(newRole).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
@@ -52,15 +46,15 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
     public async Task<string> AssignRoleAsync(AssignRoleModel model)
     {
-        var user = await userManager.FindByNameAsync(model.Username)
+        var user = await userManager.FindByNameAsync(model.Username).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        if (!await roleManager.RoleExistsAsync(model.Role))
+        if (!await roleManager.RoleExistsAsync(model.Role).ConfigureAwait(false))
         {
             throw new NotFoundException(MessagesApi.RoleNotFound);
         }
 
-        var result = await userManager.AddToRoleAsync(user, model.Role);
+        var result = await userManager.AddToRoleAsync(user, model.Role).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
@@ -72,10 +66,10 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
     public async Task<string> RevokeRoleAsync(RevokeRoleModel model)
     {
-        var user = await userManager.FindByNameAsync(model.Username)
+        var user = await userManager.FindByNameAsync(model.Username).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        var result = await userManager.RemoveFromRoleAsync(user, model.Role);
+        var result = await userManager.RemoveFromRoleAsync(user, model.Role).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {
@@ -87,7 +81,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
     public async Task<string> DeleteRoleAsync(DeleteRoleModel model)
     {
-        var role = await roleManager.FindByNameAsync(model.Role)
+        var role = await roleManager.FindByNameAsync(model.Role).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.RoleNotFound);
 
         if (role.Default)
@@ -95,7 +89,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             throw new BadRequestException(MessagesApi.RoleNotDeleted);
         }
 
-        var result = await roleManager.DeleteAsync(role);
+        var result = await roleManager.DeleteAsync(role).ConfigureAwait(false);
 
         if (!result.Succeeded)
         {

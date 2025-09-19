@@ -88,6 +88,8 @@ The configuration can be completely managed by adding this section to the _appse
     "MaxRetryAttempts": 10
 },
 "AppSettings": {
+    "DatabaseType": "sqlserver",
+    "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
     "AssignAdminUsername": "admin",
     "AssignAdminEmail": "admin@example.org",
     "AssignAdminPassword": "StrongPassword",
@@ -99,14 +101,12 @@ The configuration can be completely managed by adding this section to the _appse
     "ValidateMinLength": 3,
     "ValidateMaxLength": 50,
     "ValidateMinLengthDescription": 5,
-    "ValidateMaxLengthDescription": 100,
-    "DatabaseType": "sqlserver",
-    "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer"
+    "ValidateMaxLengthDescription": 100
 }
 ```
 
 > [!NOTE]
-> For migrations you can use a specific project to add to your solution, then configuring the assembly in _ConnectionStrings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
+> For migrations you can use a specific project to add to your solution, then configuring the assembly in _AppSettings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
 
 ## 🗃️ Database
 
@@ -114,9 +114,9 @@ The configuration can be completely managed by adding this section to the _appse
 
 The library uses Entity Framework Core to manage the database.
 
-The connection string is configured in the `ConnectionStrings` section of the _appsettings.json_ file.
+The connection string is configured in the `AppSettings` section of the _appsettings.json_ file.
 
-- Database Type: Set via `ConnectionStrings:DatabaseType` (supported values: `sqlserver`)
+- Database Type: Set via `AppSettings:DatabaseType` (supported values: `sqlserver`)
 
 After setting the type of database you want to use, modify the corresponding connection string.
 
@@ -148,11 +148,12 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        var builder = WebApplication.CreateBuilder(args);
+
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
-
         //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
         //but create one (or more) duplicates of this configuration, modifying it as needed.
         builder.Services.AddRegisterServices(options =>

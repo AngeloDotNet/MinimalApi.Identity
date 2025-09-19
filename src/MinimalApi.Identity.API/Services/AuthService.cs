@@ -5,10 +5,10 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.Models;
-using MinimalApi.Identity.API.Options;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
@@ -27,11 +27,12 @@ namespace MinimalApi.Identity.API.Services;
 
 public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, IModuleService moduleService,
-    IProfileService profileService, IEmailManagerService emailManager) : IAuthService
+    IProfileService profileService, IEmailManagerService emailManager, ILogger<AuthService> logger) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
-        var signInResult = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, jwtOptions.Value.AllowedForNewUsers);
+        var signInResult = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe,
+            jwtOptions.Value.AllowedForNewUsers).ConfigureAwait(false);
 
         if (!signInResult.Succeeded)
         {
@@ -44,7 +45,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             };
         }
 
-        var user = await userManager.FindByNameAsync(model.Username)
+        var user = await userManager.FindByNameAsync(model.Username).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!user.EmailConfirmed)
@@ -52,7 +53,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
         }
 
-        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None)
+        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         if (!profileUser.IsEnabled)
@@ -63,34 +64,34 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         var lastDateChangePassword = profileUser.LastDateChangePassword;
         var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
 
-        if (lastDateChangePassword == null || checkLastDateChangePassword)
+        if (lastDateChangePassword is null || checkLastDateChangePassword)
         {
             throw new BadRequestException(MessagesApi.UserForcedChangePassword);
         }
 
-        await userManager.UpdateSecurityStampAsync(user);
+        await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
-        var userRoles = await userManager.GetRolesAsync(user);
-        var userClaims = await userManager.GetClaimsAsync(user);
+        var userRolesTask = await userManager.GetRolesAsync(user);
+        var userClaimsTask = await userManager.GetClaimsAsync(user);
+        var customClaimsTask = await GetCustomClaimsUserAsync(user);
 
-        var customClaims = await GetCustomClaimsUserAsync(user);
-        var claims = new List<Claim>()
+        var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName ?? string.Empty),
             new(ClaimTypes.Email, user.Email ?? string.Empty),
-            new(ClaimTypes.SerialNumber, user.SecurityStamp!.ToString()),
-        }
-        .Union(userClaims)
-        .Union(customClaims)
-        .Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role))).ToList();
+            new(ClaimTypes.SerialNumber, user.SecurityStamp!)
+        };
+        claims.AddRange(userClaimsTask);
+        claims.AddRange(userRolesTask.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(customClaimsTask);
 
         var loginResponse = CreateToken(claims, jwtOptions.Value);
 
         user.RefreshToken = loginResponse.RefreshToken;
-        user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(60);
+        user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.Value.RefreshTokenExpirationMinutes);
 
-        await userManager.UpdateAsync(user);
+        await userManager.UpdateAsync(user).ConfigureAwait(false);
 
         return loginResponse;
     }
@@ -103,53 +104,61 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             Email = model.Email
         };
 
-        var result = await userManager.CreateAsync(user, model.Password);
+        var result = await userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
 
-        if (result.Succeeded)
+        if (!result.Succeeded)
         {
-            await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None);
-
-            var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value) ? DefaultRoles.Admin : DefaultRoles.User;
-            var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString());
-
-            if (!roleAssignResult.Succeeded)
-            {
-                throw new BadRequestException(MessagesApi.RoleNotAssigned);
-            }
-
-            var claimsAssignResult = await AddClaimsToUserAsync(user, role);
-
-            if (!claimsAssignResult.Succeeded)
-            {
-                throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
-            }
-
-            var userId = await userManager.GetUserIdAsync(user);
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(new GenerateCallBackUrlModel(userId, token, null), httpContextAccessor);
-            var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
-                "It is recommended to copy and paste for simplicity.";
-
-            var emailModel = new EmailSending
-            {
-                EmailTo = user.Email!,
-                Subject = "Confirm your email",
-                Body = messageText,
-                TypeEmailSendingId = (int)EmailSendingType.RegisterUser,
-                TypeEmailStatusId = (int)EmailStatusType.Pending,
-                DateSent = DateTime.UtcNow,
-                RetrySender = 0
-            };
-
-            await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
-
-            return MessagesApi.UserCreated;
+            throw new BadRequestException(result.Errors);
         }
 
-        throw new BadRequestException(result.Errors);
+        await profileService.CreateProfileAsync(
+            new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None
+        ).ConfigureAwait(false);
+
+        var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value).ConfigureAwait(false)
+            ? DefaultRoles.Admin
+            : DefaultRoles.User;
+
+        var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
+
+        if (!roleAssignResult.Succeeded)
+        {
+            throw new BadRequestException(MessagesApi.RoleNotAssigned);
+        }
+
+        var claimsAssignResult = await AddClaimsToUserAsync(user, role).ConfigureAwait(false);
+
+        if (!claimsAssignResult.Succeeded)
+        {
+            throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
+        }
+
+        var userId = await userManager.GetUserIdAsync(user).ConfigureAwait(false);
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
+
+        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(
+            new GenerateCallBackUrlModel(userId, token, null), httpContextAccessor
+        ).ConfigureAwait(false);
+
+        var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
+            "It is recommended to copy and paste for simplicity.";
+
+        var emailModel = new EmailSending
+        {
+            EmailTo = user.Email!,
+            Subject = "Confirm your email",
+            Body = messageText,
+            TypeEmailSendingId = (int)EmailSendingType.RegisterUser,
+            TypeEmailStatusId = (int)EmailStatusType.Pending,
+            DateSent = DateTime.UtcNow,
+            RetrySender = 0
+        };
+
+        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
+
+        return MessagesApi.UserCreated;
     }
 
     public async Task<AuthResponseModel> RefreshTokenAsync(RefreshTokenModel model)
@@ -158,9 +167,11 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
 
         var userId = user.GetUserId();
-        var dbUser = await userManager.FindByIdAsync(userId);
+        var dbUser = await userManager.FindByIdAsync(userId).ConfigureAwait(false);
 
-        if (dbUser?.RefreshToken == null || dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow || dbUser.RefreshToken != model.RefreshToken)
+        if (dbUser?.RefreshToken is null ||
+            dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow ||
+            dbUser.RefreshToken != model.RefreshToken)
         {
             throw new BadRequestException(MessagesExceptions.InvalidRefreshToken);
         }
@@ -170,51 +181,55 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         dbUser.RefreshToken = loginResponse.RefreshToken;
         dbUser.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.Value.RefreshTokenExpirationMinutes);
 
-        await userManager.UpdateAsync(dbUser);
+        await userManager.UpdateAsync(dbUser).ConfigureAwait(false);
 
         return loginResponse;
     }
 
     public async Task<string> LogoutAsync()
     {
-        await signInManager.SignOutAsync();
+        await signInManager.SignOutAsync().ConfigureAwait(false);
 
         return MessagesApi.UserLogOut;
     }
 
     public async Task<AuthResponseModel> ImpersonateAsync(ImpersonateUserModel inputModel)
     {
-        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString()) ?? throw new UserUnknownException($"User not found");
+        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString()).ConfigureAwait(false)
+            ?? throw new UserUnknownException("User not found");
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
             throw new UserIsLockedException(MessagesApi.UserLockedOut);
         }
 
-        await userManager.UpdateSecurityStampAsync(user);
+        await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
-        var userRoles = await userManager.GetRolesAsync(user);
-        var userClaims = await userManager.GetClaimsAsync(user);
+        var userRolesTask = userManager.GetRolesAsync(user);
+        var userClaimsTask = userManager.GetClaimsAsync(user);
+        var customClaimsTask = GetCustomClaimsUserAsync(user);
 
-        var customClaims = await GetCustomClaimsUserAsync(user);
+        await Task.WhenAll(userRolesTask, userClaimsTask, customClaimsTask).ConfigureAwait(false);
+
         var identity = UsersExtensions.GetIdentity(httpContextAccessor);
 
         UpdateClaim(ClaimTypes.NameIdentifier, user.Id.ToString());
         UpdateClaim(ClaimTypes.Name, user.UserName ?? string.Empty);
         UpdateClaim(ClaimTypes.Email, user.Email ?? string.Empty);
-        UpdateClaim(ClaimTypes.SerialNumber, user.SecurityStamp!.ToString());
+        UpdateClaim(ClaimTypes.SerialNumber, user.SecurityStamp!);
 
         var updateIdentity = identity.Claims
-            .Union(userClaims)
-            .Union(customClaims)
-            .Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role))).ToList();
+            .Union(userClaimsTask.Result)
+            .Union(customClaimsTask.Result)
+            .Union(userRolesTask.Result.Select(role => new Claim(ClaimTypes.Role, role)))
+            .ToList();
 
         var loginResponse = CreateToken(updateIdentity, jwtOptions.Value);
 
         user.RefreshToken = loginResponse.RefreshToken;
         user.RefreshTokenExpirationDate = DateTime.UtcNow.AddMinutes(jwtOptions.Value.RefreshTokenExpirationMinutes);
 
-        await userManager.UpdateAsync(user);
+        await userManager.UpdateAsync(user).ConfigureAwait(false);
 
         return loginResponse;
 
@@ -222,7 +237,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         {
             var existingClaim = identity.FindFirst(type);
 
-            if (existingClaim != null)
+            if (existingClaim is not null)
             {
                 identity.RemoveClaim(existingClaim);
             }
@@ -233,15 +248,15 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
     {
-        var user = await userManager.FindByEmailAsync(inputModel.Email)
+        var user = await userManager.FindByEmailAsync(inputModel.Email).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        if (!await userManager.IsEmailConfirmedAsync(user))
+        if (!await userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
         {
             throw new BadRequestException(MessagesApi.ErrorEmailNotConfirmed);
         }
 
-        var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+        var resetToken = await userManager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
         var messageText = $"To reset your password, you will need to indicate this code: {encodedToken}. " +
             "It is recommended to copy and paste for simplicity.";
@@ -257,7 +272,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             RetrySender = 0
         };
 
-        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
+        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
 
         return MessagesApi.SendEmailResetPassword;
     }
@@ -269,40 +284,45 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.ErrorCodeResetPassword);
         }
 
-        var user = await userManager.FindByEmailAsync(inputModel.Email)
+        var user = await userManager.FindByEmailAsync(inputModel.Email).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password);
+        var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password).ConfigureAwait(false);
 
         if (result.Succeeded)
         {
             return MessagesApi.ResetPassword;
         }
-        else
-        {
-            throw new BadRequestException(result.Errors);
-        }
+
+        throw new BadRequestException(result.Errors);
     }
 
     private static AuthResponseModel CreateToken(List<Claim> claims, JwtOptions jwtOptions)
     {
         var audienceClaim = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud);
-        claims.Remove(audienceClaim!);
+        if (audienceClaim is not null)
+        {
+            claims.Remove(audienceClaim);
+        }
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-        var jwtSecurityToken = new JwtSecurityToken(jwtOptions.Issuer, jwtOptions.Audience, claims,
-            DateTime.UtcNow, DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenExpirationMinutes), signingCredentials);
+        var jwtSecurityToken = new JwtSecurityToken(
+            jwtOptions.Issuer,
+            jwtOptions.Audience,
+            claims,
+            DateTime.UtcNow,
+            DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenExpirationMinutes),
+            signingCredentials
+        );
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
         var italyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
         var expiredLocalNow = TimeZoneInfo.ConvertTimeFromUtc(jwtSecurityToken.ValidTo, italyTimeZone);
 
-        var response = new AuthResponseModel(accessToken, GenerateRefreshToken(), expiredLocalNow);
-
-        return response;
+        return new AuthResponseModel(accessToken, GenerateRefreshToken(), expiredLocalNow);
 
         static string GenerateRefreshToken()
         {
@@ -316,25 +336,20 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
     private async Task<bool> CheckUserIsAdminDesignedAsync(string email, UsersOptions userOptions)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
-        if (user is null || user.Email is null)
-        {
-            return false;
-        }
-
-        return user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
+        return user is not null &&
+               user.Email is not null &&
+               user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private async Task<IdentityResult> AddClaimsToUserAsync(ApplicationUser user, DefaultRoles role)
-    {
-        return role switch
+        => role switch
         {
-            DefaultRoles.Admin => await AddClaimsToAdminUserAsync(user),
-            DefaultRoles.User => await AddClaimsToDefaultUserAsync(user),
+            DefaultRoles.Admin => await AddClaimsToAdminUserAsync(user).ConfigureAwait(false),
+            DefaultRoles.User => await AddClaimsToDefaultUserAsync(user).ConfigureAwait(false),
             _ => IdentityResult.Failed()
         };
-    }
 
     private async Task<IdentityResult> AddClaimsToAdminUserAsync(ApplicationUser user)
     {
@@ -342,7 +357,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
             .ToList();
 
-        return await userManager.AddClaimsAsync(user, claims);
+        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
     }
 
     private async Task<IdentityResult> AddClaimsToDefaultUserAsync(ApplicationUser user)
@@ -352,34 +367,33 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
             .ToList();
 
-        return await userManager.AddClaimsAsync(user, claims);
+        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
     }
 
     private async Task<List<Claim>> GetCustomClaimsUserAsync(ApplicationUser user)
     {
+        var userProfileTask = await profileService.GetClaimUserProfileAsync(user, CancellationToken.None);
+        var userClaimModulesTask = await moduleService.GetClaimsModuleUserAsync(user);
+
+        // TODO: Integrate licenseService to get user license claims
+        // var userLicensesTask = licenseService.GetClaimsLicenseUserAsync(user, CancellationToken.None);
+
         var customClaims = new List<Claim>();
-        var userProfile = new List<Claim>();
-        var userClaimModules = new List<Claim>();
 
-        //TODO: Integrate licenseService to get user license claims
-
-        //TODO: Integrate profileService to get user profile claims
-        var task = new List<Task> {
-            //Task.Run(async () => userProfile = await profileService.GetClaimUserProfileAsync(user)),
-            Task.Run(async () => userClaimModules = await moduleService.GetClaimsModuleUserAsync(user))
-        };
-
-        await Task.WhenAll(task);
-
-        if (userProfile != null)
+        if (userProfileTask is { Count: > 0 })
         {
-            customClaims.AddRange(userProfile);
+            customClaims.AddRange(userProfileTask);
         }
 
-        if (userClaimModules?.Count > 0)
+        if (userClaimModulesTask is { Count: > 0 })
         {
-            customClaims.AddRange(userClaimModules);
+            customClaims.AddRange(userClaimModulesTask);
         }
+
+        // if (userLicensesTask.Result is { Count: > 0 })
+        // {
+        //     customClaims.AddRange(userLicensesTask.Result);
+        // }
 
         return customClaims;
     }
@@ -405,29 +419,20 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         {
             var user = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
 
-            if (securityToken is JwtSecurityToken jwtSecurityToken && jwtSecurityToken.Header.Alg == SecurityAlgorithms.HmacSha256)
+            if (securityToken is JwtSecurityToken { Header.Alg: SecurityAlgorithms.HmacSha256 })
             {
                 return user;
             }
         }
         catch
         {
-            // Token validation failed
-            // Log the exception if needed
+            logger.LogWarning("Token validation failed");
         }
 
-        // Token is invalid or expired
-        // Log the invalid token if needed
+        logger.LogWarning("Token is invalid or expired");
         return null!;
     }
 
     private static bool CheckLastDateChangePassword(DateOnly? lastDate, UsersOptions userOptions)
-    {
-        if (lastDate!.Value.AddDays(userOptions.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow))
-        {
-            return true;
-        }
-
-        return false;
-    }
+        => lastDate is not null && lastDate.Value.AddDays(userOptions.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
 }
