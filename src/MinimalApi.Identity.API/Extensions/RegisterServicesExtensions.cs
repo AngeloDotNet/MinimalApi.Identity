@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
@@ -46,13 +45,19 @@ public static class RegisterServicesExtensions
         };
 
         services
-            .AddCorsConfiguration()
-            .AddProblemDetails()
             .AddHttpContextAccessor()
+            .ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.SerializerOptions.Converters.Add(new UtcDateTimeConverter());
+            })
             .AddSwaggerConfiguration(activeModules)
             .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
-            .AddRegisterFeatureFlags(activeModules);
+            .AddRegisterFeatureFlags(activeModules)
+            .AddProblemDetails()
+            .AddCorsConfiguration();
 
         services
             .AddScoped<SignInManager<ApplicationUser>>();
@@ -73,18 +78,17 @@ public static class RegisterServicesExtensions
         switch (errorFormat)
         {
             case "Default":
-                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.Default);
+                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
                 break;
             case "List":
-                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.List);
+                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.List));
                 break;
             default:
-                services.ConfigureValidation(options => options.ErrorResponseFormat = ErrorResponseFormat.Default);
+                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
                 break;
         }
 
         services
-            .Configure<JsonOptions>(options => options.ConfigureJsonOptions())
             .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel").Bind(options))
@@ -243,15 +247,6 @@ public static class RegisterServicesExtensions
         return options;
     }
 
-    //public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
-    //{
-    //    var section = configuration.GetSection(sectionName);
-    //    var settings = section.Get<T>();
-    //    services.Configure<T>(section);
-
-    //    return settings;
-    //}
-
     public static T? ConfigureAndGet<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -261,24 +256,10 @@ public static class RegisterServicesExtensions
         var section = configuration.GetSection(sectionName);
         services.Configure<T>(section);
 
-        // Avoid double-binding: use Bind to avoid extra allocations and reflection
         var settings = Activator.CreateInstance<T>();
         section.Bind(settings);
 
         return settings;
-    }
-
-    internal static JsonOptions ConfigureJsonOptions(this JsonOptions jsonOptions)
-    {
-        ArgumentNullException.ThrowIfNull(jsonOptions);
-
-        var options = new JsonOptions();
-
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
-
-        return options;
     }
 
     internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions settings)
