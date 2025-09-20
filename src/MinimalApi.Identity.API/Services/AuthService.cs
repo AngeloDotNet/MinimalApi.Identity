@@ -4,10 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MinimalApi.Identity.API.DependencyInjection;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
@@ -15,19 +15,13 @@ using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
-using MinimalApi.Identity.Core.Models;
 using MinimalApi.Identity.Core.Options;
-using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.Core.Utility.Messages;
-using MinimalApi.Identity.EmailManager.Services;
-using MinimalApi.Identity.ProfileManager.Models;
-using MinimalApi.Identity.ProfileManager.Services;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager,
-    SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, IModuleService moduleService,
-    IProfileService profileService, IEmailManagerService emailManager, ILogger<AuthService> logger) : IAuthService
+public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+    IHttpContextAccessor httpContextAccessor, ILogger<AuthService> logger, IServiceProvider serviceProvider) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
@@ -53,27 +47,13 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
         }
 
-        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None).ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
-
-        if (!profileUser.IsEnabled)
-        {
-            throw new BadRequestException(MessagesApi.UserNotEnableLogin);
-        }
-
-        var lastDateChangePassword = profileUser.LastDateChangePassword;
-        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
-
-        if (lastDateChangePassword is null || checkLastDateChangePassword)
-        {
-            throw new BadRequestException(MessagesApi.UserForcedChangePassword);
-        }
+        await AuthExtensions.CheckUserProfileAndPasswordAsync(user, usersOptions, serviceProvider).ConfigureAwait(false);
 
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
         var userRolesTask = await userManager.GetRolesAsync(user);
         var userClaimsTask = await userManager.GetClaimsAsync(user);
-        var customClaimsTask = await GetCustomClaimsUserAsync(user);
+        var customClaimsTask = await AuthExtensions.GetCustomClaimsUserAsync(user, serviceProvider);
 
         var claims = new List<Claim>
         {
@@ -111,9 +91,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(result.Errors);
         }
 
-        await profileService.CreateProfileAsync(
-            new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None
-        ).ConfigureAwait(false);
+        await AuthExtensions.CreateProfileAsync(model, user, serviceProvider).ConfigureAwait(false);
 
         var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value).ConfigureAwait(false)
             ? DefaultRoles.Admin
@@ -133,30 +111,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
         }
 
-        var userId = await userManager.GetUserIdAsync(user).ConfigureAwait(false);
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
-
-        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-        var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(
-            new GenerateCallBackUrlModel(userId, token, null), httpContextAccessor
-        ).ConfigureAwait(false);
-
-        var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
-            "It is recommended to copy and paste for simplicity.";
-
-        var emailModel = new EmailSending
-        {
-            EmailTo = user.Email!,
-            Subject = "Confirm your email",
-            Body = messageText,
-            TypeEmailSendingId = (int)EmailSendingType.RegisterUser,
-            TypeEmailStatusId = (int)EmailStatusType.Pending,
-            DateSent = DateTime.UtcNow,
-            RetrySender = 0
-        };
-
-        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
+        await AuthExtensions.SendEmailRegisterUserAsync(userManager, user, httpContextAccessor, serviceProvider).ConfigureAwait(false);
 
         return MessagesApi.UserCreated;
     }
@@ -207,7 +162,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         var userRolesTask = userManager.GetRolesAsync(user);
         var userClaimsTask = userManager.GetClaimsAsync(user);
-        var customClaimsTask = GetCustomClaimsUserAsync(user);
+        var customClaimsTask = AuthExtensions.GetCustomClaimsUserAsync(user, serviceProvider);
 
         await Task.WhenAll(userRolesTask, userClaimsTask, customClaimsTask).ConfigureAwait(false);
 
@@ -248,31 +203,15 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
     {
-        var user = await userManager.FindByEmailAsync(inputModel.Email).ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.UserNotFound);
+        var user = await userManager.FindByEmailAsync(inputModel.Email)
+            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!await userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
         {
             throw new BadRequestException(MessagesApi.ErrorEmailNotConfirmed);
         }
 
-        var resetToken = await userManager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
-        var messageText = $"To reset your password, you will need to indicate this code: {encodedToken}. " +
-            "It is recommended to copy and paste for simplicity.";
-
-        var emailModel = new EmailSending
-        {
-            EmailTo = user.Email!,
-            Subject = "Reset Password",
-            Body = messageText,
-            TypeEmailSendingId = (int)EmailSendingType.ForgotPassword,
-            TypeEmailStatusId = (int)EmailStatusType.Pending,
-            DateSent = DateTime.UtcNow,
-            RetrySender = 0
-        };
-
-        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
+        await AuthExtensions.SendEmailForgotPasswordAsync(userManager, user, serviceProvider).ConfigureAwait(false);
 
         return MessagesApi.SendEmailResetPassword;
     }
@@ -338,9 +277,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
     {
         var user = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
-        return user is not null &&
-               user.Email is not null &&
-               user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
+        return user is not null && user.Email is not null && user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private async Task<IdentityResult> AddClaimsToUserAsync(ApplicationUser user, DefaultRoles role)
@@ -368,34 +305,6 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             .ToList();
 
         return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
-    }
-
-    private async Task<List<Claim>> GetCustomClaimsUserAsync(ApplicationUser user)
-    {
-        var userProfileTask = await profileService.GetClaimUserProfileAsync(user, CancellationToken.None);
-        var userClaimModulesTask = await moduleService.GetClaimsModuleUserAsync(user);
-
-        // TODO: Integrate licenseService to get user license claims
-        // var userLicensesTask = licenseService.GetClaimsLicenseUserAsync(user, CancellationToken.None);
-
-        var customClaims = new List<Claim>();
-
-        if (userProfileTask is { Count: > 0 })
-        {
-            customClaims.AddRange(userProfileTask);
-        }
-
-        if (userClaimModulesTask is { Count: > 0 })
-        {
-            customClaims.AddRange(userClaimModulesTask);
-        }
-
-        // if (userLicensesTask.Result is { Count: > 0 })
-        // {
-        //     customClaims.AddRange(userLicensesTask.Result);
-        // }
-
-        return customClaims;
     }
 
     private ClaimsPrincipal ValidateAccessToken(string accessToken)
@@ -432,7 +341,4 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         logger.LogWarning("Token is invalid or expired");
         return null!;
     }
-
-    private static bool CheckLastDateChangePassword(DateOnly? lastDate, UsersOptions userOptions)
-        => lastDate is not null && lastDate.Value.AddDays(userOptions.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
 }

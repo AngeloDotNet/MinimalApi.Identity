@@ -40,23 +40,8 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
         if (exception is ValidationModelException validationException)
         {
-            if (validationOptions.ErrorResponseFormat == ErrorResponseFormat.List)
-            {
-                var errorList = new List<object>();
-                foreach (var e in validationException.Errors)
-                {
-                    foreach (var m in e.Value)
-                    {
-                        errorList.Add(new { Name = e.Key, Message = m });
-                    }
-                }
-
-                problemDetails.Extensions["errors"] = errorList;
-            }
-            else
-            {
-                problemDetails.Extensions["errors"] = validationException.Errors;
-            }
+            problemDetails.Extensions["errors"] = validationOptions.ErrorResponseFormat == ErrorResponseFormat.List
+                ? CreateErrorList(validationException) : validationException.Errors;
         }
 
         context.Response.ContentType = "application/json";
@@ -85,67 +70,97 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         extensions["requestId"] = context.TraceIdentifier;
         extensions["dateTime"] = DateTime.UtcNow;
 
+        AddStackTraceIfDevelopment(context, extensions);
+        AddUserClaims(user, extensions);
+
+        return problemDetails;
+    }
+
+    private static void AddStackTraceIfDevelopment(HttpContext context, IDictionary<string, object?> extensions)
+    {
         var env = context.RequestServices.GetService<IHostEnvironment>();
+
         if (env is not null && env.IsDevelopment())
         {
             var stackTrace = context.Features.Get<IExceptionHandlerFeature>()?.Error?.StackTrace;
+
             if (!string.IsNullOrEmpty(stackTrace))
             {
                 extensions["stackTrace"] = stackTrace;
             }
         }
-
-        if (user?.Identity?.IsAuthenticated == true)
-        {
-            // Avoid ToDictionary allocation if not needed
-            string? userId = null, userName = null;
-            foreach (var claim in user.Claims)
-            {
-                if (userId is null && claim.Type == ClaimTypes.NameIdentifier)
-                {
-                    userId = claim.Value;
-                }
-                else if (userName is null && claim.Type == ClaimTypes.Name)
-                {
-                    userName = claim.Value;
-                }
-
-                if (userId is not null && userName is not null)
-                    break;
-            }
-
-            if (userId is not null)
-                extensions["userId"] = userId;
-
-            if (userName is not null)
-                extensions["userName"] = userName;
-        }
-
-        return problemDetails;
     }
 
-    private static HttpStatusCode GetStatusCodeFromException(Exception exception)
-        => exception switch
+    private static void AddUserClaims(ClaimsPrincipal? user, IDictionary<string, object?> extensions)
+    {
+        if (user?.Identity?.IsAuthenticated is not true)
         {
-            ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
-            BadRequestException => HttpStatusCode.BadRequest,
-            ConflictException => HttpStatusCode.Conflict,
-            NotFoundException => HttpStatusCode.NotFound,
-            UnauthorizeException => HttpStatusCode.Unauthorized,
-            ValidationModelException => HttpStatusCode.UnprocessableEntity,
-            _ => HttpStatusCode.InternalServerError
-        };
+            return;
+        }
 
-    private static string GetMessageFromException(Exception exception)
-        => exception switch
+        string? userId = null, userName = null;
+
+        foreach (var claim in user.Claims)
         {
-            ArgumentOutOfRangeException argumentOutOfRangeException => argumentOutOfRangeException.Message,
-            ArgumentNullException argumentNullException => argumentNullException.Message,
-            BadRequestException badRequestException => badRequestException.Message,
-            ConflictException conflictException => conflictException.Message,
-            NotFoundException notFoundException => notFoundException.Message,
-            UnauthorizeException => MessagesExceptions.UserNotAuthenticated,
-            ValidationModelException validationModelException => validationModelException.Message,
-            _ => MessagesExceptions.UnexpectedError
-        };
+            if (userId is null && claim.Type == ClaimTypes.NameIdentifier)
+            {
+                userId = claim.Value;
+            }
+            else if (userName is null && claim.Type == ClaimTypes.Name)
+            {
+                userName = claim.Value;
+            }
+
+            if (userId is not null && userName is not null)
+                break;
+        }
+
+        if (userId is not null)
+        {
+            extensions["userId"] = userId;
+        }
+
+        if (userName is not null)
+        {
+            extensions["userName"] = userName;
+        }
+    }
+
+    private static List<object> CreateErrorList(ValidationModelException validationException)
+    {
+        var errorList = new List<object>();
+
+        foreach (var e in validationException.Errors)
+        {
+            foreach (var m in e.Value)
+            {
+                errorList.Add(new { Name = e.Key, Message = m });
+            }
+        }
+
+        return errorList;
+    }
+
+    private static HttpStatusCode GetStatusCodeFromException(Exception exception) => exception switch
+    {
+        ArgumentOutOfRangeException or ArgumentNullException => HttpStatusCode.BadRequest,
+        BadRequestException => HttpStatusCode.BadRequest,
+        ConflictException => HttpStatusCode.Conflict,
+        NotFoundException => HttpStatusCode.NotFound,
+        UnauthorizeException => HttpStatusCode.Unauthorized,
+        ValidationModelException => HttpStatusCode.UnprocessableEntity,
+        _ => HttpStatusCode.InternalServerError
+    };
+
+    private static string GetMessageFromException(Exception exception) => exception switch
+    {
+        ArgumentOutOfRangeException argumentOutOfRangeException => argumentOutOfRangeException.Message,
+        ArgumentNullException argumentNullException => argumentNullException.Message,
+        BadRequestException badRequestException => badRequestException.Message,
+        ConflictException conflictException => conflictException.Message,
+        NotFoundException notFoundException => notFoundException.Message,
+        UnauthorizeException => MessagesExceptions.UserNotAuthenticated,
+        ValidationModelException validationModelException => validationModelException.Message,
+        _ => MessagesExceptions.UnexpectedError
+    };
 }

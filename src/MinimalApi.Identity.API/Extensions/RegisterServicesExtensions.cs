@@ -69,9 +69,7 @@ public static class RegisterServicesExtensions
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService();
 
-        //TODO: Missing services to register
-        //.ClaimsManagerRegistrationService()
-        //.RolesManagerRegistrationService()
+        //TODO: Missing services to register (Claims, Roles Manager Registration Services)
 
         var errorFormat = appSettings.ErrorResponseFormat;
 
@@ -102,12 +100,12 @@ public static class RegisterServicesExtensions
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
             services.LicenseRegistrationService();
-            //services.LicenseManagerRegistrationService();
+            //TODO: Replace with new implementation: LicenseManagerRegistrationService();
         }
 
         if (featureFlagsOptions.EnabledFeatureModule)
         {
-            //services.ModuleManagerRegistrationService();
+            //TODO: Replace with new implementation: ModuleManagerRegistrationService();
         }
 
         return services;
@@ -126,9 +124,7 @@ public static class RegisterServicesExtensions
         app.MapPolicyEndpoints();
         app.MapProfileEndpoints();
 
-        //TODO: Missing services to register
-        //app.MapClaimsEndpoints();
-        //app.MapRolesEndpoints();
+        //TODO: Missing services to register (Claims, Roles Endpoints)
 
         if (activeModules.EnabledFeatureLicense)
         {
@@ -137,7 +133,7 @@ public static class RegisterServicesExtensions
 
         if (activeModules.EnabledFeatureModule)
         {
-            //app.MapModuleEndpoints();
+            //TODO: Replace with new implementation: app.MapModuleEndpoints();
         }
     }
 
