@@ -81,8 +81,7 @@ public static class AuthExtensions
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None
-        ).ConfigureAwait(false);
+        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None).ConfigureAwait(false);
     }
 
     public static bool CheckLastDateChangePassword(DateOnly? lastDate, UsersOptions userOptions)
