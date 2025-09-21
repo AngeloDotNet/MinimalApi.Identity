@@ -45,5 +45,5 @@ jobs:
           title: "Update CHANGELOG.md for tag ${{ github.ref_name }} [auto]"
           body: "This PR automatically updates CHANGELOG.md for tag ${{ github.ref_name }}."
           branch: "changelog/update-for-${{ github.ref_name }}"
-          base: ${{ github.ref_name }}
+          base: main
           token: ${{ secrets.GITHUB_TOKEN }}
