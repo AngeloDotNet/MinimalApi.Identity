@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
-using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 
 namespace MinimalApi.Identity.AuthManager.HostedServices;
 
@@ -15,17 +15,17 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
     {
         using var scope = serviceProvider.CreateScope();
 
-        var usersOptions = new UsersOptions();
+        var settings = new AppSettings();
 
-        configuration.Bind(nameof(UsersOptions), usersOptions);
+        configuration.Bind(nameof(AppSettings), settings);
 
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         var administratorUser = new ApplicationUser
         {
-            UserName = usersOptions.AssignAdminUsername,
-            Email = usersOptions.AssignAdminEmail,
+            UserName = settings.AssignAdminUsername,
+            Email = settings.AssignAdminEmail,
             UserProfile = new UserProfile
             {
                 FirstName = "Application",
@@ -39,7 +39,7 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             RefreshToken = ""
         };
 
-        await CheckCreateUserAsync(userManager, administratorUser, usersOptions.AssignAdminPassword, nameof(DefaultRoles.Admin));
+        await CheckCreateUserAsync(userManager, administratorUser, settings.AssignAdminPassword, nameof(DefaultRoles.Admin));
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
