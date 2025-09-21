@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
+using EntityFramework.Exceptions.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +46,7 @@ public static class RegisterServicesExtensions
         };
 
         services
+            .AddSingleton(TimeProvider.System)
             .AddHttpContextAccessor()
             .ConfigureHttpJsonOptions(options =>
             {
@@ -57,9 +59,7 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddRegisterFeatureFlags(activeModules)
             .AddProblemDetails()
-            .AddCorsConfiguration();
-
-        services
+            .AddCorsConfiguration()
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
@@ -161,6 +161,7 @@ public static class RegisterServicesExtensions
         var sqlConnection = dbType switch
         {
             "sqlserver" => configuration.GetConnectionString("SQLServer"),
+            //"azuresql" => configuration.GetConnectionString("AzureSQL"),
             //"postgresql" => configuration.GetConnectionString("PostgreSQL"),
             //"mysql" => configuration.GetConnectionString("MySQL"),
             //"sqlite" => configuration.GetConnectionString("SQLite"),
@@ -174,7 +175,19 @@ public static class RegisterServicesExtensions
                 opt.MigrationsAssembly(migrationAssembly);
                 opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
                 opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+                options.UseExceptionProcessor();
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }),
+            //"azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
             //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
             //{
             //    opt.MigrationsAssembly(migrationAssembly);

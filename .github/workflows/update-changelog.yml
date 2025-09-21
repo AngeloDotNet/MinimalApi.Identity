@@ -1,0 +1,48 @@
+name: Update CHANGELOG.md for new tags
+
+on:
+  push:
+    tags:
+      - '*' # Run the action on every new tag
+  # release:
+  #   types: [published, edited]
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install github-changelog-generator
+        run: gem install github_changelog_generator
+
+      - name: Generate CHANGELOG.md
+        run: |
+          github_changelog_generator \
+            --user ${{ github.repository_owner }} \
+            --project ${{ github.event.repository.name }} \
+            --token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add CHANGELOG.md
+          git diff --cached --quiet || git commit -m "Update CHANGELOG.md for tag ${{ github.ref_name }} [auto]"
+
+      - name: Create Pull Request if needed
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "Update CHANGELOG.md for tag ${{ github.ref_name }} [auto]"
+          title: "Update CHANGELOG.md for tag ${{ github.ref_name }} [auto]"
+          body: "This PR automatically updates CHANGELOG.md for tag ${{ github.ref_name }}."
+          branch: "changelog/update-for-${{ github.ref_name }}"
+          base: main
+          token: ${{ secrets.GITHUB_TOKEN }}
