@@ -4,8 +4,9 @@ on:
   push:
     tags:
       - '*' # Run the action on every new tag
-  # release:
-  #   types: [published, edited]
+  release:
+    types: [published, edited]
+  workflow_dispatch:
 
 jobs:
   generate-changelog:
