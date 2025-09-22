@@ -2,9 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using MinimalApi.Identity.API.Swagger;
 using MinimalApi.Identity.Core.Configurations;
+using MinimalApi.Identity.Core.Filters;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Utility.Generators;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MinimalApi.Identity.API.Extensions;
@@ -57,7 +58,12 @@ public static class SwaggerExtensions
 
     public static void AddSwaggerDocumentFilters(this SwaggerGenOptions options, FeatureFlagsOptions featureFlagsOptions)
     {
-        options.DocumentFilter<SwaggerLicenseDocumentFilter>(featureFlagsOptions);
-        options.DocumentFilter<SwaggerModulesDocumentFilter>(featureFlagsOptions);
+        //options.DocumentFilter<SwaggerLicenseDocumentFilter>(featureFlagsOptions);
+        //options.DocumentFilter<SwaggerModulesDocumentFilter>(featureFlagsOptions);
+        options.DocumentFilter<SwaggerFeatureDocumentFilter>(featureFlagsOptions, (FeatureFlagsOptions opts)
+            => opts.EnabledFeatureLicense, EndpointGenerator.EndpointsLicenseGroup);
+
+        options.DocumentFilter<SwaggerFeatureDocumentFilter>(featureFlagsOptions, (FeatureFlagsOptions opts)
+            => opts.EnabledFeatureModule, EndpointGenerator.EndpointsModulesGroup);
     }
 }

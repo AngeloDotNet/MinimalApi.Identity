@@ -48,17 +48,18 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
     public async Task<string> AssignModuleAsync(AssignModuleModel model)
     {
-        var userTask = userManager.FindByIdAsync(model.UserId.ToString());
-        var moduleTask = dbContext.Set<Module>().FindAsync(model.ModuleId).AsTask();
-        var userHasModuleTask = dbContext.Set<UserModule>()
-            .AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
+        //var userTask = await userManager.FindByIdAsync(model.UserId.ToString());
+        //var moduleTask = await dbContext.Set<Module>().FindAsync(model.ModuleId).AsTask();
+        //var moduleTask = await dbContext.Set<Module>().FindAsync(model.ModuleId);
+        var userHasModuleTask = await dbContext.Set<UserModule>().AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
 
-        await Task.WhenAll(userTask, moduleTask, userHasModuleTask).ConfigureAwait(false);
+        //await Task.WhenAll(userTask, moduleTask, userHasModuleTask).ConfigureAwait(false);
 
-        var user = userTask.Result ?? throw new NotFoundException(MessagesApi.UserNotFound);
-        var module = moduleTask.Result ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
+        //var user = userTask.Result ?? throw new NotFoundException(MessagesApi.UserNotFound);
+        //var module = moduleTask.Result ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
 
-        if (userHasModuleTask.Result)
+        //if (userHasModuleTask.Result)
+        if (userHasModuleTask)
         {
             throw new BadRequestException(MessagesApi.ModuleNotAssignable);
         }

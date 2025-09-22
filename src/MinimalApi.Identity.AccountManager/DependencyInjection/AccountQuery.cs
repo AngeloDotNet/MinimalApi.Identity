@@ -31,41 +31,38 @@ public static class AccountQuery
         return result.Succeeded ? MessagesApi.ConfirmingEmail : throw new BadRequestException(MessagesApi.ErrorConfirmEmail);
     }
 
-    public static async Task<string> ChangeEmailAsync(UserManager<ApplicationUser> userManager, ChangeEmailModel request,
-        IHttpContextAccessor httpContextAccessor, IEmailManagerService emailManager)
+    public static async Task<string> ChangeEmailAsync(UserManager<ApplicationUser> userManager, ChangeEmailModel request, IHttpContextAccessor httpContextAccessor, IEmailManagerService emailManager)
     {
+        if (request.NewEmail == null)
         {
-            if (request.NewEmail == null)
-            {
-                throw new BadRequestException(MessagesApi.RequiredNewEmail);
-            }
-
-            var user = await userManager.FindByEmailAsync(request.Email)
-                ?? throw new BadRequestException(MessagesApi.UserNotFound);
-
-            var userId = await userManager.GetUserIdAsync(user);
-            var token = await userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
-            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(new GenerateCallBackUrlModel(userId, token, request.NewEmail), httpContextAccessor);
-            var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
-                "It is recommended to copy and paste for simplicity.";
-
-            var emailModel = new EmailSending
-            {
-                EmailTo = user.Email!,
-                Subject = "Confirm your email",
-                Body = messageText,
-                TypeEmailSendingId = (int)EmailSendingType.ChangeEmail,
-                TypeEmailStatusId = (int)EmailStatusType.Pending,
-                DateSent = DateTime.UtcNow,
-                RetrySender = 0
-            };
-
-            await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
-
-            return MessagesApi.SendEmailForChangeEmail;
+            throw new BadRequestException(MessagesApi.RequiredNewEmail);
         }
+
+        var user = await userManager.FindByEmailAsync(request.Email)
+            ?? throw new BadRequestException(MessagesApi.UserNotFound);
+
+        var userId = await userManager.GetUserIdAsync(user);
+        var token = await userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
+        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(new GenerateCallBackUrlModel(userId, token, request.NewEmail), httpContextAccessor);
+        var messageText = $"Please confirm your account by <a href='{callbackUrl}'>clicking here</a>." +
+            "It is recommended to copy and paste for simplicity.";
+
+        var emailModel = new EmailSending
+        {
+            EmailTo = user.Email!,
+            Subject = "Confirm your email",
+            Body = messageText,
+            TypeEmailSendingId = (int)EmailSendingType.ChangeEmail,
+            TypeEmailStatusId = (int)EmailStatusType.Pending,
+            DateSent = DateTime.UtcNow,
+            RetrySender = 0
+        };
+
+        await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
+
+        return MessagesApi.SendEmailForChangeEmail;
     }
 
     public static async Task<string> ConfirmEmailChangeAsync(UserManager<ApplicationUser> userManager, ConfirmEmailChangeModel request)
