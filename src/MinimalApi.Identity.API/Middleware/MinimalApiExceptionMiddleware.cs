@@ -11,14 +11,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
-using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Middleware;
 
-public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<ValidationOptions> options)
+//public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<ValidationOptions> options)
+public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor<AppSettings> settings)
 {
-    private readonly ValidationOptions validationOptions = options.Value;
+    //private readonly ValidationOptions validationOptions = options.Value;
+    private readonly AppSettings settings = settings.CurrentValue;
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -28,11 +30,11 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(httpContext, ex, validationOptions).ConfigureAwait(false);
+            await HandleExceptionAsync(httpContext, ex, settings).ConfigureAwait(false);
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, Exception exception, ValidationOptions validationOptions)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception, AppSettings settings)
     {
         var statusCode = GetStatusCodeFromException(exception);
         var message = GetMessageFromException(exception);
@@ -40,7 +42,7 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<Valida
 
         if (exception is ValidationModelException validationException)
         {
-            problemDetails.Extensions["errors"] = validationOptions.ErrorResponseFormat == ErrorResponseFormat.List
+            problemDetails.Extensions["errors"] = settings.ErrorResponseFormat == nameof(ErrorResponseFormat.List)
                 ? CreateErrorList(validationException) : validationException.Errors;
         }
 
