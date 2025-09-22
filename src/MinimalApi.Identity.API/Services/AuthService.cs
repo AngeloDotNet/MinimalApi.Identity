@@ -16,12 +16,14 @@ using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions> usersOptions, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-    IHttpContextAccessor httpContextAccessor, ILogger<AuthService> logger, IServiceProvider serviceProvider) : IAuthService
+public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> options, UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor, ILogger<AuthService> logger,
+    IServiceProvider serviceProvider) : IAuthService
 {
     public async Task<AuthResponseModel> LoginAsync(LoginModel model)
     {
@@ -47,7 +49,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
             throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
         }
 
-        await AuthExtensions.CheckUserProfileAndPasswordAsync(user, usersOptions, serviceProvider).ConfigureAwait(false);
+        await AuthExtensions.CheckUserProfileAndPasswordAsync(user, options, serviceProvider).ConfigureAwait(false);
 
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
@@ -93,7 +95,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
 
         await AuthExtensions.CreateProfileAsync(model, user, serviceProvider).ConfigureAwait(false);
 
-        var role = await CheckUserIsAdminDesignedAsync(user.Email, usersOptions.Value).ConfigureAwait(false)
+        var role = await CheckUserIsAdminDesignedAsync(user.Email, options.Value).ConfigureAwait(false)
             ? DefaultRoles.Admin
             : DefaultRoles.User;
 
@@ -273,11 +275,11 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
         }
     }
 
-    private async Task<bool> CheckUserIsAdminDesignedAsync(string email, UsersOptions userOptions)
+    private async Task<bool> CheckUserIsAdminDesignedAsync(string email, AppSettings options)
     {
         var user = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
-        return user is not null && user.Email is not null && user.Email.Equals(userOptions.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
+        return user is not null && user.Email is not null && user.Email.Equals(options.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private async Task<IdentityResult> AddClaimsToUserAsync(ApplicationUser user, DefaultRoles role)
@@ -333,9 +335,10 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<UsersOptions>
                 return user;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            logger.LogWarning("Token validation failed");
+            //logger.LogWarning("Token validation failed");
+            logger.LogWarning(ex, "Token validation failed");
         }
 
         logger.LogWarning("Token is invalid or expired");
