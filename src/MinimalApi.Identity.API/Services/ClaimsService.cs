@@ -63,11 +63,11 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         var user = await userManager.FindByIdAsync(model.UserId.ToString()).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        var claim = await dbContext.Set<ClaimType>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
-                && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase)).ConfigureAwait(false)
-                ?? throw new NotFoundException(MessagesApi.ClaimNotFound);
+        //var claim = await dbContext.Set<ClaimType>()
+        //    .AsNoTracking()
+        //    .FirstOrDefaultAsync(c => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
+        //        && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase)).ConfigureAwait(false)
+        //        ?? throw new NotFoundException(MessagesApi.ClaimNotFound);
 
         var userHasClaim = await userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
