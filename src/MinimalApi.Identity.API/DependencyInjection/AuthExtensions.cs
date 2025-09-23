@@ -11,7 +11,7 @@ using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Models;
-using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.EmailManager.Services;
@@ -22,7 +22,7 @@ namespace MinimalApi.Identity.API.DependencyInjection;
 
 public static class AuthExtensions
 {
-    public static async Task CheckUserProfileAndPasswordAsync(ApplicationUser user, IOptions<UsersOptions> usersOptions, IServiceProvider serviceProvider)
+    public static async Task CheckUserProfileAndPasswordAsync(ApplicationUser user, IOptions<AppSettings> options, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
@@ -36,7 +36,7 @@ public static class AuthExtensions
         }
 
         var lastDateChangePassword = profileUser.LastDateChangePassword;
-        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, usersOptions.Value);
+        var checkLastDateChangePassword = CheckLastDateChangePassword(lastDateChangePassword, options.Value);
 
         if (lastDateChangePassword is null || checkLastDateChangePassword)
         {
@@ -84,8 +84,8 @@ public static class AuthExtensions
         await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None).ConfigureAwait(false);
     }
 
-    public static bool CheckLastDateChangePassword(DateOnly? lastDate, UsersOptions userOptions)
-        => lastDate is not null && lastDate.Value.AddDays(userOptions.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
+    public static bool CheckLastDateChangePassword(DateOnly? lastDate, AppSettings options)
+        => lastDate is not null && lastDate.Value.AddDays(options.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
 
     public static async Task SendEmailRegisterUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider)
     {
