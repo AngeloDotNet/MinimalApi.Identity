@@ -13,7 +13,13 @@ public static class GenericExtensions
         => input.HasValue(allowEmptyString, whiteSpaceAsEmpty: true);
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString, bool whiteSpaceAsEmpty)
-        => allowEmptyString ? input is not null : whiteSpaceAsEmpty ? !string.IsNullOrWhiteSpace(input) : !string.IsNullOrEmpty(input);
+    {
+        return allowEmptyString
+            ? input is not null
+            : whiteSpaceAsEmpty
+                ? !string.IsNullOrWhiteSpace(input)
+                : !string.IsNullOrEmpty(input);
+    }
 
     internal static string FormatErrorMessage(IEnumerable<IdentityError> errors)
     {
@@ -21,7 +27,9 @@ public static class GenericExtensions
 
         foreach (var error in errors)
         {
-            sb.AppendLine($"{error.Code}: {error.Description}");
+            sb.Append(error.Code);
+            sb.Append(": ");
+            sb.AppendLine(error.Description);
         }
 
         return sb.ToString();
