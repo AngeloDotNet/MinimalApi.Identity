@@ -16,10 +16,8 @@ using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Middleware;
 
-//public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptions<ValidationOptions> options)
 public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor<AppSettings> settings)
 {
-    //private readonly ValidationOptions validationOptions = options.Value;
     private readonly AppSettings settings = settings.CurrentValue;
 
     public async Task InvokeAsync(HttpContext httpContext)
