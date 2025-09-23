@@ -14,22 +14,11 @@ public static class GenericExtensions
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString, bool whiteSpaceAsEmpty)
     {
-        bool hasValue;
-
-        if (allowEmptyString)
-        {
-            hasValue = input is not null;
-        }
-        else if (whiteSpaceAsEmpty)
-        {
-            hasValue = !string.IsNullOrWhiteSpace(input);
-        }
-        else
-        {
-            hasValue = !string.IsNullOrEmpty(input);
-        }
-
-        return hasValue;
+        return allowEmptyString
+            ? input is not null
+            : whiteSpaceAsEmpty
+                ? !string.IsNullOrWhiteSpace(input)
+                : !string.IsNullOrEmpty(input);
     }
 
     internal static string FormatErrorMessage(IEnumerable<IdentityError> errors)
