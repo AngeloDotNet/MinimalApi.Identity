@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Core.Settings;
 
 namespace MinimalApi.Identity.API.Validator;
 
@@ -9,26 +10,26 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
 {
     private static int requiredUniqueChars;
 
-    public RegisterValidator(IOptions<JwtOptions> iOptions, IOptions<ValidationOptions> vOptions)
+    public RegisterValidator(IOptions<JwtOptions> iOptions, IOptions<AppSettings> pOptions)
     {
         var identityOptions = iOptions.Value;
-        var validationOptions = vOptions.Value;
+        var vOptions = pOptions.Value;
         requiredUniqueChars = identityOptions.RequiredUniqueChars;
 
         RuleFor(x => x.Firstname)
             .NotEmpty().WithMessage("First name is required")
-            .MinimumLength(validationOptions.MinLength).WithMessage($"First name must be at least {validationOptions.MinLength} characters")
-            .MaximumLength(validationOptions.MaxLength).WithMessage($"First name must not exceed {validationOptions.MaxLength} characters");
+            .MinimumLength(vOptions.ValidateMinLength).WithMessage($"First name must be at least {vOptions.ValidateMinLength} characters")
+            .MaximumLength(vOptions.ValidateMaxLength).WithMessage($"First name must not exceed {vOptions.ValidateMaxLength} characters");
 
         RuleFor(x => x.Lastname)
             .NotEmpty().WithMessage("Last name is required")
-            .MinimumLength(validationOptions.MinLength).WithMessage($"Last name must be at least {validationOptions.MinLength} characters")
-            .MaximumLength(validationOptions.MaxLength).WithMessage($"Last name must not exceed {validationOptions.MaxLength} characters");
+            .MinimumLength(vOptions.ValidateMinLength).WithMessage($"Last name must be at least {vOptions.ValidateMinLength} characters")
+            .MaximumLength(vOptions.ValidateMaxLength).WithMessage($"Last name must not exceed {vOptions.ValidateMaxLength} characters");
 
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("Username is required")
-            .MinimumLength(validationOptions.MinLength).WithMessage($"Username must be at least {validationOptions.MinLength} characters")
-            .MaximumLength(validationOptions.MaxLength).WithMessage($"Username must not exceed {validationOptions.MaxLength} characters");
+            .MinimumLength(vOptions.ValidateMinLength).WithMessage($"Username must be at least {vOptions.ValidateMinLength} characters")
+            .MaximumLength(vOptions.ValidateMaxLength).WithMessage($"Username must not exceed {vOptions.ValidateMaxLength} characters");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required")
