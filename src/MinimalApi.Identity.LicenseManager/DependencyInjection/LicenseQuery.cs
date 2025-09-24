@@ -84,11 +84,6 @@ public static class LicenseQuery
             .Where(x => x.Id == model.LicenseId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.LicenseNotFound);
 
-        //if (await dbContext.Set<UserLicense>().AsNoTracking().AnyAsync(ul => ul.LicenseId == model.LicenseId, cancellationToken))
-        //{
-        //    throw new BadRequestException(MessagesAPI.LicenseNotDeleted);
-        //}
-
         dbContext.Set<License>().Remove(license);
         await dbContext.SaveChangesAsync(cancellationToken);
 
