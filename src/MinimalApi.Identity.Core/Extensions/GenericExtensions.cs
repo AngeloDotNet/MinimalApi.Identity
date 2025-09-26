@@ -10,7 +10,7 @@ public static class GenericExtensions
         => input is not null && !string.IsNullOrWhiteSpace(input);
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString)
-        => input is not null && (allowEmptyString || !string.IsNullOrWhiteSpace(input));
+        => HasValue(input, allowEmptyString, whiteSpaceAsEmpty: true);
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString, bool whiteSpaceAsEmpty)
     {
