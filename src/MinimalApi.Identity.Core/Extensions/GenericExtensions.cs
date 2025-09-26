@@ -7,18 +7,24 @@ namespace MinimalApi.Identity.Core.Extensions;
 public static class GenericExtensions
 {
     public static bool HasValue([NotNullWhen(true)] this string? input)
-        => input.HasValue(allowEmptyString: false, whiteSpaceAsEmpty: true);
+        => input is not null && !string.IsNullOrWhiteSpace(input);
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString)
-        => input.HasValue(allowEmptyString, whiteSpaceAsEmpty: true);
+        => input is not null && (allowEmptyString || !string.IsNullOrWhiteSpace(input));
 
     public static bool HasValue([NotNullWhen(true)] this string? input, bool allowEmptyString, bool whiteSpaceAsEmpty)
     {
-        return allowEmptyString
-            ? input is not null
-            : whiteSpaceAsEmpty
-                ? !string.IsNullOrWhiteSpace(input)
-                : !string.IsNullOrEmpty(input);
+        if (input is null)
+        {
+            return false;
+        }
+
+        if (allowEmptyString)
+        {
+            return true;
+        }
+
+        return whiteSpaceAsEmpty ? !string.IsNullOrWhiteSpace(input) : !string.IsNullOrEmpty(input);
     }
 
     internal static string FormatErrorMessage(IEnumerable<IdentityError> errors)
