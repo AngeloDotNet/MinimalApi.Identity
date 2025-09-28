@@ -15,8 +15,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
     {
         var roles = await roleManager.Roles
             .Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
-            .ToListAsync()
-            .ConfigureAwait(false);
+            .ToListAsync().ConfigureAwait(false);
 
         return roles;
     }
