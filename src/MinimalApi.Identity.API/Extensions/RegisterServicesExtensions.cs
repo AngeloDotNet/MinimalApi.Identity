@@ -26,8 +26,8 @@ using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
-using MinimalApi.Identity.Licenses.DependencyInjection;
-using MinimalApi.Identity.Licenses.Endpoints;
+using MinimalApi.Identity.LicenseManager.DependencyInjection;
+using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
@@ -99,8 +99,7 @@ public static class RegisterServicesExtensions
     {
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
-            services.LicenseRegistrationService();
-            //TODO: Replace with new implementation: LicenseManagerRegistrationService();
+            services.LicenseManagerRegistrationService();
         }
 
         if (featureFlagsOptions.EnabledFeatureModule)
@@ -161,7 +160,7 @@ public static class RegisterServicesExtensions
         var sqlConnection = dbType switch
         {
             "sqlserver" => configuration.GetConnectionString("SQLServer"),
-            //"azuresql" => configuration.GetConnectionString("AzureSQL"),
+            "azuresql" => configuration.GetConnectionString("AzureSQL"),
             //"postgresql" => configuration.GetConnectionString("PostgreSQL"),
             //"mysql" => configuration.GetConnectionString("MySQL"),
             //"sqlite" => configuration.GetConnectionString("SQLite"),
@@ -179,15 +178,15 @@ public static class RegisterServicesExtensions
                 options.UseExceptionProcessor();
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }),
-            //"azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            "azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
+            {
+                opt.MigrationsAssembly(migrationAssembly);
+                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
+                options.UseExceptionProcessor();
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }),
             //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
             //{
             //    opt.MigrationsAssembly(migrationAssembly);
