@@ -58,8 +58,6 @@ public static class SwaggerExtensions
 
     public static void AddSwaggerDocumentFilters(this SwaggerGenOptions options, FeatureFlagsOptions featureFlagsOptions)
     {
-        //options.DocumentFilter<SwaggerLicenseDocumentFilter>(featureFlagsOptions);
-        //options.DocumentFilter<SwaggerModulesDocumentFilter>(featureFlagsOptions);
         options.DocumentFilter<SwaggerFeatureDocumentFilter>(featureFlagsOptions, (FeatureFlagsOptions opts)
             => opts.EnabledFeatureLicense, EndpointGenerator.EndpointsLicenseGroup);
 
