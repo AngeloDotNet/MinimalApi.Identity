@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.API.Services.Interfaces;
@@ -11,7 +10,7 @@ using MinimalApi.Identity.Core.Utility.Messages;
 
 namespace MinimalApi.Identity.API.Services;
 
-public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<ApplicationUser> userManager) : IModuleService
+public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
 {
     public async Task<List<ModuleResponseModel>> GetAllModulesAsync()
     {
@@ -48,17 +47,9 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
     public async Task<string> AssignModuleAsync(AssignModuleModel model)
     {
-        //var userTask = await userManager.FindByIdAsync(model.UserId.ToString());
-        //var moduleTask = await dbContext.Set<Module>().FindAsync(model.ModuleId).AsTask();
-        //var moduleTask = await dbContext.Set<Module>().FindAsync(model.ModuleId);
-        var userHasModuleTask = await dbContext.Set<UserModule>().AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
+        var userHasModuleTask = await dbContext.Set<UserModule>()
+            .AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
 
-        //await Task.WhenAll(userTask, moduleTask, userHasModuleTask).ConfigureAwait(false);
-
-        //var user = userTask.Result ?? throw new NotFoundException(MessagesApi.UserNotFound);
-        //var module = moduleTask.Result ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
-
-        //if (userHasModuleTask.Result)
         if (userHasModuleTask)
         {
             throw new BadRequestException(MessagesApi.ModuleNotAssignable);
@@ -80,8 +71,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         var userModule = await dbContext.Set<UserModule>()
             .SingleOrDefaultAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId)
-            .ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
+            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
 
         dbContext.Set<UserModule>().Remove(userModule);
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -91,8 +81,8 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
     public async Task<string> DeleteModuleAsync(DeleteModuleModel model)
     {
-        var module = await dbContext.Set<Module>().FindAsync(model.ModuleId).AsTask().ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
+        var module = await dbContext.Set<Module>().FindAsync(model.ModuleId).AsTask()
+            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
 
         if (await dbContext.Set<UserModule>().AnyAsync(ul => ul.ModuleId == model.ModuleId).ConfigureAwait(false))
         {
@@ -108,7 +98,8 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     public async Task<List<Claim>> GetClaimsModuleUserAsync(ApplicationUser user)
     {
         var result = await dbContext.Set<UserModule>()
-            .AsNoTracking().Where(ul => ul.UserId == user.Id)
+            .AsNoTracking()
+            .Where(ul => ul.UserId == user.Id)
             .Select(ul => ul.Module.Name).ToListAsync()
             .ConfigureAwait(false);
 
@@ -124,6 +115,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext, UserManager<Applic
 
     private async Task<bool> CheckModuleExistAsync(CreateModuleModel inputModel)
         => await dbContext.Set<Module>()
-            .AsNoTracking().AnyAsync(m => m.Name.Equals(inputModel.Name, StringComparison.InvariantCultureIgnoreCase))
-            .ConfigureAwait(false);
+        .AsNoTracking()
+        .AnyAsync(m => m.Name.Equals(inputModel.Name, StringComparison.InvariantCultureIgnoreCase))
+        .ConfigureAwait(false);
 }
