@@ -95,9 +95,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
         await AuthExtensions.CreateProfileAsync(model, user, serviceProvider).ConfigureAwait(false);
 
-        var role = await CheckUserIsAdminDesignedAsync(user.Email, options.Value).ConfigureAwait(false)
-            ? DefaultRoles.Admin
-            : DefaultRoles.User;
+        var role = await CheckUserIsAdminDesignedAsync(user.Email, options.Value)
+            .ConfigureAwait(false) ? DefaultRoles.Admin : DefaultRoles.User;
 
         var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
 
@@ -152,8 +151,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
     public async Task<AuthResponseModel> ImpersonateAsync(ImpersonateUserModel inputModel)
     {
-        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString()).ConfigureAwait(false)
-            ?? throw new UserUnknownException("User not found");
+        var user = await userManager.FindByIdAsync(inputModel.UserId.ToString())
+            .ConfigureAwait(false) ?? throw new UserUnknownException("User not found");
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
@@ -225,8 +224,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
             throw new BadRequestException(MessagesApi.ErrorCodeResetPassword);
         }
 
-        var user = await userManager.FindByEmailAsync(inputModel.Email).ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.UserNotFound);
+        var user = await userManager.FindByEmailAsync(inputModel.Email)
+            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password).ConfigureAwait(false);
 
@@ -241,6 +240,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
     private static AuthResponseModel CreateToken(List<Claim> claims, JwtOptions jwtOptions)
     {
         var audienceClaim = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud);
+
         if (audienceClaim is not null)
         {
             claims.Remove(audienceClaim);
@@ -249,14 +249,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-        var jwtSecurityToken = new JwtSecurityToken(
-            jwtOptions.Issuer,
-            jwtOptions.Audience,
-            claims,
-            DateTime.UtcNow,
-            DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenExpirationMinutes),
-            signingCredentials
-        );
+        var jwtSecurityToken = new JwtSecurityToken(jwtOptions.Issuer, jwtOptions.Audience, claims, DateTime.UtcNow,
+            DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenExpirationMinutes), signingCredentials);
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
@@ -337,7 +331,6 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         }
         catch (Exception ex)
         {
-            //logger.LogWarning("Token validation failed");
             logger.LogWarning(ex, "Token validation failed");
         }
 
