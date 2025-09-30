@@ -35,7 +35,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
             return signInResult switch
             {
                 { IsNotAllowed: true } => throw new BadRequestException(MessagesApi.UserNotAllowedLogin),
-                { IsLockedOut: true } => throw new UserIsLockedException(MessagesApi.UserLockedOut),
+                { IsLockedOut: true } => throw new UnauthorizeException(MessagesApi.UserLockedOut),
                 { RequiresTwoFactor: true } => throw new BadRequestException(MessagesApi.RequiredTwoFactor),
                 _ => throw new BadRequestException(MessagesApi.InvalidCredentials)
             };
@@ -152,11 +152,11 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
     public async Task<AuthResponseModel> ImpersonateAsync(ImpersonateUserModel inputModel)
     {
         var user = await userManager.FindByIdAsync(inputModel.UserId.ToString())
-            .ConfigureAwait(false) ?? throw new UserUnknownException("User not found");
+            .ConfigureAwait(false) ?? throw new NotFoundException("User not found");
 
         if (user.LockoutEnd.GetValueOrDefault() > DateTimeOffset.UtcNow)
         {
-            throw new UserIsLockedException(MessagesApi.UserLockedOut);
+            throw new UnauthorizeException(MessagesApi.UserLockedOut);
         }
 
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
