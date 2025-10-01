@@ -31,7 +31,7 @@ public class MinioS3Sink : ILogEventSink
 
     public void Emit(LogEvent logEvent)
     {
-        // Serializza logEvent in JSON
+        // Serialize logEvent to JSON
         string logLine;
         using (var sw = new StringWriter())
         {
