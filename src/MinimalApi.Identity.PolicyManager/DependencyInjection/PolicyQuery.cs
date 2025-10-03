@@ -12,16 +12,16 @@ namespace MinimalApi.Identity.PolicyManager.DependencyInjection;
 public static class PolicyQuery
 {
     public static async Task<List<PolicyResponseModel>> GetPoliciesAsync(MinimalApiAuthDbContext dbContext,
-    Expression<Func<AuthPolicy, bool>>? filter = null, CancellationToken cancellationToken = default)
+        Expression<Func<AuthPolicy, bool>>? filter = null, CancellationToken cancellationToken = default)
     {
-        var query = dbContext.Set<AuthPolicy>().AsNoTracking();
+        IQueryable<AuthPolicy> query = dbContext.Set<AuthPolicy>();
 
-        if (filter != null)
+        if (filter is not null)
         {
             query = query.Where(filter);
         }
 
-        return await query.ToModel().ToListAsync(cancellationToken);
+        return await query.ToModel().ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public static async Task<string> CreatePolicyAsync(CreatePolicyModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
@@ -49,7 +49,6 @@ public static class PolicyQuery
     public static async Task<string> DeletePolicyAsync(DeletePolicyModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var policyToDelete = await dbContext.Set<AuthPolicy>()
-            .AsNoTracking()
             .Where(x => x.Id == model.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.PolicyNotFound);
 
@@ -65,6 +64,6 @@ public static class PolicyQuery
     }
 
     private static async Task<bool> CheckPolicyExistAsync(string policyName, MinimalApiAuthDbContext dbContext)
-        => await dbContext.Set<AuthPolicy>().AsNoTracking()
+        => await dbContext.Set<AuthPolicy>()
             .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
 }
