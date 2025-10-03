@@ -15,7 +15,6 @@ public static class ProfileQuery
     public static async Task<List<UserProfileModel>> GetAllProfilesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var profiles = await dbContext.Set<UserProfile>()
-            .AsNoTracking()
             .Select(profile => ProfileMapper.ToEntity(profile))
             .ToListAsync(cancellationToken);
 
@@ -27,7 +26,6 @@ public static class ProfileQuery
         var user = await userManager.FindByIdAsync(userId.ToString()) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         var profile = await dbContext.Set<UserProfile>()
-            .AsNoTracking()
             .Where(x => x.UserId == user.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
@@ -53,7 +51,7 @@ public static class ProfileQuery
 
     public static async Task<string> EditProfileAsync(EditUserProfileModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var profile = await dbContext.Set<UserProfile>().AsNoTracking()
+        var profile = await dbContext.Set<UserProfile>()
             .Where(x => x.UserId == model.UserId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
@@ -69,7 +67,6 @@ public static class ProfileQuery
     public static async Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var result = await dbContext.Set<UserProfile>()
-            .AsNoTracking()
             .Where(ul => ul.UserId == user.Id)
             .Select(ul => new { ul.FirstName, ul.LastName })
             .FirstOrDefaultAsync(cancellationToken);
@@ -88,7 +85,6 @@ public static class ProfileQuery
     public static async Task<string> ChangeEnablementStatusUserProfileAsync(ChangeEnableProfileModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var profile = await dbContext.Set<UserProfile>()
-            .AsNoTracking()
             .Where(x => x.UserId == model.UserId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
