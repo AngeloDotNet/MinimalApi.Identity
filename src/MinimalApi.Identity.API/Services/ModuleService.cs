@@ -15,7 +15,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
     public async Task<List<ModuleResponseModel>> GetAllModulesAsync()
     {
         var result = await dbContext.Set<Module>()
-            .AsNoTracking().Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
+            .Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
             .ToListAsync().ConfigureAwait(false);
 
         if (result.Count == 0)
@@ -98,10 +98,9 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
     public async Task<List<Claim>> GetClaimsModuleUserAsync(ApplicationUser user)
     {
         var result = await dbContext.Set<UserModule>()
-            .AsNoTracking()
             .Where(ul => ul.UserId == user.Id)
-            .Select(ul => ul.Module.Name).ToListAsync()
-            .ConfigureAwait(false);
+            .Select(ul => ul.Module.Name)
+            .ToListAsync().ConfigureAwait(false);
 
         var claims = new List<Claim>(result.Count);
 
@@ -115,7 +114,6 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
 
     private async Task<bool> CheckModuleExistAsync(CreateModuleModel inputModel)
         => await dbContext.Set<Module>()
-        .AsNoTracking()
         .AnyAsync(m => m.Name.Equals(inputModel.Name, StringComparison.InvariantCultureIgnoreCase))
         .ConfigureAwait(false);
 }
