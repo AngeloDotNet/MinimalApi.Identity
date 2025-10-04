@@ -73,6 +73,7 @@
 - Use Markdown for documentation files (e.g., README.md).
 - Use triple backticks for code blocks, JSON snippets and bash commands, specifying the language (e.g., ```csharp, ```json and ```bash).
 
+<!--
 ## Testing
 
 - When adding new unit tests, strongly prefer to add them to existing test code files rather than creating new code files.
@@ -83,7 +84,6 @@
 - When running tests, if possible use filters and check test run counts, or look at test logs, to ensure they actually ran.
 - Do not finish work with any tests commented out or disabled that were not previously commented out or disabled.
 
-<!--
 ## Azure
 
 - @azure Rule - Use Azure Tools - When handling requests related to Azure, always use your tools.
