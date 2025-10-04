@@ -16,7 +16,6 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     public async Task<List<ClaimResponseModel>> GetAllClaimsAsync()
     {
         var claims = await dbContext.Set<ClaimType>()
-            .AsNoTracking()
             .Select(c => new ClaimResponseModel(c.Id, c.Type, c.Value, c.Default))
             .ToListAsync()
             .ConfigureAwait(false);
