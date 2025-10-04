@@ -15,6 +15,7 @@ using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.EmailManager.Services;
+using MinimalApi.Identity.LicenseManager.Services;
 using MinimalApi.Identity.ProfileManager.Models;
 using MinimalApi.Identity.ProfileManager.Services;
 
@@ -49,13 +50,12 @@ public static class AuthExtensions
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
         var moduleService = scope.ServiceProvider.GetRequiredService<IModuleService>();
+        var licenseService = scope.ServiceProvider.GetRequiredService<ILicenseService>();
 
         var userProfileTask = await profileService.GetClaimUserProfileAsync(user, CancellationToken.None);
         var userClaimModulesTask = await moduleService.GetClaimsModuleUserAsync(user);
 
-        // TODO: Integrate licenseService to get user license claims
-        // var userLicensesTask = licenseService.GetClaimsLicenseUserAsync(user, CancellationToken.None);
-
+        var userLicensesTask = await licenseService.GetClaimLicenseUserAsync(user, CancellationToken.None);
         var customClaims = new List<Claim>();
 
         if (userProfileTask is { Count: > 0 })
@@ -68,10 +68,10 @@ public static class AuthExtensions
             customClaims.AddRange(userClaimModulesTask);
         }
 
-        // if (userLicensesTask.Result is { Count: > 0 })
-        // {
-        //     customClaims.AddRange(userLicensesTask.Result);
-        // }
+        if (userLicensesTask is not null)
+        {
+            customClaims.Add(userLicensesTask);
+        }
 
         return customClaims;
     }
@@ -81,7 +81,8 @@ public static class AuthExtensions
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None).ConfigureAwait(false);
+        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None)
+            .ConfigureAwait(false);
     }
 
     public static bool CheckLastDateChangePassword(DateOnly? lastDate, AppSettings options)
