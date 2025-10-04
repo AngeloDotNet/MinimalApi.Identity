@@ -10,9 +10,7 @@ namespace MinimalApi.Identity.EmailManager.DependencyInjection;
 public static class EmailQuery
 {
     public static IQueryable<EmailSending> GetAllEmailsAsync(MinimalApiAuthDbContext dbContext)
-    {
-        return dbContext.Set<EmailSending>().AsNoTracking();
-    }
+        => dbContext.Set<EmailSending>();
 
     public static async Task<string> CreateEmailAsync(EmailSending model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
@@ -36,7 +34,6 @@ public static class EmailQuery
     public static async Task<string> UpdateEmailAsync(EmailSending model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var emailToUpdate = await dbContext.Set<EmailSending>()
-            .AsNoTracking()
             .Where(x => x.Id == model.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.EmailNotFound);
 
@@ -59,7 +56,6 @@ public static class EmailQuery
     public static async Task<string> UpdateEmailStatusAsync(int id, int typeEmailStatusId, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var emailToUpdate = await dbContext.Set<EmailSending>()
-            .AsNoTracking()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.EmailNotFound);
 
@@ -73,7 +69,6 @@ public static class EmailQuery
     public static async Task<string> DeleteEmailAsync(int id, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var emailToDelete = await dbContext.Set<EmailSending>()
-            .AsNoTracking()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException(MessagesApi.EmailNotFound);
 
