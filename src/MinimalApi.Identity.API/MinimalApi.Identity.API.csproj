@@ -25,21 +25,27 @@
 </ItemGroup>
 
 <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.Exceptions.MySQL" Version="8.1.3" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.MySQL.Pomelo" Version="8.1.3" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
+    <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
-    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.18" />
-    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.24" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.104" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.23" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.28" />
-    <!--<PackageReference Include="Identity.Module.Licenses" Version="1.0.44" />-->
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.45" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.38" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
+    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.21" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.27" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.112" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.26" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.31" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.49" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.42" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.19" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
 </ItemGroup>
 
 <ItemGroup>
