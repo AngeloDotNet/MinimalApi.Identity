@@ -35,7 +35,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Scrutor" Version="6.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.6" />
     </ItemGroup>
     
     <ItemGroup>
