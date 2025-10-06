@@ -5,6 +5,7 @@ using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
+using Serilog;
 
 namespace IdentityManager.API;
 
@@ -14,8 +15,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Host.UseSerilog((context, services, config)
+            => config.ReadFrom.Configuration(context.Configuration));
+        //.WriteToMinio(context.Configuration)
+
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
+        var swaggerSettings = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings)) ?? new();
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
         builder.Services.AddRegisterServices(options =>
@@ -38,13 +44,15 @@ public class Program
 
         app.UseMiddleware<MinimalApiExceptionMiddleware>();
 
-        if (app.Environment.IsDevelopment())
+        if (swaggerSettings.IsEnabled)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
+            if (swaggerSettings.IsRequiredAuth)
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1");
-            });
+                app.UseMiddleware<SwaggerBasicAuthMiddleware>();
+            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1"));
         }
 
         app.UseRouting();
