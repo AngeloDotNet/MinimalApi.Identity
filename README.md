@@ -27,13 +27,12 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 - .NET 8.0 SDK (latest version)
 - SQL Server 2022 Express installed ([setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
 
-<!--
 As an alternative to SQL Server you can use one of these databases:
 
+- Azure SQL Database ([setup guide](https://learn.microsoft.com/it-it/azure/azure-sql/database/single-database-create-quickstart?view=azuresql&tabs=azure-portal))
 - PostgreSQL - Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/Postgres-16))
 - MySQL - Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/MySQL-Server-8_0_34))
 - SQLite
--->
 
 ### Setup
 
@@ -56,8 +55,39 @@ The configuration can be completely managed by adding this section to the _appse
         "MaxRequestBodySize": 5242880
     }
 },
+"Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Warning",
+    "WriteTo": [
+        {
+            "Name": "Console",
+            "Args": {
+                "outputTemplate": "{Timestamp:HH:mm:ss}\t{Level:u3}\t{SourceContext}\t{Message}{NewLine}{Exception}"
+            }
+        },
+        {
+            "Name": "File",
+            "Args": {
+                "path": "Logs/log.txt",
+                "rollingInterval": "Day",
+                "retainedFileCountLimit": 7,
+                "restrictedToMinimumLevel": "Warning",
+                "formatter": "Serilog.Formatting.Json.JsonFormatter, Serilog"
+            }
+        }
+        // The custom MinioS3Sink sink must be added via code (not here)
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+        "Application": "MinimalApi.Identity"
+    }
+},
 "ConnectionStrings": {
-    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
+    "AzureSQL": "Server=tcp:[SERVER].database.windows.net,1433;Initial Catalog=IdentityManager;Persist Security Info=False;User ID=[USERNAME];Password=[PASSWORD];MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+    "PostgreSQL": "Host=[HOSTNAME];Port=5432;Database=IdentityManager;Username=[USERNAME];Password=[PASSWORD];Include Error Detail=true",
+    "MySQL": "Server=[HOSTNAME];Port=3306;Database=IdentityManager;Uid=[USERNAME];Pwd=[PASSWORD]",
+    "SQLite": "Data Source=Data/IdentityManager.db"
 },
 "JwtOptions": {
     "Issuer": "[ISSUER]",
@@ -102,6 +132,12 @@ The configuration can be completely managed by adding this section to the _appse
     "ValidateMaxLength": 50,
     "ValidateMinLengthDescription": 5,
     "ValidateMaxLengthDescription": 100
+},
+"SwaggerSettings": {
+    "IsEnabled": true,
+    "IsRequiredAuth": false,
+    "Username": "admin",
+    "Password": "StrongPassword"
 }
 ```
 
@@ -116,7 +152,7 @@ The library uses Entity Framework Core to manage the database.
 
 The connection string is configured in the `AppSettings` section of the _appsettings.json_ file.
 
-- Database Type: Set via `AppSettings:DatabaseType` (supported values: `sqlserver`)
+- Database Type: Set via `AppSettings:DatabaseType` (supported values: `sqlserver`, `azuresql`, `postgresql`, `mysql`, `sqlite`)
 
 After setting the type of database you want to use, modify the corresponding connection string.
 
@@ -134,6 +170,18 @@ Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations
 > if you use a separate project for migrations (It is recommended to add a reference in the project name to the database used, in this case it is SQL Server), 
 > make sure to set the `-Project` parameter to the name of that project.
 
+## 📎 Swagger / OpenAPI
+
+It is possible to protect access to the Swagger UI with the following configuration:
+
+- RequiredAuth: set via `SwaggerSettings:IsRequiredAuth` (supported values: `true`, `false`)
+- Username: set via `SwaggerSettings:Username`
+- Password: set via `SwaggerSettings:Password`
+
+You can manage the state of the Swagger UI with the following configuration:
+
+- Enable/Disable Swagger UI: set via `SwaggerSettings:IsEnabled` (supported values: `true`, `false`)
+
 ## 🔰 Feature Flags
 
 🚧 coming soon
@@ -150,8 +198,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Host.UseSerilog((context, services, config) => config.ReadFrom.Configuration(context.Configuration));
+        //.WriteToMinio(context.Configuration)
+
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
+        var swaggerSettings = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings)) ?? new();
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
         //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
@@ -178,13 +230,15 @@ public class Program
 
         app.UseMiddleware<MinimalApiExceptionMiddleware>();
 
-        if (app.Environment.IsDevelopment())
+        if (swaggerSettings.IsEnabled)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
+            if (swaggerSettings.IsRequiredAuth)
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1");
-            });
+                app.UseMiddleware<SwaggerBasicAuthMiddleware>();
+            }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1"));
         }
 
         app.UseRouting();
@@ -201,7 +255,7 @@ public class Program
 
 ## 🔐 Authentication
 
-This library currently supports the following authentication types:
+The following authentication types are currently supported:
 
 - JWT Bearer Token
 
@@ -210,9 +264,9 @@ This library currently supports the following authentication types:
 
 A default administrator account is created automatically with the following configuration:
 
-- Email: set via `UsersOptions:AssignAdminEmail`
-- Username: set via `UsersOptions:AssignAdminUsername`
-- Password: set via `UsersOptions:AssignAdminPassword`
+- Email: set via `AppSettings:AssignAdminEmail`
+- Username: set via `AppSettings:AssignAdminUsername`
+- Password: set via `AppSettings:AssignAdminPassword`
 
 ## 📚 API Reference
 
@@ -228,7 +282,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 |[Identity.Module.ClaimsManager](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ClaimsManager)](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|
 |[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|
 |[Identity.Module.EmailManager](https://www.nuget.org/packages/Identity.Module.EmailManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.EmailManager)](https://www.nuget.org/packages/Identity.Module.EmailManager)|
-|[Identity.Module.Licenses](https://www.nuget.org/packages/Identity.Module.Licenses)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Licenses)](https://www.nuget.org/packages/Identity.Module.Licenses)|
+|[Identity.Module.LicenseManager](https://www.nuget.org/packages/Identity.Module.LicenseManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.LicenseManager)](https://www.nuget.org/packages/Identity.Module.LicenseManager)|
 |[Identity.Module.ModuleManager](https://www.nuget.org/packages/Identity.Module.ModuleManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ModuleManager)](https://www.nuget.org/packages/Identity.Module.ModuleManager)|
 |[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|
 |[Identity.Module.ProfileManager](https://www.nuget.org/packages/Identity.Module.ProfileManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ProfileManager)](https://www.nuget.org/packages/Identity.Module.ProfileManager)|
@@ -256,26 +310,23 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the claims to a dedicated library
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Move the configuration of the roles to a dedicated library
-- [ ] Replacing exceptions with implementation of operation results 
-- [ ] Add centralized logging with Serilog
 - [ ] Fix the TODOs
+- [ ] Replacing exceptions with implementation of operation results 
 - [ ] Migrate SmtpOptions configuration to database
 - [ ] Migrate FeatureFlagsOptions configuration to database
+- [ ] Migrate SwaggerSettings configuration to database
 - [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Add endpoints for two-factor authentication and management
-- [ ] Add endpoints for downloading and deleting personal data
+- [ ] Change the entity ID type from INT to GUID
+- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
 - [ ] Code Review and Refactoring
 
 ### Future implementations
 
-- [ ] Add support for the MySQL database 
-- [ ] Add support for the PostgreSQL database 
-- [ ] Add support for the SQLite database
-- [ ] Add support for the AzureSQL database
+- [ ] Migrate solution to .NET 10
 - [ ] Add support for multi tenancy
+- [ ] Add endpoints for two-factor authentication and management
+- [ ] Add endpoints for downloading and deleting personal data
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
-- [ ] Migrate your repository to .NET 10
-- [ ] Change the entity ID type from INT to GUID
 
 ## 📜 License
 
