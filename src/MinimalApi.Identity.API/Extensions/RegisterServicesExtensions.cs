@@ -21,7 +21,6 @@ using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
@@ -31,6 +30,7 @@ using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
+using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.API.Extensions;
 
@@ -161,9 +161,9 @@ public static class RegisterServicesExtensions
         {
             "sqlserver" => configuration.GetConnectionString("SQLServer"),
             "azuresql" => configuration.GetConnectionString("AzureSQL"),
-            //"postgresql" => configuration.GetConnectionString("PostgreSQL"),
-            //"mysql" => configuration.GetConnectionString("MySQL"),
-            //"sqlite" => configuration.GetConnectionString("SQLite"),
+            "postgresql" => configuration.GetConnectionString("PostgreSQL"),
+            "mysql" => configuration.GetConnectionString("MySQL"),
+            "sqlite" => configuration.GetConnectionString("SQLite"),
             _ => null
         } ?? throw new InvalidOperationException($"Connection string for '{databaseType}' is not configured.");
 
@@ -187,24 +187,33 @@ public static class RegisterServicesExtensions
                 options.UseExceptionProcessor();
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }),
-            //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //}),
-            //"mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //}),
-            //"sqlite" => options => options.UseSqlite(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            //}),
+            "postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
+            {
+                opt.MigrationsAssembly(migrationAssembly);
+                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+                options.UseExceptionProcessor();
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }),
+            "mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
+            {
+                opt.MigrationsAssembly(migrationAssembly);
+                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+                options.UseExceptionProcessor();
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }),
+            "sqlite" => options => options.UseSqlite(sqlConnection, opt =>
+            {
+                opt.MigrationsAssembly(migrationAssembly);
+                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+                options.UseExceptionProcessor();
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }),
             _ => _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
         };
 
