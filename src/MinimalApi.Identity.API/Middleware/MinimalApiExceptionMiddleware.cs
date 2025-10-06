@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Messages;
+using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.API.Middleware;
 
