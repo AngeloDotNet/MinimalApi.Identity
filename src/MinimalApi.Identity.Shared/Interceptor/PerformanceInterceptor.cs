@@ -21,6 +21,5 @@ public class PerformanceInterceptor : DbCommandInterceptor
         return base.NonQueryExecuted(command, eventData, result);
     }
 
-    private string Truncate(string s, int len = 200)
-        => string.IsNullOrEmpty(s) ? s : (s.Length <= len ? s : s.Substring(0, len) + "...");
+    private string Truncate(string s, int len = 200) => string.IsNullOrEmpty(s) ? s : (s.Length <= len ? s : s[..len] + "...");
 }
