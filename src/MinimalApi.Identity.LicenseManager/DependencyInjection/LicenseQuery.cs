@@ -13,8 +13,9 @@ public static class LicenseQuery
 {
     public static async Task<List<LicenseResponseModel>> GetAllLicensesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var licenses = await dbContext.Set<License>().AsNoTracking()
-            .ToLicenseResponseModel().ToListAsync(cancellationToken);
+        var licenses = await dbContext.Set<License>()
+            .ToLicenseResponseModel()
+            .ToListAsync(cancellationToken);
 
         return licenses.Count == 0 ? [] : licenses;
     }
@@ -40,7 +41,7 @@ public static class LicenseQuery
 
     public static async Task<string> AssignLicenseAsync(AssignLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var userHasLicense = await dbContext.Set<UserLicense>().AsNoTracking()
+        var userHasLicense = await dbContext.Set<UserLicense>()
             .AnyAsync(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId, cancellationToken);
 
         if (userHasLicense)
@@ -62,9 +63,10 @@ public static class LicenseQuery
 
     public static async Task<string> RevokeLicenseAsync(RevokeLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var userLicense = await dbContext.Set<UserLicense>().AsNoTracking()
+        var userLicense = await dbContext.Set<UserLicense>()
             .Where(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId)
-            .ToUserLicense().FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.LicenseNotFound);
+            .ToUserLicense()
+            .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.LicenseNotFound);
 
         dbContext.Set<UserLicense>().Remove(userLicense);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -74,7 +76,7 @@ public static class LicenseQuery
 
     public static async Task<string> DeleteLicenseAsync(DeleteLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var license = await dbContext.Set<License>().AsNoTracking()
+        var license = await dbContext.Set<License>()
             .Where(x => x.Id == model.LicenseId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.LicenseNotFound);
 
@@ -86,19 +88,22 @@ public static class LicenseQuery
 
     public static async Task<Claim> GetClaimLicenseUserAsync(ApplicationUser user, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var result = await dbContext.Set<UserLicense>().AsNoTracking().Where(ul => ul.UserId == user.Id)
-            .ToUserLicense().FirstOrDefaultAsync(cancellationToken);
+        var result = await dbContext.Set<UserLicense>()
+            .Where(ul => ul.UserId == user.Id)
+            .ToUserLicense()
+            .FirstOrDefaultAsync(cancellationToken);
 
         return result != null ? new Claim(LicenseExtensions.License, result.License.Name) : null!;
     }
 
     public static async Task<bool> CheckUserLicenseExpiredAsync(ApplicationUser user, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        return await dbContext.Set<UserLicense>().AsNoTracking().Include(ul => ul.License)
+        return await dbContext.Set<UserLicense>()
+            .Include(ul => ul.License)
             .AnyAsync(ul => ul.UserId == user.Id && ul.License.ExpirationDate < DateOnly.FromDateTime(DateTime.UtcNow), cancellationToken);
     }
 
     private static async Task<bool> CheckLicenseExistAsync(CreateLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
-        => await dbContext.Set<License>().AsNoTracking()
+        => await dbContext.Set<License>()
         .AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
 }
