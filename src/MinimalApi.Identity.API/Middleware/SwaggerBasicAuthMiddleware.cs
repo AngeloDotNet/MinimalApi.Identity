@@ -15,8 +15,8 @@ public class SwaggerBasicAuthMiddleware(RequestDelegate next, IOptions<SwaggerSe
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var isAuthenticationRequired = (context.Request.Path == "/index.html"
-            || context.Request.Path.StartsWithSegments("/swagger")) && settings.UserName.HasValue() && settings.Password.HasValue();
+        var isAuthenticationRequired = (context.Request.Path == "/index.html" || context.Request.Path.StartsWithSegments("/swagger"))
+            && settings.UserName.HasValue() && settings.Password.HasValue();
 
         if (!isAuthenticationRequired)
         {
@@ -25,6 +25,7 @@ public class SwaggerBasicAuthMiddleware(RequestDelegate next, IOptions<SwaggerSe
         }
 
         string? authenticationHeader = context.Request.Headers[HeaderNames.Authorization];
+
         if (authenticationHeader?.StartsWith("Basic ") == true)
         {
             // Get the credentials from request header
