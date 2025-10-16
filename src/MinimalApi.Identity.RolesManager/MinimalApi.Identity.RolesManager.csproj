@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <Authors>Angelo Pirola</Authors>
         <Company>Angelo Pirola</Company>
-        <Product>Identity.Module.Shared</Product>
-        <Title>Identity.Module.Shared</Title>
+        <Product>MinimalApi.Identity.RolesManager</Product>
+        <Title>Identity.Module.RolesManager</Title>
         <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
-        <PackageId>Identity.Module.Shared</PackageId>
+        <PackageId>Identity.Module.RolesManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
@@ -22,27 +22,16 @@
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <PackageReference Include="Identity.Module.Core" Version="2.5.116" />
+    </ItemGroup>
+
     <ItemGroup>
         <None Include="..\..\identityLibrary.png">
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="4.0.7.10" />
-      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.21" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Serilog" Version="4.3.0" />
-      <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
-      <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-      <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     </ItemGroup>
 
 </Project>
