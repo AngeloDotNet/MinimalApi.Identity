@@ -1,12 +1,41 @@
 # Changelog
 
-## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
+## [Identity.Module.API_v2.5.189](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.189) (2025-10-17)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.179...HEAD)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.118...Identity.Module.API_v2.5.189)
+
+## [Identity.Module.Core_v2.5.118](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.118) (2025-10-17)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.180...Identity.Module.Core_v2.5.118)
 
 **Implemented enhancements:**
 
+- Develop [\#136](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/136) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+## [Identity.Module.API_v2.5.180](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.180) (2025-10-16)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.32...Identity.Module.API_v2.5.180)
+
+## [Identity.Module.Shared_v2.5.32](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.32) (2025-10-16)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.31...Identity.Module.Shared_v2.5.32)
+
+**Implemented enhancements:**
+
+- Develop [\#134](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/134) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+## [Identity.Module.Shared_v2.5.31](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.31) (2025-10-15)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.179...Identity.Module.Shared_v2.5.31)
+
+**Implemented enhancements:**
+
+- Develop [\#133](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/133) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#131](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/131) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+**Merged pull requests:**
+
+- Update CHANGELOG.md for tag main \[auto\] [\#132](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/132) ([github-actions[bot]](https://github.com/apps/github-actions))
 
 ## [Identity.Module.API_v2.5.179](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.179) (2025-10-10)
 
