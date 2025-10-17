@@ -12,11 +12,6 @@ public record class AssignModuleModel(int UserId, int ModuleId);
 public record class RevokeModuleModel(int UserId, int ModuleId);
 public record class DeleteModuleModel(int ModuleId);
 
-public record class CreateRoleModel(string Role);
-public record class AssignRoleModel(string Username, string Role);
-public record class RevokeRoleModel(string Username, string Role);
-public record class DeleteRoleModel(string Role);
-
 public record class CreateClaimModel(string Type, string Value);
 public record class AssignClaimModel(int UserId, string Type, string Value);
 public record class RevokeClaimModel(int UserId, string Type, string Value);

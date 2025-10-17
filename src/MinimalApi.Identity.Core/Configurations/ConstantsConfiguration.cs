@@ -33,11 +33,6 @@ public static class ConstantsConfiguration
     public const string EndpointsRevokeModule = "/revoke-module";
     public const string EndpointsDeleteModule = "/delete-module";
 
-    public const string EndpointsCreateRole = "/create-role";
-    public const string EndpointsAssignRole = "/assign-role";
-    public const string EndpointsRevokeRole = "/revoke-role";
-    public const string EndpointsDeleteRole = "/delete-role";
-
     public const string EndpointsCreateClaim = "/create-claim";
     public const string EndpointsAssignClaim = "/assign-claim";
     public const string EndpointsRevokeClaim = "/revoke-claim";
