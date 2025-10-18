@@ -65,15 +65,14 @@ public static class RegisterServicesExtensions
         services
             .AccountManagerRegistrationService()
             .AuthManagerRegistrationService()
+            //.ClaimsManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
-            .ProfileManagerRegistrationService();
+            .ProfileManagerRegistrationService()
+            //.RolesManagerRegistrationService()
+            ;
 
-        //TODO: Missing services to register (Claims, Roles Manager Registration Services)
-
-        var errorFormat = appSettings.ErrorResponseFormat;
-
-        switch (errorFormat)
+        switch (appSettings.ErrorResponseFormat)
         {
             case "Default":
                 services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
@@ -104,7 +103,7 @@ public static class RegisterServicesExtensions
 
         if (featureFlagsOptions.EnabledFeatureModule)
         {
-            //TODO: Replace with new implementation: ModuleManagerRegistrationService();
+            //services.ModuleManagerRegistrationService();
         }
 
         return services;
@@ -120,10 +119,10 @@ public static class RegisterServicesExtensions
 
         app.MapEndpoints();
         app.MapAccountEndpoints();
+        //app.MapClaimsEndpoints();
         app.MapPolicyEndpoints();
         app.MapProfileEndpoints();
-
-        //TODO: Missing services to register (Claims, Roles Endpoints)
+        //app.MapRolesEndpoints();
 
         if (activeModules.EnabledFeatureLicense)
         {
@@ -132,7 +131,7 @@ public static class RegisterServicesExtensions
 
         if (activeModules.EnabledFeatureModule)
         {
-            //TODO: Replace with new implementation: app.MapModuleEndpoints();
+            //app.MapModuleEndpoints();
         }
     }
 
