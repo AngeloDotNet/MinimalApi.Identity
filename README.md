@@ -309,7 +309,6 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 - [ ] Move the configuration of the claims to a dedicated library
 - [ ] Move the configuration of the module to a dedicated library
-- [ ] Move the configuration of the roles to a dedicated library
 - [ ] Fix the TODOs
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Migrate SmtpOptions configuration to database
