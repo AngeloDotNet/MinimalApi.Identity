@@ -30,6 +30,8 @@ using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
+using MinimalApi.Identity.RolesManager.DependencyInjection;
+using MinimalApi.Identity.RolesManager.Endpoints;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.API.Extensions;
@@ -69,8 +71,7 @@ public static class RegisterServicesExtensions
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
-            //.RolesManagerRegistrationService()
-            ;
+            .RolesManagerRegistrationService();
 
         switch (appSettings.ErrorResponseFormat)
         {
@@ -122,7 +123,7 @@ public static class RegisterServicesExtensions
         //app.MapClaimsEndpoints();
         app.MapPolicyEndpoints();
         app.MapProfileEndpoints();
-        //app.MapRolesEndpoints();
+        app.MapRolesEndpoints();
 
         if (activeModules.EnabledFeatureLicense)
         {
