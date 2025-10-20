@@ -5,6 +5,8 @@ using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
+using MinimalApi.Identity.Shared.DependencyInjection;
+using MinimalApi.Identity.Shared.Options;
 using Serilog;
 
 namespace IdentityManager.API;
@@ -14,10 +16,13 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        builder.Host.UseSerilog((context, services, config)
-            => config.ReadFrom.Configuration(context.Configuration));
-        //.WriteToMinio(context.Configuration)
+        builder.Host.UseSerilog((context, services, config) =>
+        {
+            config.ReadFrom.Configuration(context.Configuration);
+            config.WriteToMinio(minioOptions);
+        });
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
