@@ -138,6 +138,13 @@ The configuration can be completely managed by adding this section to the _appse
     "IsRequiredAuth": false,
     "Username": "admin",
     "Password": "StrongPassword"
+},
+"MinioOptions": {
+    "Endpoint": "http://127.0.0.1:9000",
+    "AccessKey": "",
+    "SecretKey": "",
+    "BucketName": "logs",
+    "LogObjectKey": "serilog-demo.json"
 }
 ```
 
@@ -197,9 +204,13 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        builder.Host.UseSerilog((context, services, config) => config.ReadFrom.Configuration(context.Configuration));
-        //.WriteToMinio(context.Configuration)
+        builder.Host.UseSerilog((context, services, config) =>
+        {
+            config.ReadFrom.Configuration(context.Configuration);
+            config.WriteToMinio(minioOptions);
+        });
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
@@ -218,7 +229,6 @@ public class Program
         builder.Services.AddAuthorization(options =>
         {
             options.AddDefaultSecurityOptions();
-
             // Here you can add additional authorization policies
         });
 
@@ -229,7 +239,6 @@ public class Program
         app.UseStatusCodePages();
 
         app.UseMiddleware<MinimalApiExceptionMiddleware>();
-
         if (swaggerSettings.IsEnabled)
         {
             if (swaggerSettings.IsRequiredAuth)
