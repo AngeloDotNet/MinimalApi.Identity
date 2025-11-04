@@ -25,7 +25,7 @@
     
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-        <PackageReference Include="Identity.Module.Shared" Version="2.5.39" />
+        <PackageReference Include="Identity.Module.Shared" Version="2.5.41" />
         <PackageReference Include="MailKit" Version="4.14.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />

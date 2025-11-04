@@ -320,7 +320,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Migrate SmtpOptions configuration to database
-- [ ] Migrate FeatureFlagsOptions configuration to database
+- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Change the entity ID type from INT to GUID
@@ -334,6 +334,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+- [ ] Migrate FeatureFlagsOptions configuration to database (to be verified)
 
 ## 📜 License
 
