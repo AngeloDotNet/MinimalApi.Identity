@@ -9,7 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Nerdbank.GitVersioning" Version="3.8.118" PrivateAssets="All" />
+        <PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50" PrivateAssets="All" />
+        <!--<PackageReference Include="Nerdbank.GitVersioning" Version="3.8.118" PrivateAssets="All" />-->
         <!--<PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115" PrivateAssets="All" />-->
     </ItemGroup>
 
