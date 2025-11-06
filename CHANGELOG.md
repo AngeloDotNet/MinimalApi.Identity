@@ -1,5 +1,89 @@
 # Changelog
 
+## [Identity.Module.API_v2.5.214](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.214) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.38...Identity.Module.API_v2.5.214)
+
+## [Identity.Module.AccountManager_v2.5.38](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.38) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.38...Identity.Module.AccountManager_v2.5.38)
+
+## [Identity.Module.AuthManager_v2.5.38](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.38) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.37...Identity.Module.AuthManager_v2.5.38)
+
+## [Identity.Module.EmailManager_v2.5.37](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.37) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.41...Identity.Module.EmailManager_v2.5.37)
+
+## [Identity.Module.LicenseManager_v2.5.41](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.41) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.PolicyManager_v2.5.58...Identity.Module.LicenseManager_v2.5.41)
+
+## [Identity.Module.PolicyManager_v2.5.58](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.PolicyManager_v2.5.58) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ProfileManager_v2.5.51...Identity.Module.PolicyManager_v2.5.58)
+
+## [Identity.Module.ProfileManager_v2.5.51](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ProfileManager_v2.5.51) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.RolesManager_v2.5.10...Identity.Module.ProfileManager_v2.5.51)
+
+## [Identity.Module.RolesManager_v2.5.10](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.RolesManager_v2.5.10) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.213...Identity.Module.RolesManager_v2.5.10)
+
+**Implemented enhancements:**
+
+- Develop [\#155](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/155) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+## [Identity.Module.API_v2.5.213](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.213) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.37...Identity.Module.API_v2.5.213)
+
+## [Identity.Module.AccountManager_v2.5.37](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.37) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.37...Identity.Module.AccountManager_v2.5.37)
+
+## [Identity.Module.AuthManager_v2.5.37](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.37) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.127...Identity.Module.AuthManager_v2.5.37)
+
+## [Identity.Module.Core_v2.5.127](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.127) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.36...Identity.Module.Core_v2.5.127)
+
+## [Identity.Module.EmailManager_v2.5.36](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.36) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.40...Identity.Module.EmailManager_v2.5.36)
+
+## [Identity.Module.LicenseManager_v2.5.40](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.40) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.PolicyManager_v2.5.57...Identity.Module.LicenseManager_v2.5.40)
+
+## [Identity.Module.PolicyManager_v2.5.57](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.PolicyManager_v2.5.57) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ProfileManager_v2.5.50...Identity.Module.PolicyManager_v2.5.57)
+
+## [Identity.Module.ProfileManager_v2.5.50](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ProfileManager_v2.5.50) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.RolesManager_v2.5.9...Identity.Module.ProfileManager_v2.5.50)
+
+## [Identity.Module.RolesManager_v2.5.9](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.RolesManager_v2.5.9) (2025-11-05)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.212...Identity.Module.RolesManager_v2.5.9)
+
+**Implemented enhancements:**
+
+- Develop [\#154](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/154) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+**Merged pull requests:**
+
+- Update CHANGELOG.md for tag main \[auto\] [\#153](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/153) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [Identity.Module.API_v2.5.212](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.212) (2025-11-04)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.36...Identity.Module.API_v2.5.212)
+
 ## [Identity.Module.AccountManager_v2.5.36](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.36) (2025-11-04)
 
 [Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.126...Identity.Module.AccountManager_v2.5.36)
