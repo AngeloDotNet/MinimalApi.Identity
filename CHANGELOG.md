@@ -4,8 +4,13 @@
 
 [Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.218...HEAD)
 
+**Implemented enhancements:**
+
+- Develop [\#164](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/164) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#163](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/163) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#161](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/161) ([github-actions[bot]](https://github.com/apps/github-actions))
 
 ## [Identity.Module.API_v2.5.218](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.218) (2025-11-11)
