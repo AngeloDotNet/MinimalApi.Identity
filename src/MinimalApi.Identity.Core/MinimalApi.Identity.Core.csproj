@@ -27,10 +27,10 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
         <PackageReference Include="Identity.Module.Shared" Version="2.5.43" />
         <PackageReference Include="MailKit" Version="4.14.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
