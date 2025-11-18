@@ -32,7 +32,7 @@
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.42" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.40" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.129" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.130" />
     <PackageReference Include="Identity.Module.EmailManager" Version="2.5.39" />
     <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.43" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.60" />
