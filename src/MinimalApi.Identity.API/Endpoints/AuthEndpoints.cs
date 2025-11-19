@@ -34,7 +34,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthRegister, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] RegisterModel inputModel) =>
         {
-            await authService.RegisterAsync(inputModel);
+            return await authService.RegisterAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User registered successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
