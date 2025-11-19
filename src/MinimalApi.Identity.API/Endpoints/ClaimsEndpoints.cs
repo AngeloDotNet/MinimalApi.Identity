@@ -29,7 +29,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IClaimsService claimsService) =>
         {
-            await claimsService.GetAllClaimsAsync();
+            return await claimsService.GetAllClaimsAsync();
         })
         .Produces<Ok<List<ClaimResponseModel>>>(StatusCodes.Status200OK).WithDescription("Claims retrieved successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
