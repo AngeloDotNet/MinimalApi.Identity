@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi;
 using MinimalApi.Identity.Core.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

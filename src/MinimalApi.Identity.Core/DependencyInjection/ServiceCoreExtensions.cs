@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Filters;
@@ -29,7 +29,14 @@ public static class ServiceCoreExtensions
         => operation.Responses.GetByStatusCode(statusCode);
 
     public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
-        => responses.Single(r => r.Key == statusCode.ToString()).Value;
+    {
+        var pair = responses.SingleOrDefault(r => r.Key == statusCode.ToString());
+        if (pair.Value is OpenApiResponse response)
+        {
+            return response;
+        }
+        throw new InvalidOperationException($"Response for status code {statusCode} is not an {nameof(OpenApiResponse)}.");
+    }
 
     public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder) where T : class
         => builder.AddEndpointFilter<ValidatorFilter<T>>().ProducesValidationProblem();
