@@ -131,7 +131,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsDeleteClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] DeleteClaimModel inputModel) =>
         {
-            await claimsService.DeleteClaimAsync(inputModel);
+            return await claimsService.DeleteClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim deleted successfully")
         //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
