@@ -142,7 +142,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsForgotPassword, async ([FromServices] IAuthService authService,
             [FromBody] ForgotPasswordModel inputModel) =>
         {
-            await authService.ForgotPasswordAsync(inputModel);
+            return await authService.ForgotPasswordAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Password reset link sent successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
