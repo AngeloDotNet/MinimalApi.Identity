@@ -77,7 +77,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignModule, async ([FromServices] IModuleService moduleService,
             [FromBody] AssignModuleModel inputModel) =>
         {
-            await moduleService.AssignModuleAsync(inputModel);
+            return await moduleService.AssignModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Module assigned successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
