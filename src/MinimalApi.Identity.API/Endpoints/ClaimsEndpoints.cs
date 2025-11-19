@@ -79,7 +79,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] AssignClaimModel inputModel) =>
         {
-            await claimsService.AssignClaimAsync(inputModel);
+            return await claimsService.AssignClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim assigned successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
