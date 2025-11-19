@@ -53,7 +53,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsCreateModule, async ([FromServices] IModuleService moduleService,
             [FromBody] CreateModuleModel inputModel) =>
         {
-            await moduleService.CreateModuleAsync(inputModel);
+            return await moduleService.CreateModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Module created successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
