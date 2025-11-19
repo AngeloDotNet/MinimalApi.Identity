@@ -29,7 +29,14 @@ public static class ServiceCoreExtensions
         => operation.Responses.GetByStatusCode(statusCode);
 
     public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
-        => (OpenApiResponse)responses.Single(r => r.Key == statusCode.ToString()).Value;
+    {
+        var pair = responses.SingleOrDefault(r => r.Key == statusCode.ToString());
+        if (pair.Value is OpenApiResponse response)
+        {
+            return response;
+        }
+        throw new InvalidOperationException($"Response for status code {statusCode} is not an {nameof(OpenApiResponse)}.");
+    }
 
     public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder) where T : class
         => builder.AddEndpointFilter<ValidatorFilter<T>>().ProducesValidationProblem();
