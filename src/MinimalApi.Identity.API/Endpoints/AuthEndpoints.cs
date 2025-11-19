@@ -103,7 +103,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsImpersonateUser, async ([FromServices] IAuthService authService,
             [FromBody] ImpersonateUserModel inputModel) =>
         {
-            await authService.ImpersonateAsync(inputModel);
+            return await authService.ImpersonateAsync(inputModel);
         })
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User impersonated successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
