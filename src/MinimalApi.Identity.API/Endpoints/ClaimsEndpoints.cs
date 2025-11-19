@@ -105,7 +105,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeClaim, async ([FromServices] IClaimsService claimService,
             [FromBody] RevokeClaimModel inputModel) =>
         {
-            await claimService.RevokeClaimAsync(inputModel);
+            return await claimService.RevokeClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim revoked successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
