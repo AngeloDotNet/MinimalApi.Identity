@@ -124,7 +124,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogout, [AllowAnonymous] async ([FromServices] IAuthService authService) =>
         {
-            await authService.LogoutAsync();
+            return await authService.LogoutAsync().ConfigureAwait(false);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User logged out successfully")
         //.WithOpenApi(opt =>
