@@ -59,7 +59,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogin, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] LoginModel inputModel) =>
         {
-            await authService.LoginAsync(inputModel);
+            return await authService.LoginAsync(inputModel);
         })
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User logged in successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
