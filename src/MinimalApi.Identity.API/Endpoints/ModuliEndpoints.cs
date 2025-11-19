@@ -103,7 +103,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeModule, async ([FromServices] IModuleService moduleService,
             [FromBody] RevokeModuleModel inputModel) =>
         {
-            await moduleService.RevokeModuleAsync(inputModel);
+            return await moduleService.RevokeModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
