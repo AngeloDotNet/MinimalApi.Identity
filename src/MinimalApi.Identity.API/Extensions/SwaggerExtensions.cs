@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Filters;
 using MinimalApi.Identity.Core.Options;
@@ -38,23 +38,32 @@ public static class SwaggerExtensions
         var securityScheme = new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
-            Description = "Insert the Bearer Token",
             Name = HeaderNames.Authorization,
+            Description = "Insert the Bearer Token",
             Type = SecuritySchemeType.ApiKey,
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = JwtBearerDefaults.AuthenticationScheme
-            }
+            //Reference = new OpenApiReference
+            //{
+            //    Type = ReferenceType.SecurityScheme,
+            //    Id = JwtBearerDefaults.AuthenticationScheme
+            //}
+            Scheme = JwtBearerDefaults.AuthenticationScheme
         };
         options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
 
-        var securityRequirement = new OpenApiSecurityRequirement
-        {
-            { securityScheme, Array.Empty<string>() }
-        };
-        options.AddSecurityRequirement(securityRequirement);
+        //var securityRequirement = new OpenApiSecurityRequirement
+        //{
+        //    { securityScheme, Array.Empty<string>() }
+        //};
+        ////options.AddSecurityRequirement(securityRequirement);
+        //options.AddSecurityRequirement(_ => securityRequirement);
+        options.AddSecurityRequirement(document => CreateSecurityRequirement(JwtBearerDefaults.AuthenticationScheme, document));
     }
+
+    public static OpenApiSecurityRequirement CreateSecurityRequirement(string name, OpenApiDocument document)
+        => new()
+        {
+            { new OpenApiSecuritySchemeReference(name, document), [] }
+        };
 
     public static void AddSwaggerDocumentFilters(this SwaggerGenOptions options, FeatureFlagsOptions featureFlagsOptions)
     {
