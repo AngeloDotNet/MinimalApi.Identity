@@ -29,7 +29,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IModuleService moduleService) =>
         {
-            await moduleService.GetAllModulesAsync();
+            return await moduleService.GetAllModulesAsync();
         })
         .Produces<Ok<List<ModuleResponseModel>>>(StatusCodes.Status200OK).WithDescription("Modules retrieved successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
