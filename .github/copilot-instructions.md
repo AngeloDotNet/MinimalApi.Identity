@@ -71,7 +71,7 @@
 
 ## Markdown
 
-- - Use Markdown for documentation files (e.g., README.md).
+- Use Markdown for documentation files (e.g., README.md).
 - Use triple backticks for code blocks, JSON snippets and bash commands, specifying the language (e.g., ```csharp, ```json and ```bash).
 
 ## Testing
