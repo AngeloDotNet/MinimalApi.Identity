@@ -164,7 +164,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPassword, async ([FromServices] IAuthService authService,
             [FromBody] ResetPasswordModel inputModel, [FromRoute] string code) =>
         {
-            await authService.ResetPasswordAsync(inputModel, code);
+            return await authService.ResetPasswordAsync(inputModel, code);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Your password has been reset.")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
