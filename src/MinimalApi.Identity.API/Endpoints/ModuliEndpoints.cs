@@ -29,7 +29,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IModuleService moduleService) =>
         {
-            await moduleService.GetAllModulesAsync();
+            return await moduleService.GetAllModulesAsync();
         })
         .Produces<Ok<List<ModuleResponseModel>>>(StatusCodes.Status200OK).WithDescription("Modules retrieved successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -53,7 +53,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsCreateModule, async ([FromServices] IModuleService moduleService,
             [FromBody] CreateModuleModel inputModel) =>
         {
-            await moduleService.CreateModuleAsync(inputModel);
+            return await moduleService.CreateModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Module created successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
@@ -77,7 +77,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignModule, async ([FromServices] IModuleService moduleService,
             [FromBody] AssignModuleModel inputModel) =>
         {
-            await moduleService.AssignModuleAsync(inputModel);
+            return await moduleService.AssignModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Module assigned successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -103,7 +103,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeModule, async ([FromServices] IModuleService moduleService,
             [FromBody] RevokeModuleModel inputModel) =>
         {
-            await moduleService.RevokeModuleAsync(inputModel);
+            return await moduleService.RevokeModuleAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK)
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -129,7 +129,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsDeleteModule, async ([FromServices] IModuleService moduleService,
             [FromBody] DeleteModuleModel inputModel) =>
         {
-            await moduleService.DeleteModuleAsync(inputModel);
+            return await moduleService.DeleteModuleAsync(inputModel);
         })
         .Produces<string>(StatusCodes.Status200OK)
         //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)

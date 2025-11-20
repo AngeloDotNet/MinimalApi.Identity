@@ -34,7 +34,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthRegister, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] RegisterModel inputModel) =>
         {
-            await authService.RegisterAsync(inputModel);
+            return await authService.RegisterAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User registered successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
@@ -59,7 +59,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogin, [AllowAnonymous] async ([FromServices] IAuthService authService,
             [FromBody] LoginModel inputModel) =>
         {
-            await authService.LoginAsync(inputModel);
+            return await authService.LoginAsync(inputModel);
         })
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User logged in successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
@@ -103,7 +103,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsImpersonateUser, async ([FromServices] IAuthService authService,
             [FromBody] ImpersonateUserModel inputModel) =>
         {
-            await authService.ImpersonateAsync(inputModel);
+            return await authService.ImpersonateAsync(inputModel);
         })
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User impersonated successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
@@ -124,7 +124,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogout, [AllowAnonymous] async ([FromServices] IAuthService authService) =>
         {
-            await authService.LogoutAsync();
+            return await authService.LogoutAsync().ConfigureAwait(false);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User logged out successfully")
         //.WithOpenApi(opt =>
@@ -142,7 +142,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsForgotPassword, async ([FromServices] IAuthService authService,
             [FromBody] ForgotPasswordModel inputModel) =>
         {
-            await authService.ForgotPasswordAsync(inputModel);
+            return await authService.ForgotPasswordAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Password reset link sent successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
@@ -164,7 +164,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPassword, async ([FromServices] IAuthService authService,
             [FromBody] ResetPasswordModel inputModel, [FromRoute] string code) =>
         {
-            await authService.ResetPasswordAsync(inputModel, code);
+            return await authService.ResetPasswordAsync(inputModel, code);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Your password has been reset.")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)

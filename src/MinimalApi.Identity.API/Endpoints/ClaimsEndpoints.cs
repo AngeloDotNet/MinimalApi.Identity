@@ -29,7 +29,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, async ([FromServices] IClaimsService claimsService) =>
         {
-            await claimsService.GetAllClaimsAsync();
+            return await claimsService.GetAllClaimsAsync();
         })
         .Produces<Ok<List<ClaimResponseModel>>>(StatusCodes.Status200OK).WithDescription("Claims retrieved successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound)
@@ -53,7 +53,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsCreateClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] CreateClaimModel inputModel) =>
         {
-            await claimsService.CreateClaimAsync(inputModel);
+            return await claimsService.CreateClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim created successfully")
         //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
@@ -79,7 +79,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAssignClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] AssignClaimModel inputModel) =>
         {
-            await claimsService.AssignClaimAsync(inputModel);
+            return await claimsService.AssignClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim assigned successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -105,7 +105,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsRevokeClaim, async ([FromServices] IClaimsService claimService,
             [FromBody] RevokeClaimModel inputModel) =>
         {
-            await claimService.RevokeClaimAsync(inputModel);
+            return await claimService.RevokeClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim revoked successfully")
         //.ProducesDefaultProblem(StatusCodes.Status401Unauthorized, StatusCodes.Status404NotFound, StatusCodes.Status422UnprocessableEntity)
@@ -131,7 +131,7 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
         apiGroup.MapDelete(ConstantsConfiguration.EndpointsDeleteClaim, async ([FromServices] IClaimsService claimsService,
             [FromBody] DeleteClaimModel inputModel) =>
         {
-            await claimsService.DeleteClaimAsync(inputModel);
+            return await claimsService.DeleteClaimAsync(inputModel);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Claim deleted successfully")
         //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
