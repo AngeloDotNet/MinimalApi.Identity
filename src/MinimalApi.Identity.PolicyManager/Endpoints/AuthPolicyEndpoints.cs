@@ -68,7 +68,7 @@ public static class AuthPolicyEndpoints
             .WithSummary("Add authorization policy");
 
         apiGroup.MapDelete(PolicyExtensions.EndpointsDeleteAuthPolicy, EndpointsHandler.DeleteHandlerAsync)
-            .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription(ConstantsConfiguration.Unauthorized)
+            .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Policy deleted successfully")
             //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status401Unauthorized, StatusCodes.Status422UnprocessableEntity)
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
