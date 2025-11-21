@@ -17,15 +17,6 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
 {
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        //var apiGroup = endpoints
-        //    .MapGroup(EndpointGenerator.EndpointsAuthGroup)
-        //    .RequireAuthorization()
-        //    .WithOpenApi(opt =>
-        //    {
-        //        opt.Tags = [new OpenApiTag { Name = EndpointGenerator.EndpointsAuthTag }];
-        //        return opt;
-        //    });
-
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsAuthGroup)
             .RequireAuthorization()
@@ -39,19 +30,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User registered successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<RegisterModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Register new user";
-        //    opt.Summary = "Register new user";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "User registered successfully";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-
-        //    return opt;
-        //})
-        //.WithOpenApi()
         .WithName("Register")
         .WithDescription("Register new user")
         .WithSummary("Register new user");
@@ -64,17 +43,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User logged in successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<LoginModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Login user";
-        //    opt.Summary = "Login user";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "User logged in successfully";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-        //    return opt;
-        //});
         .WithDescription("Login user")
         .WithSummary("Login user");
 
@@ -86,17 +55,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("Token refreshed successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<RefreshTokenModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Refresh token user";
-        //    opt.Summary = "Refresh token user";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "Token refreshed successfully";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-        //    return opt;
-        //});
         .WithDescription("Refresh token user")
         .WithSummary("Refresh token user");
 
@@ -108,17 +67,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<AuthResponseModel>>(StatusCodes.Status200OK).WithDescription("User impersonated successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<ImpersonateUserModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Impersonate user";
-        //    opt.Summary = "Impersonate user";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "User impersonated successfully";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-        //    return opt;
-        //});
         .WithDescription("Impersonate user")
         .WithSummary("Impersonate user");
 
@@ -127,15 +76,6 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             return await authService.LogoutAsync().ConfigureAwait(false);
         })
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User logged out successfully")
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Logout user";
-        //    opt.Summary = "Logout user";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "User logged out successfully";
-
-        //    return opt;
-        //});
         .WithDescription("Logout user")
         .WithSummary("Logout user");
 
@@ -147,17 +87,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Password reset link sent successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<ForgotPasswordModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Forgot password";
-        //    opt.Summary = "Forgot password";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "Password reset link sent successfully";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-        //    return opt;
-        //});
         .WithDescription("Forgot password")
         .WithSummary("Forgot password");
 
@@ -169,17 +99,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
         .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Your password has been reset.")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
-        //.ProducesDefaultProblem(StatusCodes.Status400BadRequest, StatusCodes.Status422UnprocessableEntity)
         .WithValidation<ResetPasswordModel>()
-        //.WithOpenApi(opt =>
-        //{
-        //    opt.Description = "Reset password";
-        //    opt.Summary = "Reset password";
-
-        //    opt.Response(StatusCodes.Status200OK).Description = "Your password has been reset.";
-        //    opt.Response(StatusCodes.Status400BadRequest).Description = ConstantsConfiguration.BadRequest;
-        //    return opt;
-        //});
         .WithDescription("Reset password")
         .WithSummary("Reset password");
     }
