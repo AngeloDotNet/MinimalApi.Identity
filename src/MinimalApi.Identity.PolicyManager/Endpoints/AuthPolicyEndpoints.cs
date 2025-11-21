@@ -21,7 +21,7 @@ public static class AuthPolicyEndpoints
             .WithOpenApi();
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
-            .Produces<Ok<List<PolicyResponseModel>>>(StatusCodes.Status200OK).WithDescription("Claims retrieved successfully")
+            .Produces<Ok<List<PolicyResponseModel>>>(StatusCodes.Status200OK).WithDescription("Policies retrieved successfully")
             .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound).WithDescription(ConstantsConfiguration.NotFound)
             .RequireAuthorization(nameof(Permissions.AuthPolicyRead))
