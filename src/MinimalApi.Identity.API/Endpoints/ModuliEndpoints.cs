@@ -65,7 +65,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         {
             return await moduleService.RevokeModuleAsync(inputModel);
         })
-        .Produces<Ok<string>>(StatusCodes.Status200OK)
+        .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Module revoked successfully")
         .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
         .ProducesProblem(StatusCodes.Status404NotFound).WithDescription(ConstantsConfiguration.NotFound)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
@@ -79,7 +79,7 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
         {
             return await moduleService.DeleteModuleAsync(inputModel);
         })
-        .Produces<string>(StatusCodes.Status200OK)
+        .Produces<string>(StatusCodes.Status200OK).WithDescription("Module deleted successfully")
         .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
         .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
         .ProducesProblem(StatusCodes.Status404NotFound).WithDescription(ConstantsConfiguration.NotFound)
