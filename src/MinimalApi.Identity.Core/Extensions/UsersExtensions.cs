@@ -68,7 +68,7 @@ public static class UsersExtensions
         return true;
     }
 
-    public static ClaimsIdentity GetIdentity(this IHttpContextAccessor httpContextAccessor)
+    public static ClaimsIdentity? GetIdentity(this IHttpContextAccessor httpContextAccessor)
     {
         ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
