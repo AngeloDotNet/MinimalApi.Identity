@@ -12,6 +12,8 @@ public static class ConstantsConfiguration
     public static string Unauthorized => "Unauthorized"; // 401
     public static string NotFound => "Not Found"; // 404
     public static string Conflict => "Conflict"; // 409
+    //public static string ValidationErrors => "One or more validation errors occurred.";
+    public static string ValidationErrors => "Validation error"; // 422
 
     public static DateTime Today => DateTime.UtcNow.Date;
     public static DateOnly DateOnlyToday => DateOnly.FromDateTime(Today);
