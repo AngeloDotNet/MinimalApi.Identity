@@ -1,19 +1,45 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using MinimalApi.Identity.Core.Exceptions;
+using Microsoft.Extensions.Options;
+using MinimalApi.Identity.Core.Options;
+using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.Core.Filters;
 
-internal class ValidatorFilter<T>(IValidator<T> validator) : IEndpointFilter where T : class
+//internal class ValidatorFilter<T>(IValidator<T> validator) : IEndpointFilter where T : class
+//{
+//    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
+//    {
+//        if (context.Arguments.FirstOrDefault(a => a is T) is not T input)
+//        {
+//            return TypedResults.UnprocessableEntity();
+//        }
+
+//        var validationResult = await validator.ValidateAsync(input);
+
+//        if (validationResult.IsValid)
+//        {
+//            return await next(context);
+//        }
+
+//        var errors = validationResult.ToDictionary();
+
+//        throw new ValidationModelException("One or more validation errors occurred", errors);
+//    }
+//}
+internal class ValidatorFilter<TModel>(IValidator<TModel> validator, IOptions<ValidationOptions> options) : IEndpointFilter where TModel : class
 {
+    private readonly ValidationOptions validationOptions = options.Value;
+
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        if (context.Arguments.FirstOrDefault(a => a is T) is not T input)
+        if (context.Arguments.FirstOrDefault(a => a?.GetType() == typeof(TModel)) is not TModel input)
         {
             return TypedResults.UnprocessableEntity();
         }
 
-        var validationResult = await validator.ValidateAsync(input);
+        var validationResult = await validator.ValidateAsync(input, context.HttpContext.RequestAborted);
 
         if (validationResult.IsValid)
         {
@@ -22,6 +48,18 @@ internal class ValidatorFilter<T>(IValidator<T> validator) : IEndpointFilter whe
 
         var errors = validationResult.ToDictionary();
 
-        throw new ValidationModelException("One or more validation errors occurred", errors);
+        var result = TypedResults.Problem(
+            //statusCode: StatusCodes.Status400BadRequest,
+            statusCode: StatusCodes.Status422UnprocessableEntity,
+            instance: context.HttpContext.Request.Path,
+            title: validationOptions.ValidationErrorTitleMessageFactory?.Invoke(context, errors) ?? "One or more validation errors occurred",
+            extensions: new Dictionary<string, object?>(StringComparer.Ordinal)
+            {
+                ["traceId"] = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier,
+                ["errors"] = validationOptions.ErrorResponseFormat == ErrorResponseFormat.Default ? errors : errors.SelectMany(e => e.Value.Select(m => new { Name = e.Key, Message = m })).ToArray()
+            }
+        );
+
+        return result;
     }
 }

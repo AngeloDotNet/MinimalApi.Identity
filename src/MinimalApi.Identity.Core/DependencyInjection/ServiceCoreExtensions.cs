@@ -25,21 +25,26 @@ public static class ServiceCoreExtensions
         return builder;
     }
 
+    //public static OpenApiResponse Response(this OpenApiOperation operation, int statusCode)
+    //    => operation.Responses.GetByStatusCode(statusCode);
     public static OpenApiResponse Response(this OpenApiOperation operation, int statusCode)
-        => operation.Responses.GetByStatusCode(statusCode);
+        => operation.Responses!.GetByStatusCode(statusCode);
 
+    //public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
+    //{
+    //    var pair = responses.SingleOrDefault(r => r.Key == statusCode.ToString());
+    //    if (pair.Value is OpenApiResponse response)
+    //    {
+    //        return response;
+    //    }
+
+    //    throw new InvalidOperationException($"Response for status code {statusCode} is not an {nameof(OpenApiResponse)}.");
+    //}
     public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
-    {
-        var pair = responses.SingleOrDefault(r => r.Key == statusCode.ToString());
-        if (pair.Value is OpenApiResponse response)
-        {
-            return response;
-        }
-        throw new InvalidOperationException($"Response for status code {statusCode} is not an {nameof(OpenApiResponse)}.");
-    }
+        => (OpenApiResponse)responses.Single(r => r.Key == statusCode.ToString()).Value;
 
-    public static RouteHandlerBuilder WithValidation<T>(this RouteHandlerBuilder builder) where T : class
-        => builder.AddEndpointFilter<ValidatorFilter<T>>().ProducesValidationProblem();
+    public static RouteHandlerBuilder WithValidation<TModel>(this RouteHandlerBuilder builder) where TModel : class
+        => builder.AddEndpointFilter<ValidatorFilter<TModel>>().ProducesValidationProblem();
 
     public static IServiceCollection ConfigureFluentValidation<TValidator>(this IServiceCollection services) where TValidator : IValidator
         => services.AddValidatorsFromAssembly(typeof(TValidator).Assembly);
@@ -83,12 +88,30 @@ public static class ServiceCoreExtensions
         return services;
     }
 
+    //internal static Assembly FindImplementationInterfaces(Type interfaceType)
+    //{
+    //    var implementationType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+    //        .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
+    //        ?? throw new InvalidOperationException($"No implementation found for interface {interfaceType.FullName}");
+
+    //    return interfaceType.Assembly;
+    //}
+
     internal static Assembly FindImplementationInterfaces(Type interfaceType)
     {
-        var implementationType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
-            .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-            ?? throw new InvalidOperationException($"No implementation found for interface {interfaceType.FullName}");
+        ArgumentNullException.ThrowIfNull(interfaceType);
 
-        return interfaceType.Assembly;
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach (var type in assembly.GetTypes())
+            {
+                if (type.IsClass && !type.IsAbstract && interfaceType.IsAssignableFrom(type))
+                {
+                    return type.Assembly;
+                }
+            }
+        }
+
+        throw new InvalidOperationException($"No implementation found for interface {interfaceType.FullName}");
     }
 }
