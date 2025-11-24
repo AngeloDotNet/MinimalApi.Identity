@@ -8,11 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Identity.Module.API" Version="2.5.249" />
+        <PackageReference Include="Identity.Module.API" Version="2.5.250" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.11.0" />
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     </ItemGroup>
