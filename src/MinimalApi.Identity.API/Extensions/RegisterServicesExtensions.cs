@@ -102,10 +102,10 @@ public static class RegisterServicesExtensions
             services.LicenseManagerRegistrationService();
         }
 
-        if (featureFlagsOptions.EnabledFeatureModule)
-        {
-            //services.ModuleManagerRegistrationService();
-        }
+        //if (featureFlagsOptions.EnabledFeatureModule)
+        //{
+        //    services.ModuleManagerRegistrationService();
+        //}
 
         return services;
     }
