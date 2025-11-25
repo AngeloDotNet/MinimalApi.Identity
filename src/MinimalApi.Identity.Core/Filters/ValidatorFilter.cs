@@ -2,32 +2,12 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.Core.Filters;
 
-//internal class ValidatorFilter<T>(IValidator<T> validator) : IEndpointFilter where T : class
-//{
-//    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
-//    {
-//        if (context.Arguments.FirstOrDefault(a => a is T) is not T input)
-//        {
-//            return TypedResults.UnprocessableEntity();
-//        }
-
-//        var validationResult = await validator.ValidateAsync(input);
-
-//        if (validationResult.IsValid)
-//        {
-//            return await next(context);
-//        }
-
-//        var errors = validationResult.ToDictionary();
-
-//        throw new ValidationModelException("One or more validation errors occurred", errors);
-//    }
-//}
 internal class ValidatorFilter<TModel>(IValidator<TModel> validator, IOptions<ValidationOptions> options) : IEndpointFilter where TModel : class
 {
     private readonly ValidationOptions validationOptions = options.Value;
@@ -49,10 +29,9 @@ internal class ValidatorFilter<TModel>(IValidator<TModel> validator, IOptions<Va
         var errors = validationResult.ToDictionary();
 
         var result = TypedResults.Problem(
-            //statusCode: StatusCodes.Status400BadRequest,
             statusCode: StatusCodes.Status422UnprocessableEntity,
             instance: context.HttpContext.Request.Path,
-            title: validationOptions.ValidationErrorTitleMessageFactory?.Invoke(context, errors) ?? "One or more validation errors occurred",
+            title: validationOptions.ValidationErrorTitleMessageFactory?.Invoke(context, errors) ?? ConstantsConfiguration.ValidationOccurred,
             extensions: new Dictionary<string, object?>(StringComparer.Ordinal)
             {
                 ["traceId"] = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier,
