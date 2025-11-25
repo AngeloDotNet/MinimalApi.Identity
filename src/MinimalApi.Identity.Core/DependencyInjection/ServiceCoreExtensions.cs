@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Filters;
@@ -25,23 +25,11 @@ public static class ServiceCoreExtensions
         return builder;
     }
 
-    //public static OpenApiResponse Response(this OpenApiOperation operation, int statusCode)
-    //    => operation.Responses.GetByStatusCode(statusCode);
     public static OpenApiResponse Response(this OpenApiOperation operation, int statusCode)
         => operation.Responses!.GetByStatusCode(statusCode);
 
-    //public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
-    //{
-    //    var pair = responses.SingleOrDefault(r => r.Key == statusCode.ToString());
-    //    if (pair.Value is OpenApiResponse response)
-    //    {
-    //        return response;
-    //    }
-
-    //    throw new InvalidOperationException($"Response for status code {statusCode} is not an {nameof(OpenApiResponse)}.");
-    //}
     public static OpenApiResponse GetByStatusCode(this OpenApiResponses responses, int statusCode)
-        => (OpenApiResponse)responses.Single(r => r.Key == statusCode.ToString()).Value;
+        => responses.Single(r => r.Key == statusCode.ToString()).Value;
 
     public static RouteHandlerBuilder WithValidation<TModel>(this RouteHandlerBuilder builder) where TModel : class
         => builder.AddEndpointFilter<ValidatorFilter<TModel>>().ProducesValidationProblem();
@@ -87,15 +75,6 @@ public static class ServiceCoreExtensions
 
         return services;
     }
-
-    //internal static Assembly FindImplementationInterfaces(Type interfaceType)
-    //{
-    //    var implementationType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
-    //        .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-    //        ?? throw new InvalidOperationException($"No implementation found for interface {interfaceType.FullName}");
-
-    //    return interfaceType.Assembly;
-    //}
 
     internal static Assembly FindImplementationInterfaces(Type interfaceType)
     {
