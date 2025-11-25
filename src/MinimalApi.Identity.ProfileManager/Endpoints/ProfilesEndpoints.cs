@@ -49,7 +49,7 @@ public static class ProfilesEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound).WithDescription(ConstantsConfiguration.NotFound)
-            .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .RequireAuthorization(nameof(Permissions.ProfiloWrite))
             .WithValidation<EditUserProfileModel>()
             .WithDescription("Update user profile")
