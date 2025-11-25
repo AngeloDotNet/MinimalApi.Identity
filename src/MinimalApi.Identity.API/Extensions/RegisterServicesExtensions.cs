@@ -12,26 +12,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
-using MinimalApi.Identity.AccountManager.Endpoints;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
+using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.DependencyInjection;
-using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
-using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
-using MinimalApi.Identity.RolesManager.Endpoints;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.API.Extensions;
@@ -118,21 +115,23 @@ public static class RegisterServicesExtensions
             EnabledFeatureModule = appSettings.EnabledFeatureModule
         };
 
-        app.MapEndpoints();
-        app.MapAccountEndpoints();
-        //app.MapClaimsEndpoints();
-        app.MapPolicyEndpoints();
-        app.MapProfileEndpoints();
-        app.MapRolesEndpoints();
+        app.MapAuthEndpoints();
+        app.MapClaimsEndpoints();
 
-        if (activeModules.EnabledFeatureLicense)
-        {
-            app.MapLicenseEndpoints();
-        }
+        //app.MapAccountEndpoints();
+        //app.MapClaimsEndpoints();
+        //app.MapPolicyEndpoints();
+        //app.MapProfileEndpoints();
+        //app.MapRolesEndpoints();
+
+        //if (activeModules.EnabledFeatureLicense)
+        //{
+        //    app.MapLicenseEndpoints();
+        //}
 
         if (activeModules.EnabledFeatureModule)
         {
-            //app.MapModuleEndpoints();
+            app.MapModuliEndpoints();
         }
     }
 
@@ -140,11 +139,60 @@ public static class RegisterServicesExtensions
     {
         return services
             .AddEndpointsApiExplorer()
-            .AddSwaggerGen(options =>
+            .AddSwaggerGen(opt =>
             {
-                options.AddOpenApiInfo();
-                options.AddOpenApiSecuritySchemeRequirement();
-                options.AddSwaggerDocumentFilters(featureFlagsOptions);
+                var openApiInfo = new OpenApiInfo
+                {
+                    Title = "Minimal API Identity",
+                    Version = "v1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Angelo Pirola",
+                        Email = "angelo@aepserver.it"
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "License MIT",
+                        Url = new Uri(ConstantsConfiguration.LicenseMIT)
+                    },
+                };
+
+                opt.SwaggerDoc("v1", openApiInfo);
+                //opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                opt.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Type = SecuritySchemeType.ApiKey,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = JwtBearerDefaults.AuthenticationScheme
+                    },
+                    Scheme = JwtBearerDefaults.AuthenticationScheme
+
+                    //BearerFormat = "JWT",
+                    //Description = "JWT Authorization header using the Bearer scheme.",
+                    //Name = "Authorization",
+                    //In = ParameterLocation.Header,
+                    //Type = SecuritySchemeType.ApiKey,
+                    //Scheme = "Bearer"
+                });
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
     }
 
