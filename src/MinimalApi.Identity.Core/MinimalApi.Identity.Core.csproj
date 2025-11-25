@@ -25,17 +25,17 @@
     
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
-        <PackageReference Include="Identity.Module.Shared" Version="2.5.51" />
+        <PackageReference Include="Identity.Module.Shared" Version="2.5.53" />
         <PackageReference Include="MailKit" Version="4.14.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Scrutor" Version="6.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.1" />
+        <PackageReference Include="Scrutor" Version="7.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.2" /> <!-- Non aggiornare a versioni più recenti -->
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.3.2" /> <!-- Non aggiornare a versioni più recenti -->
     </ItemGroup>
     
     <ItemGroup>
