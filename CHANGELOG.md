@@ -2,95 +2,18 @@
 
 ## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.250...HEAD)
-
-**Merged pull requests:**
-
-- Update CHANGELOG.md for tag main \[auto\] [\#168](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/168) ([github-actions[bot]](https://github.com/apps/github-actions))
-
-## [Identity.Module.API_v2.5.250](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.250) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.48...Identity.Module.API_v2.5.250)
-
-## [Identity.Module.AccountManager_v2.5.48](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.48) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.43...Identity.Module.AccountManager_v2.5.48)
-
-## [Identity.Module.AuthManager_v2.5.43](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.43) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.138...Identity.Module.AuthManager_v2.5.43)
-
-## [Identity.Module.Core_v2.5.138](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.138) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.42...Identity.Module.Core_v2.5.138)
-
-## [Identity.Module.EmailManager_v2.5.42](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.42) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.49...Identity.Module.EmailManager_v2.5.42)
-
-## [Identity.Module.LicenseManager_v2.5.49](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.49) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.48...Identity.Module.LicenseManager_v2.5.49)
-
-## [Identity.Module.Shared_v2.5.48](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.48) (2025-11-22)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.249...Identity.Module.Shared_v2.5.48)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
 
 **Implemented enhancements:**
 
+- Develop [\#179](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/179) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#178](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/178) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#176](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/176) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#175](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/175) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#173](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/173) ([AngeloDotNet](https://github.com/AngeloDotNet))
-
-## [Identity.Module.API_v2.5.249](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.249) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.47...Identity.Module.API_v2.5.249)
-
-## [Identity.Module.AccountManager_v2.5.47](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.47) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.47...Identity.Module.AccountManager_v2.5.47)
-
-## [Identity.Module.LicenseManager_v2.5.47](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.47) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.PolicyManager_v2.5.67...Identity.Module.LicenseManager_v2.5.47)
-
-## [Identity.Module.PolicyManager_v2.5.67](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.PolicyManager_v2.5.67) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ProfileManager_v2.5.58...Identity.Module.PolicyManager_v2.5.67)
-
-## [Identity.Module.ProfileManager_v2.5.58](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ProfileManager_v2.5.58) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.RolesManager_v2.5.17...Identity.Module.ProfileManager_v2.5.58)
-
-## [Identity.Module.RolesManager_v2.5.17](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.RolesManager_v2.5.17) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.46...Identity.Module.RolesManager_v2.5.17)
-
-## [Identity.Module.Shared_v2.5.46](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.46) (2025-11-21)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.135...Identity.Module.Shared_v2.5.46)
-
-**Implemented enhancements:**
-
 - Develop [\#172](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/172) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#171](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/171) ([AngeloDotNet](https://github.com/AngeloDotNet))
-
-## [Identity.Module.Core_v2.5.135](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.135) (2025-11-19)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.41...Identity.Module.Core_v2.5.135)
-
-**Implemented enhancements:**
-
 - Develop [\#170](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/170) ([AngeloDotNet](https://github.com/AngeloDotNet))
-
-## [Identity.Module.AuthManager_v2.5.41](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.41) (2025-11-18)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.40...Identity.Module.AuthManager_v2.5.41)
-
-## [Identity.Module.EmailManager_v2.5.40](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.40) (2025-11-18)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.EmailManager_v2.5.40)
-
-**Implemented enhancements:**
-
 - Develop [\#169](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/169) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#167](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/167) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#166](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/166) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -226,6 +149,8 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#174](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/174) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Update CHANGELOG.md for tag main \[auto\] [\#168](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/168) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#165](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/165) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#163](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/163) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#161](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/161) ([github-actions[bot]](https://github.com/apps/github-actions))
