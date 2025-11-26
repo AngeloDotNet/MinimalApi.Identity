@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MinimalApi.Identity.Shared.Interceptor;
 using MinimalApi.Identity.Shared.MinIO;
 using MinimalApi.Identity.Shared.Options;
@@ -22,4 +23,19 @@ public static class SharedExtensions
 
     public static LoggerConfiguration WriteToMinio(this LoggerConfiguration loggerConfiguration, MinioOptions options)
         => loggerConfiguration.WriteTo.Sink(new MinioS3Sink(options));
+
+    public static IHostBuilder UseSerilogToStorageCloud(this IHostBuilder hostBuilder, Action<HostBuilderContext, IServiceProvider,
+        LoggerConfiguration> configureLogger, MinioOptions minioOptions)
+    {
+        if (!string.IsNullOrEmpty(minioOptions.AccessKey) || !string.IsNullOrEmpty(minioOptions.SecretKey))
+        {
+            return hostBuilder.UseSerilog((context, services, config) =>
+            {
+                config.ReadFrom.Configuration(context.Configuration);
+                config.WriteToMinio(minioOptions);
+            });
+        }
+
+        return hostBuilder.UseSerilog(configureLogger);
+    }
 }
