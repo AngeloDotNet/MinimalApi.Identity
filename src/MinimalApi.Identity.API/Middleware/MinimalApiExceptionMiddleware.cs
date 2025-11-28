@@ -112,7 +112,9 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor
             }
 
             if (userId is not null && userName is not null)
+            {
                 break;
+            }
         }
 
         if (userId is not null)
