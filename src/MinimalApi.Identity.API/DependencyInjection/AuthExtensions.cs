@@ -26,10 +26,10 @@ public static class AuthExtensions
     public static async Task CheckUserProfileAndPasswordAsync(ApplicationUser user, IOptions<AppSettings> options, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None)
-            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
+        var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
+        var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None).ConfigureAwait(false)
+            ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         if (!profileUser.IsEnabled)
         {

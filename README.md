@@ -319,22 +319,25 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Move the configuration of the claims to a dedicated library
 - [ ] Move the configuration of the module to a dedicated library
 - [ ] Replacing exceptions with implementation of operation results 
-- [ ] Migrate SmtpOptions configuration to database
-- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
-- [ ] Migrate SwaggerSettings configuration to database
 - [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Change the entity ID type from INT to GUID
-- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
-- [ ] Code Review and Refactoring
+- [ ] Migrate solution to .NET 9
+- [ ] Migrate solution to .NET 10
 
 ### Future implementations
 
-- [ ] Migrate solution to .NET 10
+- [ ] Change the entity ID type from INT to GUID
+- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
+- [ ] Migrate SwaggerSettings configuration to database
+- [ ] Migrate SmtpOptions configuration to database
+- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
+- [ ] Code Review and Refactoring
 - [ ] Add support for multi tenancy
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+<!--
 - [ ] Migrate FeatureFlagsOptions configuration to database (to be verified)
+-->
 
 ## 📜 License
 

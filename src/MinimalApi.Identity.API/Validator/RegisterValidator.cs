@@ -44,15 +44,11 @@ public class RegisterValidator : AbstractValidator<RegisterModel>
             .Must(ContainAtLeastUniqueCharacters).WithMessage($"Password must contain at least {requiredUniqueChars} unique characters.");
     }
 
-    private static bool ContainAtLeastTwoUppercaseLetters(string password)
-        => password.Any(char.IsUpper);
+    private static bool ContainAtLeastTwoUppercaseLetters(string password) => password.Any(char.IsUpper);
 
-    private static bool ContainAtLeastOneLowercaseLetter(string password)
-        => password.Any(char.IsLower);
+    private static bool ContainAtLeastOneLowercaseLetter(string password) => password.Any(char.IsLower);
 
-    private static bool ContainAtLeastOneNonAlphanumericCharacter(string password)
-        => password.Any(ch => !char.IsLetterOrDigit(ch));
+    private static bool ContainAtLeastOneNonAlphanumericCharacter(string password) => password.Any(ch => !char.IsLetterOrDigit(ch));
 
-    private static bool ContainAtLeastUniqueCharacters(string password)
-        => password.Distinct().Count() >= requiredUniqueChars;
+    private static bool ContainAtLeastUniqueCharacters(string password) => password.Distinct().Count() >= requiredUniqueChars;
 }
