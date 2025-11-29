@@ -4,6 +4,7 @@ using EntityFramework.Exceptions.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -51,18 +52,21 @@ public static class RegisterServicesExtensions
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.SerializerOptions.Converters.Add(new UtcDateTimeConverter());
             })
-            .AddSwaggerConfiguration(activeModules)
+            //.AddSwaggerConfiguration(activeModules)
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
             .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddRegisterFeatureFlags(activeModules)
             .AddProblemDetails()
             .AddCorsConfiguration()
+            //.AddCorsConfiguration(configuration) // Use this line instead to configure CORS from appsettings
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
             .AccountManagerRegistrationService()
             .AuthManagerRegistrationService()
-            //.ClaimsManagerRegistrationService()
+            //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
@@ -97,6 +101,7 @@ public static class RegisterServicesExtensions
             services.LicenseManagerRegistrationService();
         }
 
+        // Disabled for now (not implemented)
         //if (featureFlagsOptions.EnabledFeatureModule)
         //{
         //    services.ModuleManagerRegistrationService();
@@ -133,69 +138,12 @@ public static class RegisterServicesExtensions
         }
     }
 
-    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
-    {
-        return services
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen(opt =>
-            {
-                opt.AddSwaggerGenOptions(featureFlagsOptions);
-
-                //var openApiInfo = new OpenApiInfo
-                //{
-                //    Title = "Minimal API Identity",
-                //    Version = "v1",
-                //    Contact = new OpenApiContact
-                //    {
-                //        Name = "Angelo Pirola",
-                //        Email = "angelo@aepserver.it"
-                //    },
-                //    License = new OpenApiLicense
-                //    {
-                //        Name = "License MIT",
-                //        Url = new Uri(ConstantsConfiguration.LicenseMIT)
-                //    },
-                //};
-
-                //opt.SwaggerDoc("v1", openApiInfo);
-                ////opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                //opt.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
-                //{
-                //    In = ParameterLocation.Header,
-                //    Name = "Authorization",
-                //    Description = "JWT Authorization header using the Bearer scheme.",
-                //    Type = SecuritySchemeType.ApiKey,
-                //    Reference = new OpenApiReference
-                //    {
-                //        Type = ReferenceType.SecurityScheme,
-                //        Id = JwtBearerDefaults.AuthenticationScheme
-                //    },
-                //    Scheme = JwtBearerDefaults.AuthenticationScheme
-
-                //    //BearerFormat = "JWT",
-                //    //Description = "JWT Authorization header using the Bearer scheme.",
-                //    //Name = "Authorization",
-                //    //In = ParameterLocation.Header,
-                //    //Type = SecuritySchemeType.ApiKey,
-                //    //Scheme = "Bearer"
-                //});
-                //opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                //Id = "Bearer",
-                //                Id = JwtBearerDefaults.AuthenticationScheme,
-                //                Type = ReferenceType.SecurityScheme
-                //            }
-                //        },
-                //        Array.Empty<string>()
-                //    }
-                //});
-            });
-    }
+    //public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    //{
+    //    return services
+    //        .AddEndpointsApiExplorer()
+    //        .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(featureFlagsOptions));
+    //}
 
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         string databaseType, string migrationAssembly) where TDbContext : DbContext
@@ -386,5 +334,41 @@ public static class RegisterServicesExtensions
     {
         return services.AddCors(options => options.AddPolicy("cors", builder
             => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+    }
+
+    internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        var corsOptions = new CorsOptions();
+        configuration.GetSection("Cors").Bind(corsOptions);
+
+        return services.AddCors(options => options.AddPolicy("cors", builder =>
+        {
+            if (corsOptions.AllowAnyOrigin)
+            {
+                builder.AllowAnyOrigin();
+            }
+            else if (corsOptions.AllowedOrigins.Length > 0)
+            {
+                builder.WithOrigins(corsOptions.AllowedOrigins);
+            }
+
+            if (corsOptions.AllowAnyMethod)
+            {
+                builder.AllowAnyMethod();
+            }
+            else if (corsOptions.AllowedMethods.Length > 0)
+            {
+                builder.WithMethods(corsOptions.AllowedMethods);
+            }
+
+            if (corsOptions.AllowAnyHeader)
+            {
+                builder.AllowAnyHeader();
+            }
+            else if (corsOptions.AllowedHeaders.Length > 0)
+            {
+                builder.WithHeaders(corsOptions.AllowedHeaders);
+            }
+        }));
     }
 }

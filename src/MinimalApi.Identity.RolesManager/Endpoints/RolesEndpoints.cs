@@ -16,8 +16,7 @@ public static class RolesEndpoints
     public static IEndpointRouteBuilder MapRolesEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsRolesGroup)
-            .WithOpenApi();
+            .MapGroup(EndpointGenerator.EndpointsRolesGroup);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<List<RoleResponseModel>>(StatusCodes.Status200OK).WithDescription("Get all roles")
