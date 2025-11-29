@@ -2,10 +2,28 @@
 
 ## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.149...HEAD)
 
 **Implemented enhancements:**
 
+- Develop [\#182](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/182) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#181](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/181) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+## [Identity.Module.Core_v2.5.149](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.149) (2025-11-26)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.45...Identity.Module.Core_v2.5.149)
+
+## [Identity.Module.EmailManager_v2.5.45](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.45) (2025-11-26)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.PolicyManager_v2.5.72...Identity.Module.EmailManager_v2.5.45)
+
+## [Identity.Module.PolicyManager_v2.5.72](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.PolicyManager_v2.5.72) (2025-11-26)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.PolicyManager_v2.5.72)
+
+**Implemented enhancements:**
+
+- Develop [\#180](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/180) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#179](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/179) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#178](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/178) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#176](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/176) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -149,6 +167,7 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#177](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/177) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#174](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/174) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#168](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/168) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#165](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/165) ([github-actions[bot]](https://github.com/apps/github-actions))
