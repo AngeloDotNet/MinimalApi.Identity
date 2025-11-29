@@ -17,8 +17,7 @@ public static class LicenseEndpoints
     public static IEndpointRouteBuilder MapLicenseEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsLicenseGroup)
-            .WithOpenApi();
+            .MapGroup(EndpointGenerator.EndpointsLicenseGroup);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<Ok<List<LicenseResponseModel>>>(StatusCodes.Status200OK).WithDescription("Licenses retrieved successfully")

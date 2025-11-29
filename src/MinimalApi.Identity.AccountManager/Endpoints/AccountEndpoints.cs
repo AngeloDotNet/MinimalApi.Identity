@@ -17,8 +17,7 @@ public static class AccountEndpoints
     {
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsAccountGroup)
-            .RequireAuthorization()
-            .WithOpenApi();
+            .RequireAuthorization();
 
         apiGroup.MapGet(EndpointGenerator.EndpointsConfirmEmail, EndpointsHandler.ConfirmEmailAsync)
             .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Email address confirmed successfully")
@@ -31,7 +30,7 @@ public static class AccountEndpoints
             .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Email address changed successfully")
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status401Unauthorized).WithDescription(ConstantsConfiguration.Unauthorized)
-            .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription("Validation error")
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<ChangeEmailModel>()
             .WithDescription("Change email address")
             .WithSummary("Change email address");

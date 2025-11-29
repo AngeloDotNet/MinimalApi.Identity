@@ -2,6 +2,7 @@
 
 public class CorsOptions
 {
+    public string PolicyName { get; set; } = "DefaultCorsPolicy";
     public bool AllowAnyOrigin { get; set; }
     public bool AllowAnyMethod { get; set; }
     public bool AllowAnyHeader { get; set; }
