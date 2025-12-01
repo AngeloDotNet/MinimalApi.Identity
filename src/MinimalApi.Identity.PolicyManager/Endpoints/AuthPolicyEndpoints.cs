@@ -17,8 +17,7 @@ public static class AuthPolicyEndpoints
     public static IEndpointRouteBuilder MapPolicyEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsAuthPolicyGroup)
-            .WithOpenApi();
+            .MapGroup(EndpointGenerator.EndpointsAuthPolicyGroup);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<Ok<List<PolicyResponseModel>>>(StatusCodes.Status200OK).WithDescription("Policies retrieved successfully")
