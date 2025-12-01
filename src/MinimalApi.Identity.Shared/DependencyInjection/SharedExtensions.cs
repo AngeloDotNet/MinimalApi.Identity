@@ -21,8 +21,8 @@ public static class SharedExtensions
         return services;
     }
 
-    public static LoggerConfiguration WriteToMinio(this LoggerConfiguration loggerConfiguration, MinioOptions options)
-        => loggerConfiguration.WriteTo.Sink(new MinioS3Sink(options));
+    //public static LoggerConfiguration WriteToMinio(this LoggerConfiguration loggerConfiguration, MinioOptions options)
+    //    => loggerConfiguration.WriteTo.Sink(new MinioS3Sink(options));
 
     public static IHostBuilder UseSerilogToStorageCloud(this IHostBuilder hostBuilder, Action<HostBuilderContext, IServiceProvider,
         LoggerConfiguration> configureLogger, MinioOptions minioOptions)
@@ -32,7 +32,8 @@ public static class SharedExtensions
             return hostBuilder.UseSerilog((context, services, config) =>
             {
                 config.ReadFrom.Configuration(context.Configuration);
-                config.WriteToMinio(minioOptions);
+                //config.WriteToMinio(minioOptions);
+                config.WriteTo.Sink(new MinioS3Sink(minioOptions));
             });
         }
 
