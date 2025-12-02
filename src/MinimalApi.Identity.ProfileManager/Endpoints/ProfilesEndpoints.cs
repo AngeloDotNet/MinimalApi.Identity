@@ -16,8 +16,7 @@ public static class ProfilesEndpoints
     public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsProfilesGroup)
-            .WithOpenApi();
+            .MapGroup(EndpointGenerator.EndpointsProfilesGroup);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<List<UserProfileModel>>(StatusCodes.Status200OK).WithDescription("List of users profiles")
