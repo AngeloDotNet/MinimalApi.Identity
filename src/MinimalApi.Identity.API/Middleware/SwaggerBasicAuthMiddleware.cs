@@ -16,7 +16,7 @@ public class SwaggerBasicAuthMiddleware(RequestDelegate next, IOptions<SwaggerSe
     public async Task InvokeAsync(HttpContext context)
     {
         var isAuthenticationRequired = (context.Request.Path == "/index.html" || context.Request.Path.StartsWithSegments("/swagger"))
-            && settings.UserName.HasValue() && settings.Password.HasValue();
+            && settings.AuthSettings.UserName.HasValue() && settings.AuthSettings.Password.HasValue();
 
         if (!isAuthenticationRequired)
         {
@@ -36,7 +36,7 @@ public class SwaggerBasicAuthMiddleware(RequestDelegate next, IOptions<SwaggerSe
             var password = credentials.ElementAtOrDefault(1);
 
             // validate credentials
-            if (userName == settings.UserName && password == settings.Password)
+            if (userName == settings.AuthSettings.UserName && password == settings.AuthSettings.Password)
             {
                 await next.Invoke(context).ConfigureAwait(false);
                 return;
