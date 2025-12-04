@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.DependencyInjection;
 using MinimalApi.Identity.API.Models;
-using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
