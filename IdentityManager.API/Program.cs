@@ -18,22 +18,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        //builder.Host.UseSerilogToStorageCloud((context, services, config) =>
-        //{
-        //    config.ReadFrom.Configuration(context.Configuration);
-        //}, minioOptions);
-
         builder.Host.UseSerilogToStorageCloud((context, services, config)
             => config.ReadFrom.Configuration(context.Configuration), minioOptions);
-
-        //if (!minioOptions.AccessKey.IsNullOrEmpty() || !minioOptions.SecretKey.IsNullOrEmpty())
-        //{
-        //    builder.Host.UseSerilog((context, services, config) =>
-        //    {
-        //        config.ReadFrom.Configuration(context.Configuration);
-        //        config.WriteToMinio(minioOptions);
-        //    });
-        //}
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
