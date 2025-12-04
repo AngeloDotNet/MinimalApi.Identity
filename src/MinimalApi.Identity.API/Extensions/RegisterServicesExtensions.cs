@@ -4,7 +4,6 @@ using EntityFramework.Exceptions.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -28,7 +27,9 @@ using MinimalApi.Identity.LicenseManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
+using MinimalApi.Identity.Shared.DependencyInjection;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
+using optionsCors = MinimalApi.Identity.Core.Options;
 
 namespace MinimalApi.Identity.API.Extensions;
 
@@ -46,21 +47,21 @@ public static class RegisterServicesExtensions
         services
             .AddSingleton(TimeProvider.System)
             .AddHttpContextAccessor()
+            .AddInterceptor() // Add Logging, Performance and EF Core (for auditing) interceptors
             .ConfigureHttpJsonOptions(options =>
             {
                 options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.SerializerOptions.Converters.Add(new UtcDateTimeConverter());
             })
-            //.AddSwaggerConfiguration(activeModules)
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
             .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddRegisterFeatureFlags(activeModules)
             .AddProblemDetails()
-            .AddCorsConfiguration()
-            //.AddCorsConfiguration(configuration) // Use this line instead to configure CORS from appsettings
+            //.AddCorsConfiguration()
+            .AddCorsConfiguration(configuration)
             .AddScoped<SignInManager<ApplicationUser>>();
 
         services
@@ -68,6 +69,7 @@ public static class RegisterServicesExtensions
             .AuthManagerRegistrationService()
             //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
             .EmailManagerRegistrationService()
+            //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
             .RolesManagerRegistrationService();
@@ -119,7 +121,7 @@ public static class RegisterServicesExtensions
         };
 
         app.MapAuthEndpoints();
-        app.MapClaimsEndpoints();
+        //app.MapClaimsEndpoints(); // Duplicated with row below 127
 
         //app.MapAccountEndpoints();
         //app.MapClaimsEndpoints();
@@ -132,18 +134,11 @@ public static class RegisterServicesExtensions
         //    app.MapLicenseEndpoints();
         //}
 
-        if (activeModules.EnabledFeatureModule)
-        {
-            app.MapModuliEndpoints();
-        }
+        //if (activeModules.EnabledFeatureModule)
+        //{
+        //    app.MapModuliEndpoints();
+        //}
     }
-
-    //public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
-    //{
-    //    return services
-    //        .AddEndpointsApiExplorer()
-    //        .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(featureFlagsOptions));
-    //}
 
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         string databaseType, string migrationAssembly) where TDbContext : DbContext
@@ -330,45 +325,61 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
-    {
-        return services.AddCors(options => options.AddPolicy("cors", builder
-            => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-    }
+    //internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
+    //{
+    //    return services.AddCors(options => options.AddPolicy("cors", builder
+    //        => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true)));
+
+    //    // Documentazione CORS con credenziali: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0#credentials
+    //    //return services.AddCors(options => options.AddPolicy("cors", builder
+    //    //    => builder
+    //    //    .WithOrigins("https://example.com", "https://anotherdomain.com") // Sostituisci con i tuoi origin consentiti
+    //    //    .AllowAnyHeader()
+    //    //    .AllowAnyMethod()
+    //    //    .AllowCredentials() // Abilita l'invio di cookie/credenziali
+    //    //));
+    //}
 
     internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        var corsOptions = new CorsOptions();
-        configuration.GetSection("Cors").Bind(corsOptions);
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
 
-        return services.AddCors(options => options.AddPolicy("cors", builder =>
-        {
-            if (corsOptions.AllowAnyOrigin)
-            {
-                builder.AllowAnyOrigin();
-            }
-            else if (corsOptions.AllowedOrigins.Length > 0)
-            {
-                builder.WithOrigins(corsOptions.AllowedOrigins);
-            }
+        var corsOptions = new optionsCors.CorsOptions();
+        configuration.GetSection(nameof(optionsCors.CorsOptions)).Bind(corsOptions);
 
-            if (corsOptions.AllowAnyMethod)
+        services.AddCors(options
+            => options.AddPolicy(corsOptions.PolicyName, builder =>
             {
-                builder.AllowAnyMethod();
-            }
-            else if (corsOptions.AllowedMethods.Length > 0)
-            {
-                builder.WithMethods(corsOptions.AllowedMethods);
-            }
+                if (corsOptions.AllowAnyOrigin)
+                {
+                    builder.AllowAnyOrigin();
+                }
+                else if (corsOptions.AllowedOrigins is { Length: > 0 })
+                {
+                    builder.WithOrigins(corsOptions.AllowedOrigins);
+                    builder.AllowCredentials();
+                }
 
-            if (corsOptions.AllowAnyHeader)
-            {
-                builder.AllowAnyHeader();
-            }
-            else if (corsOptions.AllowedHeaders.Length > 0)
-            {
-                builder.WithHeaders(corsOptions.AllowedHeaders);
-            }
-        }));
+                if (corsOptions.AllowAnyHeader)
+                {
+                    builder.AllowAnyHeader();
+                }
+                else if (corsOptions.AllowedHeaders is { Length: > 0 })
+                {
+                    builder.WithHeaders(corsOptions.AllowedHeaders);
+                }
+
+                if (corsOptions.AllowAnyMethod)
+                {
+                    builder.AllowAnyMethod();
+                }
+                else if (corsOptions.AllowedMethods is { Length: > 0 })
+                {
+                    builder.WithMethods(corsOptions.AllowedMethods);
+                }
+            }));
+
+        return services;
     }
 }
