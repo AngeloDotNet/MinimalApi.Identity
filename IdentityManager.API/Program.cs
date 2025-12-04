@@ -18,15 +18,27 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        builder.Host.UseSerilog((context, services, config) =>
-        {
-            config.ReadFrom.Configuration(context.Configuration);
-            config.WriteToMinio(minioOptions);
-        });
+        //builder.Host.UseSerilogToStorageCloud((context, services, config) =>
+        //{
+        //    config.ReadFrom.Configuration(context.Configuration);
+        //}, minioOptions);
+
+        builder.Host.UseSerilogToStorageCloud((context, services, config)
+            => config.ReadFrom.Configuration(context.Configuration), minioOptions);
+
+        //if (!minioOptions.AccessKey.IsNullOrEmpty() || !minioOptions.SecretKey.IsNullOrEmpty())
+        //{
+        //    builder.Host.UseSerilog((context, services, config) =>
+        //    {
+        //        config.ReadFrom.Configuration(context.Configuration);
+        //        config.WriteToMinio(minioOptions);
+        //    });
+        //}
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
         var swaggerSettings = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings)) ?? new();
+        var corsOptions = builder.Services.ConfigureAndGet<CorsOptions>(builder.Configuration, nameof(CorsOptions)) ?? new();
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
         builder.Services.AddRegisterServices(options =>
@@ -42,7 +54,15 @@ public class Program
         });
 
         var app = builder.Build();
+        var appName = app.Environment.ApplicationName;
+
         await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
+
+        //app.UseForwardedHeaders(new()
+        //{
+        //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+        //    KnownProxies = { }
+        //});
 
         app.UseHttpsRedirection();
         app.UseStatusCodePages();
@@ -51,17 +71,17 @@ public class Program
 
         if (swaggerSettings.IsEnabled)
         {
-            if (swaggerSettings.IsRequiredAuth)
+            if (swaggerSettings.AuthSettings.IsRequired)
             {
                 app.UseMiddleware<SwaggerBasicAuthMiddleware>();
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1"));
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appName} v1"));
         }
 
         app.UseRouting();
-        app.UseCors("cors");
+        app.UseCors(corsOptions.PolicyName);
 
         app.UseAuthentication();
         app.UseAuthorization();
