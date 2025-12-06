@@ -60,7 +60,6 @@ public static class RegisterServicesExtensions
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddRegisterFeatureFlags(activeModules)
             .AddProblemDetails()
-            //.AddCorsConfiguration()
             .AddCorsConfiguration(configuration)
             .AddScoped<SignInManager<ApplicationUser>>();
 
@@ -121,8 +120,6 @@ public static class RegisterServicesExtensions
         };
 
         app.MapAuthEndpoints();
-        //app.MapClaimsEndpoints(); // Duplicated with row below 127
-
         //app.MapAccountEndpoints();
         //app.MapClaimsEndpoints();
         //app.MapPolicyEndpoints();
@@ -324,21 +321,6 @@ public static class RegisterServicesExtensions
 
         return services;
     }
-
-    //internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
-    //{
-    //    return services.AddCors(options => options.AddPolicy("cors", builder
-    //        => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true)));
-
-    //    // Documentazione CORS con credenziali: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0#credentials
-    //    //return services.AddCors(options => options.AddPolicy("cors", builder
-    //    //    => builder
-    //    //    .WithOrigins("https://example.com", "https://anotherdomain.com") // Sostituisci con i tuoi origin consentiti
-    //    //    .AllowAnyHeader()
-    //    //    .AllowAnyMethod()
-    //    //    .AllowCredentials() // Abilita l'invio di cookie/credenziali
-    //    //));
-    //}
 
     internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
