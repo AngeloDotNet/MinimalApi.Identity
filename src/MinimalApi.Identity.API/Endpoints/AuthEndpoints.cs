@@ -6,13 +6,17 @@ using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-public static class AuthEndpoints
+//public static class AuthEndpoints
+//{
+//    public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder endpoints)
+public class AuthEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsAuthGroup)
@@ -72,6 +76,6 @@ public static class AuthEndpoints
             .WithDescription("Reset password")
             .WithSummary("Reset password");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }

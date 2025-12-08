@@ -135,9 +135,11 @@ The configuration can be completely managed by adding this section to the _appse
 },
 "SwaggerSettings": {
     "IsEnabled": true,
-    "IsRequiredAuth": false,
-    "Username": "admin",
-    "Password": "StrongPassword"
+    "AuthSettings": {
+        "IsRequired": false,
+        "Username": "admin",
+        "Password": "StrongPassword"
+    }
 },
 "MinioOptions": {
     "Endpoint": "http://127.0.0.1:9000",
@@ -145,6 +147,15 @@ The configuration can be completely managed by adding this section to the _appse
     "SecretKey": "",
     "BucketName": "logs",
     "LogObjectKey": "serilog-demo.json"
+},
+"CorsOptions": {
+    "PolicyName": "DefaultCorsPolicy",
+    "AllowAnyOrigin": true,
+    "AllowAnyMethod": true,
+    "AllowAnyHeader": true,
+    "AllowedOrigins": [],
+    "AllowedMethods": [],
+    "AllowedHeaders": []
 }
 ```
 
@@ -206,15 +217,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        builder.Host.UseSerilog((context, services, config) =>
-        {
-            config.ReadFrom.Configuration(context.Configuration);
-            config.WriteToMinio(minioOptions);
-        });
+        builder.Host.UseSerilogToStorageCloud((context, services, config)
+            => config.ReadFrom.Configuration(context.Configuration), minioOptions);
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
         var swaggerSettings = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings)) ?? new();
+        var corsOptions = builder.Services.ConfigureAndGet<CorsOptions>(builder.Configuration, nameof(CorsOptions)) ?? new();
 
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
         //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
@@ -233,25 +242,28 @@ public class Program
         });
 
         var app = builder.Build();
+        var appName = app.Environment.ApplicationName;
+
         await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
 
         app.UseHttpsRedirection();
         app.UseStatusCodePages();
 
         app.UseMiddleware<MinimalApiExceptionMiddleware>();
+
         if (swaggerSettings.IsEnabled)
         {
-            if (swaggerSettings.IsRequiredAuth)
+            if (swaggerSettings.AuthSettings.IsRequired)
             {
                 app.UseMiddleware<SwaggerBasicAuthMiddleware>();
             }
-            
+
             app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{app.Environment.ApplicationName} v1"));
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appName} v1"));
         }
 
         app.UseRouting();
-        app.UseCors("cors");
+        app.UseCors(corsOptions.PolicyName);
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -316,28 +328,24 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 ## 🗺️ Roadmap
 
-- [ ] Move the configuration of the claims to a dedicated library
-- [ ] Move the configuration of the module to a dedicated library
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Migrate solution to .NET 9
-- [ ] Migrate solution to .NET 10
-
-### Future implementations
-
-- [ ] Change the entity ID type from INT to GUID
-- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
+- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
-- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Code Review and Refactoring
 - [ ] Add support for multi tenancy
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
+- [ ] Migrate solution to .NET 10
+- [ ] Change the entity ID type from INT to GUID
+- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
+
+### Future implementations
+
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
-<!--
 - [ ] Migrate FeatureFlagsOptions configuration to database (to be verified)
--->
 
 ## 📜 License
 

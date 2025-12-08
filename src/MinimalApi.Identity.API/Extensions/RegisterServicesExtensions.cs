@@ -20,6 +20,7 @@ using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
@@ -119,7 +120,9 @@ public static class RegisterServicesExtensions
             EnabledFeatureModule = appSettings.EnabledFeatureModule
         };
 
-        app.MapAuthEndpoints();
+        //app.MapAuthEndpoints(); // Old way
+        app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
+
         //app.MapAccountEndpoints();
         //app.MapClaimsEndpoints();
         //app.MapPolicyEndpoints();
@@ -216,9 +219,8 @@ public static class RegisterServicesExtensions
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
         await using var scope = serviceProvider.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
 
-        // Try to migrate directly; EnsureCreated is not needed if using migrations.
+        var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
         var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
 
         if (pendingMigrations.Any())
@@ -227,7 +229,6 @@ public static class RegisterServicesExtensions
         }
         else
         {
-            // Only ensure created if no migrations exist (e.g., for in-memory or initial setup)
             var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
 
             if (!canConnect)
@@ -242,8 +243,7 @@ public static class RegisterServicesExtensions
         ArgumentNullException.ThrowIfNull(options);
 
         var policyBuilder = new AuthorizationPolicyBuilder()
-            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-            .RequireAuthenticatedUser();
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser();
 
         var policy = policyBuilder.Build();
 
