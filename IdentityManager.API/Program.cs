@@ -1,6 +1,6 @@
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
-using MinimalApi.Identity.API.Services.Interfaces;
+using MinimalApi.Identity.API.Services;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Options;
