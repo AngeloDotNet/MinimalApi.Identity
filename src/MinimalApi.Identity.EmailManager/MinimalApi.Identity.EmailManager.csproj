@@ -24,7 +24,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="2.5.161" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.163" />
     </ItemGroup>    
     
     <ItemGroup>
