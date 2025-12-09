@@ -1,31 +1,18 @@
 # Changelog
 
-## [Identity.Module.AccountManager_v2.5.54](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.54) (2025-12-01)
+## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.51...Identity.Module.AccountManager_v2.5.54)
-
-## [Identity.Module.AuthManager_v2.5.51](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.51) (2025-12-01)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.49...Identity.Module.AuthManager_v2.5.51)
-
-## [Identity.Module.EmailManager_v2.5.49](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.49) (2025-12-01)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.PolicyManager_v2.5.74...Identity.Module.EmailManager_v2.5.49)
-
-## [Identity.Module.PolicyManager_v2.5.74](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.PolicyManager_v2.5.74) (2025-12-01)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.RolesManager_v2.5.24...Identity.Module.PolicyManager_v2.5.74)
-
-## [Identity.Module.RolesManager_v2.5.24](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.RolesManager_v2.5.24) (2025-12-01)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.56...Identity.Module.RolesManager_v2.5.24)
-
-## [Identity.Module.Shared_v2.5.56](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.56) (2025-12-01)
-
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.Shared_v2.5.56)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
 
 **Implemented enhancements:**
 
+- Develop [\#193](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/193) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#192](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/192) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#191](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/191) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#190](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/190) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#189](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/189) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#188](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/188) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#187](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/187) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#185](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/185) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#183](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/183) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#182](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/182) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -174,6 +161,7 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#186](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/186) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#184](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/184) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#177](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/177) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#174](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/174) ([github-actions[bot]](https://github.com/apps/github-actions))
