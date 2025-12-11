@@ -33,9 +33,9 @@
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.56" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.54" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.167" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.51" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.59" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.77" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.52" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.60" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.78" />
     <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.67" />
     <PackageReference Include="Identity.Module.RolesManager" Version="2.5.28" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
