@@ -120,7 +120,6 @@ public static class RegisterServicesExtensions
             EnabledFeatureModule = appSettings.EnabledFeatureModule
         };
 
-        //app.MapAuthEndpoints(); // Old way
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
 
         //app.MapAccountEndpoints();

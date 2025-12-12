@@ -11,15 +11,12 @@ using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-//public static class AuthEndpoints
-//{
-//    public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder endpoints)
 public class AuthEndpoints : IEndpointRouteHandlerBuilder
 {
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsAuthGroup)
+        var apiGroup = endpoints.MapGroup(EndpointGenerator.EndpointsAuthGroup)
+            .WithTags(EndpointGenerator.EndpointsAuthTag)
             .RequireAuthorization();
 
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthRegister, EndpointsHandler.RegisterAsync)
@@ -36,6 +33,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<LoginModel>()
+            .WithName("Login")
             .WithDescription("Login user")
             .WithSummary("Login user");
 
@@ -44,6 +42,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<RefreshTokenModel>()
+            .WithName("RefreshToken")
             .WithDescription("Refresh token user")
             .WithSummary("Refresh token user");
 
@@ -52,11 +51,13 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<ImpersonateUserModel>()
+            .WithName("ImpersonateUser")
             .WithDescription("Impersonate user")
             .WithSummary("Impersonate user");
 
         apiGroup.MapPost(ConstantsConfiguration.EndpointsAuthLogout, EndpointsHandler.LogoutAsync)
             .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("User logged out successfully")
+            .WithName("Logout")
             .WithDescription("Logout user")
             .WithSummary("Logout user");
 
@@ -65,6 +66,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<ForgotPasswordModel>()
+            .WithName("ForgotPassword")
             .WithDescription("Forgot password")
             .WithSummary("Forgot password");
 
@@ -73,9 +75,8 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
             .WithValidation<ResetPasswordModel>()
+            .WithName("ResetPassword")
             .WithDescription("Reset password")
             .WithSummary("Reset password");
-
-        //return apiGroup;
     }
 }
