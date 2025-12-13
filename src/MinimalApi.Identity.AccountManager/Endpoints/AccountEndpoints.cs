@@ -12,10 +12,8 @@ using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.AccountManager.Endpoints;
 
-//public static class AccountEndpoints
 public class AccountEndpoints : IEndpointRouteHandlerBuilder
 {
-    //public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -45,7 +43,5 @@ public class AccountEndpoints : IEndpointRouteHandlerBuilder
             .AllowAnonymous()
             .WithDescription("Confirm email address change")
             .WithSummary("Confirm email address change");
-
-        //return apiGroup;
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
+using MinimalApi.Identity.AccountManager.Endpoints;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
@@ -123,6 +124,8 @@ public static class RegisterServicesExtensions
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
 
         //app.MapAccountEndpoints();
+        app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
+
         //app.MapClaimsEndpoints();
         //app.MapPolicyEndpoints();
         //app.MapProfileEndpoints();
