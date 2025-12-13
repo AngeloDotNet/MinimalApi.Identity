@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.Extensions;
@@ -11,12 +12,15 @@ using MinimalApi.Identity.RolesManager.Models;
 
 namespace MinimalApi.Identity.RolesManager.Endpoints;
 
-public static class RolesEndpoints
+//public static class RolesEndpoints
+public class RolesEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapRolesEndpoints(this IEndpointRouteBuilder endpoints)
+    //public static IEndpointRouteBuilder MapRolesEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsRolesGroup);
+            .MapGroup(EndpointGenerator.EndpointsRolesGroup)
+            .WithTags(EndpointGenerator.EndpointsRolesTag);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<List<RoleResponseModel>>(StatusCodes.Status200OK).WithDescription("Get all roles")
@@ -70,6 +74,6 @@ public static class RolesEndpoints
             .WithDescription("Delete role")
             .WithSummary("Delete role");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }
