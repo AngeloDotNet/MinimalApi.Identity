@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.ProfileManager.Extensions;
@@ -11,12 +12,15 @@ using MinimalApi.Identity.ProfileManager.Models;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-public static class ProfilesEndpoints
+//public static class ProfilesEndpoints
+public class ProfilesEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
+    //public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsProfilesGroup);
+            .MapGroup(EndpointGenerator.EndpointsProfilesGroup)
+            .WithTags(EndpointGenerator.EndpointsProfilesTag);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<List<UserProfileModel>>(StatusCodes.Status200OK).WithDescription("List of users profiles")
@@ -54,6 +58,6 @@ public static class ProfilesEndpoints
             .WithDescription("Update user profile")
             .WithSummary("Update user profile");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }

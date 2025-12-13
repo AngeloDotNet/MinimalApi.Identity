@@ -15,7 +15,8 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
 {
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        var apiGroup = endpoints.MapGroup(EndpointGenerator.EndpointsAuthGroup)
+        var apiGroup = endpoints
+            .MapGroup(EndpointGenerator.EndpointsAuthGroup)
             .WithTags(EndpointGenerator.EndpointsAuthTag)
             .RequireAuthorization();
 

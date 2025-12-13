@@ -7,16 +7,20 @@ using MinimalApi.Identity.AccountManager.Extensions;
 using MinimalApi.Identity.AccountManager.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.AccountManager.Endpoints;
 
-public static class AccountEndpoints
+//public static class AccountEndpoints
+public class AccountEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
+    //public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsAccountGroup)
+            .WithTags(EndpointGenerator.EndpointsAccountTag)
             .RequireAuthorization();
 
         apiGroup.MapGet(EndpointGenerator.EndpointsConfirmEmail, EndpointsHandler.ConfirmEmailAsync)
@@ -42,6 +46,6 @@ public static class AccountEndpoints
             .WithDescription("Confirm email address change")
             .WithSummary("Confirm email address change");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }

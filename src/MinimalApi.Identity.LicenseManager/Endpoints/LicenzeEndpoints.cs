@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.LicenseManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.Extensions;
@@ -12,12 +13,15 @@ using MinimalApi.Identity.LicenseManager.Models;
 
 namespace MinimalApi.Identity.LicenseManager.Endpoints;
 
-public static class LicenseEndpoints
+//public static class LicenseEndpoints
+public class LicenseEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapLicenseEndpoints(this IEndpointRouteBuilder endpoints)
+    //public static IEndpointRouteBuilder MapLicenseEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
-            .MapGroup(EndpointGenerator.EndpointsLicenseGroup);
+            .MapGroup(EndpointGenerator.EndpointsLicenseGroup)
+            .WithTags(EndpointGenerator.EndpointsLicenseTag);
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllHandlerAsync)
             .Produces<Ok<List<LicenseResponseModel>>>(StatusCodes.Status200OK).WithDescription("Licenses retrieved successfully")
@@ -67,6 +71,6 @@ public static class LicenseEndpoints
             .WithDescription("Delete license")
             .WithSummary("Delete license");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }
