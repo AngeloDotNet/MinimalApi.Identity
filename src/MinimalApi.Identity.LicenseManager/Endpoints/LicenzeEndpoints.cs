@@ -13,10 +13,8 @@ using MinimalApi.Identity.LicenseManager.Models;
 
 namespace MinimalApi.Identity.LicenseManager.Endpoints;
 
-//public static class LicenseEndpoints
 public class LicenseEndpoints : IEndpointRouteHandlerBuilder
 {
-    //public static IEndpointRouteBuilder MapLicenseEndpoints(this IEndpointRouteBuilder endpoints)
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -70,7 +68,5 @@ public class LicenseEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<DeleteLicenseModel>()
             .WithDescription("Delete license")
             .WithSummary("Delete license");
-
-        //return apiGroup;
     }
 }
