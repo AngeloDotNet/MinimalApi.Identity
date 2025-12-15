@@ -12,10 +12,8 @@ using MinimalApi.Identity.ProfileManager.Models;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-//public static class ProfilesEndpoints
 public class ProfilesEndpoints : IEndpointRouteHandlerBuilder
 {
-    //public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder endpoints)
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -57,7 +55,5 @@ public class ProfilesEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<EditUserProfileModel>()
             .WithDescription("Update user profile")
             .WithSummary("Update user profile");
-
-        //return apiGroup;
     }
 }
