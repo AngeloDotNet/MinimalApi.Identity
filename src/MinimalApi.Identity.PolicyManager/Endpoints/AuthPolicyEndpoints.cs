@@ -13,10 +13,8 @@ using MinimalApi.Identity.PolicyManager.Models;
 
 namespace MinimalApi.Identity.PolicyManager.Endpoints;
 
-//public static class AuthPolicyEndpoints
 public class AuthPolicyEndpoints : IEndpointRouteHandlerBuilder
 {
-    //public static IEndpointRouteBuilder MapPolicyEndpoints(this IEndpointRouteBuilder endpoints)
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -50,7 +48,5 @@ public class AuthPolicyEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<DeletePolicyModel>()
             .WithDescription("Delete authorization policy")
             .WithSummary("Delete authorization policy");
-
-        //return apiGroup;
     }
 }
