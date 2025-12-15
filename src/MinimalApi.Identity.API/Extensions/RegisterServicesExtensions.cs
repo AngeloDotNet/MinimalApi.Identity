@@ -26,6 +26,7 @@ using MinimalApi.Identity.Core.Options;
 using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.DependencyInjection;
+using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
@@ -122,8 +123,6 @@ public static class RegisterServicesExtensions
         };
 
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
-
-        //app.MapAccountEndpoints();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
 
         //app.MapClaimsEndpoints();
@@ -131,10 +130,10 @@ public static class RegisterServicesExtensions
         //app.MapProfileEndpoints();
         //app.MapRolesEndpoints();
 
-        //if (activeModules.EnabledFeatureLicense)
-        //{
-        //    app.MapLicenseEndpoints();
-        //}
+        if (activeModules.EnabledFeatureLicense)
+        {
+            app.MapEndpointsFromAssemblyContaining<LicenseEndpoints>();
+        }
 
         //if (activeModules.EnabledFeatureModule)
         //{
