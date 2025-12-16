@@ -12,10 +12,8 @@ using MinimalApi.Identity.RolesManager.Models;
 
 namespace MinimalApi.Identity.RolesManager.Endpoints;
 
-//public static class RolesEndpoints
 public class RolesEndpoints : IEndpointRouteHandlerBuilder
 {
-    //public static IEndpointRouteBuilder MapRolesEndpoints(this IEndpointRouteBuilder endpoints)
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
@@ -73,7 +71,5 @@ public class RolesEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<DeleteRoleModel>()
             .WithDescription("Delete role")
             .WithSummary("Delete role");
-
-        //return apiGroup;
     }
 }
