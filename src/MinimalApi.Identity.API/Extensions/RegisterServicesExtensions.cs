@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
-using EntityFramework.Exceptions.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -61,20 +59,21 @@ public static class RegisterServicesExtensions
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
             .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
-            .AddRegisterFeatureFlags(activeModules)
+            //.AddRegisterFeatureFlags(activeModules)
+            .AddRegisterPackagedServices(activeModules)
             .AddProblemDetails()
             .AddCorsConfiguration(configuration)
             .AddScoped<SignInManager<ApplicationUser>>();
 
-        services
-            .AccountManagerRegistrationService()
-            .AuthManagerRegistrationService()
-            //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
-            .EmailManagerRegistrationService()
-            //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
-            .PolicyManagerRegistrationService()
-            .ProfileManagerRegistrationService()
-            .RolesManagerRegistrationService();
+        //services
+        //    .AccountManagerRegistrationService()
+        //    .AuthManagerRegistrationService()
+        //    //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
+        //    .EmailManagerRegistrationService()
+        //    //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
+        //    .PolicyManagerRegistrationService()
+        //    .ProfileManagerRegistrationService()
+        //    .RolesManagerRegistrationService();
 
         switch (appSettings.ErrorResponseFormat)
         {
@@ -98,8 +97,18 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
     {
+        services
+            .AccountManagerRegistrationService()
+            .AuthManagerRegistrationService()
+            //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
+            .EmailManagerRegistrationService()
+            //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
+            .PolicyManagerRegistrationService()
+            .ProfileManagerRegistrationService()
+            .RolesManagerRegistrationService();
+
         if (featureFlagsOptions.EnabledFeatureLicense)
         {
             services.LicenseManagerRegistrationService();
@@ -114,6 +123,22 @@ public static class RegisterServicesExtensions
         return services;
     }
 
+    //public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    //{
+    //    if (featureFlagsOptions.EnabledFeatureLicense)
+    //    {
+    //        services.LicenseManagerRegistrationService();
+    //    }
+
+    //    // Disabled for now (not implemented)
+    //    //if (featureFlagsOptions.EnabledFeatureModule)
+    //    //{
+    //    //    services.ModuleManagerRegistrationService();
+    //    //}
+
+    //    return services;
+    //}
+
     public static void UseMapEndpoints(this WebApplication app, AppSettings appSettings)
     {
         var activeModules = new FeatureFlagsOptions
@@ -124,10 +149,9 @@ public static class RegisterServicesExtensions
 
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
-
-        //app.MapClaimsEndpoints();
+        //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
         //app.MapPolicyEndpoints();
-        //app.MapProfileEndpoints();
+        app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         //app.MapRolesEndpoints();
 
         if (activeModules.EnabledFeatureLicense)
@@ -135,6 +159,7 @@ public static class RegisterServicesExtensions
             app.MapEndpointsFromAssemblyContaining<LicenseEndpoints>();
         }
 
+        // Disabled for now (not implemented)
         //if (activeModules.EnabledFeatureModule)
         //{
         //    app.MapModuliEndpoints();
@@ -162,51 +187,56 @@ public static class RegisterServicesExtensions
 
         Action<DbContextOptionsBuilder> optionsAction = dbType switch
         {
-            "sqlserver" => options => options.UseSqlServer(sqlConnection, opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //"sqlserver" => options => options.UseSqlServer(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-                options.UseExceptionProcessor();
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }),
-            "azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
+            "sqlserver" => options => options.AddSqlServerBuilder(sqlConnection, migrationAssembly),
+            //"azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-                options.UseExceptionProcessor();
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }),
-            "postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
+            "azuresql" => options => options.AddAzureSqlBuilder(sqlConnection, migrationAssembly),
+            //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-                options.UseExceptionProcessor();
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }),
-            "mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
+            "postgresql" => options => options.AddPostgreSqlBuilder(sqlConnection, migrationAssembly),
+            //"mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-                options.UseExceptionProcessor();
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }),
-            "sqlite" => options => options.UseSqlite(sqlConnection, opt =>
-            {
-                opt.MigrationsAssembly(migrationAssembly);
-                opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-                opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
+            "mysql" => options => options.AddMySqlBuilder(sqlConnection, migrationAssembly),
+            //"sqlite" => options => options.UseSqlite(sqlConnection, opt =>
+            //{
+            //    opt.MigrationsAssembly(migrationAssembly);
+            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
+            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
-                options.UseExceptionProcessor();
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }),
+            //    options.UseExceptionProcessor();
+            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            //}),
+            "sqlite" => options => options.AddSqLiteBuilder(sqlConnection, migrationAssembly),
             _ => _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
         };
 
@@ -243,10 +273,17 @@ public static class RegisterServicesExtensions
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        var policyBuilder = new AuthorizationPolicyBuilder()
-            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser();
+        //var policyBuilder = new AuthorizationPolicyBuilder()
+        //    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser();
 
-        var policy = policyBuilder.Build();
+        //var policy = policyBuilder.Build();
+
+        //options.DefaultPolicy = policy;
+        //options.FallbackPolicy = policy;
+
+        var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
 
         options.DefaultPolicy = policy;
         options.FallbackPolicy = policy;
@@ -323,45 +360,98 @@ public static class RegisterServicesExtensions
         return services;
     }
 
+    //internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
+    //{
+    //    ArgumentNullException.ThrowIfNull(services);
+    //    ArgumentNullException.ThrowIfNull(configuration);
+
+    //    var corsOptions = new optionsCors.CorsOptions();
+    //    configuration.GetSection(nameof(optionsCors.CorsOptions)).Bind(corsOptions);
+
+    //    services.AddCors(options
+    //        => options.AddPolicy(corsOptions.PolicyName, builder =>
+    //        {
+    //            if (corsOptions.AllowAnyOrigin)
+    //            {
+    //                builder.AllowAnyOrigin();
+    //            }
+    //            else if (corsOptions.AllowedOrigins is { Length: > 0 })
+    //            {
+    //                builder.WithOrigins(corsOptions.AllowedOrigins);
+    //                builder.AllowCredentials();
+    //            }
+
+    //            if (corsOptions.AllowAnyHeader)
+    //            {
+    //                builder.AllowAnyHeader();
+    //            }
+    //            else if (corsOptions.AllowedHeaders is { Length: > 0 })
+    //            {
+    //                builder.WithHeaders(corsOptions.AllowedHeaders);
+    //            }
+
+    //            if (corsOptions.AllowAnyMethod)
+    //            {
+    //                builder.AllowAnyMethod();
+    //            }
+    //            else if (corsOptions.AllowedMethods is { Length: > 0 })
+    //            {
+    //                builder.WithMethods(corsOptions.AllowedMethods);
+    //            }
+    //        }));
+
+    //    return services;
+    //}
+
     internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
 
-        var corsOptions = new optionsCors.CorsOptions();
-        configuration.GetSection(nameof(optionsCors.CorsOptions)).Bind(corsOptions);
+        var corsOptions = configuration.GetSection(nameof(optionsCors.CorsOptions)).Get<optionsCors.CorsOptions>() ?? new optionsCors.CorsOptions();
 
-        services.AddCors(options
-            => options.AddPolicy(corsOptions.PolicyName, builder =>
+        // Cache values to avoid repeated property access and reduce closure pressure inside the lambda.
+        var policyName = corsOptions.PolicyName ?? string.Empty;
+
+        var allowAnyOrigin = corsOptions.AllowAnyOrigin;
+        var allowedOrigins = corsOptions.AllowedOrigins;
+
+        var allowAnyHeader = corsOptions.AllowAnyHeader;
+        var allowedHeaders = corsOptions.AllowedHeaders;
+
+        var allowAnyMethod = corsOptions.AllowAnyMethod;
+        var allowedMethods = corsOptions.AllowedMethods;
+
+        services.AddCors(options => options.AddPolicy(policyName, builder =>
+        {
+            if (allowAnyOrigin)
             {
-                if (corsOptions.AllowAnyOrigin)
-                {
-                    builder.AllowAnyOrigin();
-                }
-                else if (corsOptions.AllowedOrigins is { Length: > 0 })
-                {
-                    builder.WithOrigins(corsOptions.AllowedOrigins);
-                    builder.AllowCredentials();
-                }
+                builder.AllowAnyOrigin();
+            }
+            else if (allowedOrigins is { Length: > 0 })
+            {
+                builder.WithOrigins(allowedOrigins);
+                builder.AllowCredentials();
+            }
 
-                if (corsOptions.AllowAnyHeader)
-                {
-                    builder.AllowAnyHeader();
-                }
-                else if (corsOptions.AllowedHeaders is { Length: > 0 })
-                {
-                    builder.WithHeaders(corsOptions.AllowedHeaders);
-                }
+            if (allowAnyHeader)
+            {
+                builder.AllowAnyHeader();
+            }
+            else if (allowedHeaders is { Length: > 0 })
+            {
+                builder.WithHeaders(allowedHeaders);
+            }
 
-                if (corsOptions.AllowAnyMethod)
-                {
-                    builder.AllowAnyMethod();
-                }
-                else if (corsOptions.AllowedMethods is { Length: > 0 })
-                {
-                    builder.WithMethods(corsOptions.AllowedMethods);
-                }
-            }));
+            if (allowAnyMethod)
+            {
+                builder.AllowAnyMethod();
+            }
+            else if (allowedMethods is { Length: > 0 })
+            {
+                builder.WithMethods(allowedMethods);
+            }
+        }));
 
         return services;
     }
