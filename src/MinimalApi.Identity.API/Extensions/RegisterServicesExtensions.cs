@@ -26,6 +26,7 @@ using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.Endpoints;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
+using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
 using MinimalApi.Identity.Shared.DependencyInjection;
@@ -39,11 +40,13 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
     {
-        var activeModules = new FeatureFlagsOptions
-        {
-            EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
-            EnabledFeatureModule = appSettings.EnabledFeatureModule
-        };
+        //var activeModules = new FeatureFlagsOptions
+        //{
+        //    EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
+        //    EnabledFeatureModule = appSettings.EnabledFeatureModule
+        //};
+
+        var activeModules = ReadFeatureFlags(appSettings);
 
         services
             .AddSingleton(TimeProvider.System)
@@ -59,21 +62,10 @@ public static class RegisterServicesExtensions
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
             .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
-            //.AddRegisterFeatureFlags(activeModules)
             .AddRegisterPackagedServices(activeModules)
             .AddProblemDetails()
             .AddCorsConfiguration(configuration)
             .AddScoped<SignInManager<ApplicationUser>>();
-
-        //services
-        //    .AccountManagerRegistrationService()
-        //    .AuthManagerRegistrationService()
-        //    //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
-        //    .EmailManagerRegistrationService()
-        //    //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
-        //    .PolicyManagerRegistrationService()
-        //    .ProfileManagerRegistrationService()
-        //    .RolesManagerRegistrationService();
 
         switch (appSettings.ErrorResponseFormat)
         {
@@ -97,7 +89,7 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
+    public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions activeModules)
     {
         services
             .AccountManagerRegistrationService()
@@ -109,13 +101,13 @@ public static class RegisterServicesExtensions
             .ProfileManagerRegistrationService()
             .RolesManagerRegistrationService();
 
-        if (featureFlagsOptions.EnabledFeatureLicense)
+        if (activeModules.EnabledFeatureLicense)
         {
             services.LicenseManagerRegistrationService();
         }
 
         // Disabled for now (not implemented)
-        //if (featureFlagsOptions.EnabledFeatureModule)
+        //if (activeModules.EnabledFeatureModule)
         //{
         //    services.ModuleManagerRegistrationService();
         //}
@@ -123,34 +115,20 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    //public static IServiceCollection AddRegisterFeatureFlags(this IServiceCollection services, FeatureFlagsOptions featureFlagsOptions)
-    //{
-    //    if (featureFlagsOptions.EnabledFeatureLicense)
-    //    {
-    //        services.LicenseManagerRegistrationService();
-    //    }
-
-    //    // Disabled for now (not implemented)
-    //    //if (featureFlagsOptions.EnabledFeatureModule)
-    //    //{
-    //    //    services.ModuleManagerRegistrationService();
-    //    //}
-
-    //    return services;
-    //}
-
-    public static void UseMapEndpoints(this WebApplication app, AppSettings appSettings)
+    //public static void UseMapEndpoints(this WebApplication app, AppSettings appSettings)
+    public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions activeModules)
     {
-        var activeModules = new FeatureFlagsOptions
-        {
-            EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
-            EnabledFeatureModule = appSettings.EnabledFeatureModule
-        };
+        //var activeModules = new FeatureFlagsOptions
+        //{
+        //    EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
+        //    EnabledFeatureModule = appSettings.EnabledFeatureModule
+        //};
 
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
         //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
         //app.MapPolicyEndpoints();
+        app.MapEndpointsFromAssemblyContaining<AuthPolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         //app.MapRolesEndpoints();
 
@@ -183,59 +161,14 @@ public static class RegisterServicesExtensions
             "mysql" => configuration.GetConnectionString("MySQL"),
             "sqlite" => configuration.GetConnectionString("SQLite"),
             _ => null
-        } ?? throw new InvalidOperationException($"Connection string for '{databaseType}' is not configured.");
+        } ?? throw new InvalidOperationException($"Connection string for '{databaseType.ToUpperInvariant()}' is not configured.");
 
         Action<DbContextOptionsBuilder> optionsAction = dbType switch
         {
-            //"sqlserver" => options => options.UseSqlServer(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
             "sqlserver" => options => options.AddSqlServerBuilder(sqlConnection, migrationAssembly),
-            //"azuresql" => options => options.UseAzureSql(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
             "azuresql" => options => options.AddAzureSqlBuilder(sqlConnection, migrationAssembly),
-            //"postgresql" => options => options.UseNpgsql(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
             "postgresql" => options => options.AddPostgreSqlBuilder(sqlConnection, migrationAssembly),
-            //"mysql" => options => options.UseMySql(sqlConnection, ServerVersion.AutoDetect(sqlConnection), opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
             "mysql" => options => options.AddMySqlBuilder(sqlConnection, migrationAssembly),
-            //"sqlite" => options => options.UseSqlite(sqlConnection, opt =>
-            //{
-            //    opt.MigrationsAssembly(migrationAssembly);
-            //    opt.MigrationsHistoryTable(HistoryRepository.DefaultTableName);
-            //    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-
-            //    options.UseExceptionProcessor();
-            //    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            //}),
             "sqlite" => options => options.AddSqLiteBuilder(sqlConnection, migrationAssembly),
             _ => _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
         };
@@ -245,41 +178,61 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider)
+    //public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider)
+    //{
+    //    ArgumentNullException.ThrowIfNull(serviceProvider);
+
+    //    await using var scope = serviceProvider.CreateAsyncScope();
+
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
+    //    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
+
+    //    if (pendingMigrations.Any())
+    //    {
+    //        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
+    //    }
+    //    else
+    //    {
+    //        var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
+
+    //        if (!canConnect)
+    //        {
+    //            await dbContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
+    //        }
+    //    }
+    //}
+
+    public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
         await using var scope = serviceProvider.CreateAsyncScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
-        var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
+        var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken)
+            .ConfigureAwait(false); // First check if we can connect. If we can't, try to create the DB and exit early.
 
-        if (pendingMigrations.Any())
+        if (!canConnect)
         {
-            await dbContext.Database.MigrateAsync().ConfigureAwait(false);
+            await dbContext.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
+            return;
         }
-        else
-        {
-            var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
 
-            if (!canConnect)
-            {
-                await dbContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
-            }
+        // Only check pending migrations when the DB is reachable to avoid an extra round-trip on unreachable DBs.
+        var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
+
+        // Avoid LINQ allocations by checking the enumerator directly.
+        using var enumerator = pendingMigrations.GetEnumerator();
+
+        if (enumerator.MoveNext())
+        {
+            await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
     public static AuthorizationOptions AddDefaultSecurityOptions(this AuthorizationOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
-
-        //var policyBuilder = new AuthorizationPolicyBuilder()
-        //    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser();
-
-        //var policy = policyBuilder.Build();
-
-        //options.DefaultPolicy = policy;
-        //options.FallbackPolicy = policy;
 
         var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
             .RequireAuthenticatedUser()
@@ -304,6 +257,19 @@ public static class RegisterServicesExtensions
         section.Bind(settings);
 
         return settings;
+    }
+
+    public static FeatureFlagsOptions ReadFeatureFlags(AppSettings appSettings)
+    {
+        var enabledFeatureLicense = appSettings.EnabledFeatureLicense;
+        var enabledFeatureModule = appSettings.EnabledFeatureModule;
+
+        var activeModules = new FeatureFlagsOptions
+        {
+            EnabledFeatureLicense = enabledFeatureLicense,
+            EnabledFeatureModule = enabledFeatureModule
+        };
+        return activeModules;
     }
 
     internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions settings)
@@ -359,49 +325,6 @@ public static class RegisterServicesExtensions
 
         return services;
     }
-
-    //internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
-    //{
-    //    ArgumentNullException.ThrowIfNull(services);
-    //    ArgumentNullException.ThrowIfNull(configuration);
-
-    //    var corsOptions = new optionsCors.CorsOptions();
-    //    configuration.GetSection(nameof(optionsCors.CorsOptions)).Bind(corsOptions);
-
-    //    services.AddCors(options
-    //        => options.AddPolicy(corsOptions.PolicyName, builder =>
-    //        {
-    //            if (corsOptions.AllowAnyOrigin)
-    //            {
-    //                builder.AllowAnyOrigin();
-    //            }
-    //            else if (corsOptions.AllowedOrigins is { Length: > 0 })
-    //            {
-    //                builder.WithOrigins(corsOptions.AllowedOrigins);
-    //                builder.AllowCredentials();
-    //            }
-
-    //            if (corsOptions.AllowAnyHeader)
-    //            {
-    //                builder.AllowAnyHeader();
-    //            }
-    //            else if (corsOptions.AllowedHeaders is { Length: > 0 })
-    //            {
-    //                builder.WithHeaders(corsOptions.AllowedHeaders);
-    //            }
-
-    //            if (corsOptions.AllowAnyMethod)
-    //            {
-    //                builder.AllowAnyMethod();
-    //            }
-    //            else if (corsOptions.AllowedMethods is { Length: > 0 })
-    //            {
-    //                builder.WithMethods(corsOptions.AllowedMethods);
-    //            }
-    //        }));
-
-    //    return services;
-    //}
 
     internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
