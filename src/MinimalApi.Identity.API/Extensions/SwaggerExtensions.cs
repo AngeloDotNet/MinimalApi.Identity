@@ -57,14 +57,7 @@ public static class SwaggerExtensions
                 Array.Empty<string>()
             }
         });
-        //options.AddSwaggerDocumentFilters(featureFlagsOptions);
         options.DocumentFilter<LicensesManagementSwaggerFilter>(featureFlagsOptions.EnabledFeatureLicense);
         options.DocumentFilter<ModulesManagementSwaggerFilter>(featureFlagsOptions.EnabledFeatureModule);
     }
-
-    //public static void AddSwaggerDocumentFilters(this SwaggerGenOptions options, FeatureFlagsOptions featureFlagsOptions)
-    //{
-    //    options.DocumentFilter<LicensesManagementSwaggerFilter>(featureFlagsOptions.EnabledFeatureLicense);
-    //    options.DocumentFilter<ModulesManagementSwaggerFilter>(featureFlagsOptions.EnabledFeatureModule);
-    //}
 }
