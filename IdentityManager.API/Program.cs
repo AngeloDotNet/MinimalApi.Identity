@@ -40,6 +40,8 @@ public class Program
         });
 
         var app = builder.Build();
+
+        var activeModules = RegisterServicesExtensions.ReadFeatureFlags(appSettings);
         var appName = app.Environment.ApplicationName;
 
         await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
@@ -72,7 +74,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseMapEndpoints(appSettings);
+        app.UseMapEndpoints(activeModules);
         await app.RunAsync();
     }
 }
