@@ -13,7 +13,7 @@ using MinimalApi.Identity.PolicyManager.Models;
 
 namespace MinimalApi.Identity.PolicyManager.Endpoints;
 
-public class AuthPolicyEndpoints : IEndpointRouteHandlerBuilder
+public class PolicyEndpoints : IEndpointRouteHandlerBuilder
 {
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
