@@ -115,10 +115,8 @@ public static class RegisterServicesExtensions
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
         //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
-        //app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
-        app.MapEndpointsFromAssemblyContaining<AuthPolicyEndpoints>();
+        app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
-        //app.MapRolesEndpoints();
         app.MapEndpointsFromAssemblyContaining<RolesEndpoints>();
 
         if (activeModules.EnabledFeatureLicense)
@@ -174,8 +172,7 @@ public static class RegisterServicesExtensions
         await using var scope = serviceProvider.CreateAsyncScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
-        var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken)
-            .ConfigureAwait(false); // First check if we can connect. If we can't, try to create the DB and exit early.
+        var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken).ConfigureAwait(false);
 
         if (!canConnect)
         {
@@ -183,10 +180,8 @@ public static class RegisterServicesExtensions
             return;
         }
 
-        // Only check pending migrations when the DB is reachable to avoid an extra round-trip on unreachable DBs.
         var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
 
-        // Avoid LINQ allocations by checking the enumerator directly.
         using var enumerator = pendingMigrations.GetEnumerator();
 
         if (enumerator.MoveNext())
@@ -234,6 +229,7 @@ public static class RegisterServicesExtensions
             EnabledFeatureLicense = enabledFeatureLicense,
             EnabledFeatureModule = enabledFeatureModule
         };
+
         return activeModules;
     }
 
@@ -298,15 +294,11 @@ public static class RegisterServicesExtensions
 
         var corsOptions = configuration.GetSection(nameof(optionsCors.CorsOptions)).Get<optionsCors.CorsOptions>() ?? new optionsCors.CorsOptions();
 
-        // Cache values to avoid repeated property access and reduce closure pressure inside the lambda.
         var policyName = corsOptions.PolicyName ?? string.Empty;
-
         var allowAnyOrigin = corsOptions.AllowAnyOrigin;
         var allowedOrigins = corsOptions.AllowedOrigins;
-
         var allowAnyHeader = corsOptions.AllowAnyHeader;
         var allowedHeaders = corsOptions.AllowedHeaders;
-
         var allowAnyMethod = corsOptions.AllowAnyMethod;
         var allowedMethods = corsOptions.AllowedMethods;
 
