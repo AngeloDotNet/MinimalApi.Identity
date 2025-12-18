@@ -29,6 +29,7 @@ using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.DependencyInjection;
+using MinimalApi.Identity.RolesManager.Endpoints;
 using MinimalApi.Identity.Shared.DependencyInjection;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 using optionsCors = MinimalApi.Identity.Core.Options;
@@ -40,12 +41,6 @@ public static class RegisterServicesExtensions
     public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
         AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
     {
-        //var activeModules = new FeatureFlagsOptions
-        //{
-        //    EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
-        //    EnabledFeatureModule = appSettings.EnabledFeatureModule
-        //};
-
         var activeModules = ReadFeatureFlags(appSettings);
 
         services
@@ -115,22 +110,16 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    //public static void UseMapEndpoints(this WebApplication app, AppSettings appSettings)
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions activeModules)
     {
-        //var activeModules = new FeatureFlagsOptions
-        //{
-        //    EnabledFeatureLicense = appSettings.EnabledFeatureLicense,
-        //    EnabledFeatureModule = appSettings.EnabledFeatureModule
-        //};
-
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
         //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
-        //app.MapPolicyEndpoints();
+        //app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AuthPolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         //app.MapRolesEndpoints();
+        app.MapEndpointsFromAssemblyContaining<RolesEndpoints>();
 
         if (activeModules.EnabledFeatureLicense)
         {
@@ -177,30 +166,6 @@ public static class RegisterServicesExtensions
 
         return services;
     }
-
-    //public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider)
-    //{
-    //    ArgumentNullException.ThrowIfNull(serviceProvider);
-
-    //    await using var scope = serviceProvider.CreateAsyncScope();
-
-    //    var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
-    //    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
-
-    //    if (pendingMigrations.Any())
-    //    {
-    //        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
-    //    }
-    //    else
-    //    {
-    //        var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
-
-    //        if (!canConnect)
-    //        {
-    //            await dbContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
-    //        }
-    //    }
-    //}
 
     public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
     {
