@@ -14,7 +14,6 @@ public static class IEndpointRouteBuilderExtensions
         ArgumentNullException.ThrowIfNull(assembly);
 
         var endpointRouteHandlerBuilderInterfaceType = typeof(IEndpointRouteHandlerBuilder);
-
         var endpointRouteHandlerBuilderTypes = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericType
             && endpointRouteHandlerBuilderInterfaceType.IsAssignableFrom(t) && (predicate?.Invoke(t) ?? true)).ToArray();
 

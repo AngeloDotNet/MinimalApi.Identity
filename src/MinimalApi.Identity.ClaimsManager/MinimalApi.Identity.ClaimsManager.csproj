@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <Authors>Angelo Pirola</Authors>
         <Company>Angelo Pirola</Company>
-        <Product>MinimalApi.Identity.ModuleManager</Product>
-        <Title>Identity.Module.ModuleManager</Title>
+        <Product>MinimalApi.Identity.ClaimsManager</Product>
+        <Title>Identity.Module.ClaimsManager</Title>
         <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
-        <PackageId>Identity.Module.ModuleManager</PackageId>
+        <PackageId>Identity.Module.ClaimsManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
