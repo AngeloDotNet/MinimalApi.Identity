@@ -46,6 +46,7 @@ public class Program
 
         await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
 
+        // If behind a proxy, uncomment and configure the KnownProxies collection
         //app.UseForwardedHeaders(new()
         //{
         //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
@@ -56,7 +57,6 @@ public class Program
         app.UseStatusCodePages();
 
         app.UseMiddleware<MinimalApiExceptionMiddleware>();
-
         if (swaggerSettings.IsEnabled)
         {
             if (swaggerSettings.AuthSettings.IsRequired)
