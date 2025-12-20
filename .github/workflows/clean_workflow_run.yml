@@ -1,4 +1,4 @@
-name: Delete old workflow runs
+name: Delete old workflow runs and releases
 
 on:
   workflow_dispatch:
@@ -23,3 +23,14 @@ jobs:
           repository: ${{ env.REPOSITORY }}
           retain_days: 3
           keep_minimum_runs: 2
+          
+      - name: Delete older releases
+        uses: jay2610/delete-older-releases@1.0.0
+        with:
+          repo: AngeloDotNet/MinimalApi.Identity # defaults to current repo
+          keep_latest: 1
+          #delete_tag_pattern: beta # defaults to ""
+          delete_type: 'release'
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
