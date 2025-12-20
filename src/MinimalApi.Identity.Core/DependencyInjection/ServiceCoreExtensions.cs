@@ -51,8 +51,10 @@ public static class ServiceCoreExtensions
 
             services.Scan(scan =>
             {
-                var classSelector = scan.FromAssemblies(assembly).AddClasses(classes
-                    => classes.Where(type => type.Name.EndsWith(configuration.StringEndsWith))).AsImplementedInterfaces();
+                var classSelector = scan
+                    .FromAssemblies(assembly)
+                    .AddClasses(classes => classes.Where(type => type.Name.EndsWith(configuration.StringEndsWith)))
+                    .AsImplementedInterfaces();
 
                 if (configuration.Lifetime is ServiceLifetime.Singleton)
                 {
