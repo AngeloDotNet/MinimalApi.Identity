@@ -83,11 +83,11 @@ The configuration can be completely managed by adding this section to the _appse
     }
 },
 "ConnectionStrings": {
+    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False",
     "AzureSQL": "Server=tcp:[SERVER].database.windows.net,1433;Initial Catalog=IdentityManager;Persist Security Info=False;User ID=[USERNAME];Password=[PASSWORD];MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-    "MySQL": "Server=[HOSTNAME];Port=3306;Database=IdentityManager;Uid=[USERNAME];Pwd=[PASSWORD]",
     "PostgreSQL": "Host=[HOSTNAME];Port=5432;Database=IdentityManager;Username=[USERNAME];Password=[PASSWORD];Include Error Detail=true",
-    "SQLite": "Data Source=Data/IdentityManager.db", // OR "SQLite": "Data Source=MinimalApi.Identity.db;Cache=Shared"
-    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
+    "MySQL": "Server=[HOSTNAME];Port=3306;Database=IdentityManager;Uid=[USERNAME];Pwd=[PASSWORD]",
+    "SQLite": "Data Source=Data/IdentityManager.db"
 },
 "JwtOptions": {
     "Issuer": "[ISSUER]",
@@ -119,7 +119,7 @@ The configuration can be completely managed by adding this section to the _appse
 },
 "AppSettings": {
     "DatabaseType": "sqlserver",
-	"MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
+    "MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
     "AssignAdminUsername": "admin",
     "AssignAdminEmail": "admin@example.org",
     "AssignAdminPassword": "StrongPassword",
@@ -190,11 +190,11 @@ Example: `Add-Migration InitialMigration -Project MinimalApi.Identity.Migrations
 
 ## 📎 Swagger / OpenAPI
 
-It is possible to protect access to the Swagger UI with the following configuration in SwaggerSettings:
+It is possible to protect access to the Swagger UI with the following configuration:
 
-- RequiredAuth: set via `AuthSettings:IsRequired` (supported values: `true`, `false`)
-- Username: set via `AuthSettings:Username`
-- Password: set via `AuthSettings:Password`
+- RequiredAuth: set via `SwaggerSettings:IsRequiredAuth` (supported values: `true`, `false`)
+- Username: set via `SwaggerSettings:Username`
+- Password: set via `SwaggerSettings:Password`
 
 You can manage the state of the Swagger UI with the following configuration:
 
@@ -242,41 +242,33 @@ public class Program
         });
 
         var app = builder.Build();
+        var appName = app.Environment.ApplicationName;
 
-		var activeModules = RegisterServicesExtensions.ReadFeatureFlags(appSettings);
-		var appName = app.Environment.ApplicationName;
-		
-		await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
-		
-		// If behind a proxy, uncomment and configure the KnownProxies collection
-		//app.UseForwardedHeaders(new()
-		//{
-		//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-		//    KnownProxies = { }
-		//});
-		
-		app.UseHttpsRedirection();
-		app.UseStatusCodePages();
-		
-		app.UseMiddleware<MinimalApiExceptionMiddleware>();
-		if (swaggerSettings.IsEnabled)
-		{
-			if (swaggerSettings.AuthSettings.IsRequired)
-			{
-				app.UseMiddleware<SwaggerBasicAuthMiddleware>();
-			}
-		
-			app.UseSwagger();
-			app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appName} v1"));
-		}
-		
-		app.UseRouting();
-		app.UseCors(corsOptions.PolicyName);
-		
-		app.UseAuthentication();
-		app.UseAuthorization();
-		
-		app.UseMapEndpoints(activeModules);
+        await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
+
+        app.UseHttpsRedirection();
+        app.UseStatusCodePages();
+
+        app.UseMiddleware<MinimalApiExceptionMiddleware>();
+
+        if (swaggerSettings.IsEnabled)
+        {
+            if (swaggerSettings.AuthSettings.IsRequired)
+            {
+                app.UseMiddleware<SwaggerBasicAuthMiddleware>();
+            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appName} v1"));
+        }
+
+        app.UseRouting();
+        app.UseCors(corsOptions.PolicyName);
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseMapEndpoints(appSettings);
         await app.RunAsync();
     }
 }
@@ -287,6 +279,7 @@ public class Program
 The following authentication types are currently supported:
 
 - JWT Bearer Token
+
 
 ### 🧑‍💼 Administrator Account
 
@@ -337,22 +330,22 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Code Review and Refactoring
 - [ ] Migrate solution to .NET 9
 - [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
 - [ ] Code Review and Refactoring
-- [ ] Migrate solution to .NET 10
 - [ ] Add support for multi tenancy
 - [ ] Add endpoints for two-factor authentication and management
 - [ ] Add endpoints for downloading and deleting personal data
+- [ ] Migrate solution to .NET 10
 - [ ] Change the entity ID type from INT to GUID
 - [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
 
-## 🚀 Future implementations
+### Future implementations
 
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+- [ ] Migrate FeatureFlagsOptions configuration to database (to be verified)
 
 ## 📜 License
 

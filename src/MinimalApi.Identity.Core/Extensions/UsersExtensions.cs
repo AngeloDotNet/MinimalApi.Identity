@@ -37,10 +37,8 @@ public static class UsersExtensions
             throw new ArgumentException("User must be a ClaimsPrincipal", nameof(user));
         }
 
-        return claimsPrincipal.FindFirst(claimType)?.Value ?? throw new InvalidOperationException($"Claim value for {claimType} is missing.");
-
-        //var claim = claimsPrincipal.FindFirst(claimType);
-        //return claim?.Value ?? throw new InvalidOperationException($"Claim value for {claimType} is missing.");
+        var claim = claimsPrincipal.FindFirst(claimType);
+        return claim?.Value ?? throw new InvalidOperationException($"Claim value for {claimType} is missing.");
     }
 
     public static async Task<bool> IsAuthValidAsync(this ClaimsPrincipal principal, UserManager<ApplicationUser> userManager)
