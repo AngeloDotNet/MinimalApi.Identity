@@ -51,24 +51,20 @@ public static class ServiceCoreExtensions
 
             services.Scan(scan =>
             {
-                var classSelector = scan.FromAssemblies(assembly)
-                    .AddClasses(classes => classes.Where(type => type.Name.EndsWith(configuration.StringEndsWith)))
-                    .AsImplementedInterfaces();
+                var classSelector = scan.FromAssemblies(assembly).AddClasses(classes
+                    => classes.Where(type => type.Name.EndsWith(configuration.StringEndsWith))).AsImplementedInterfaces();
 
-                switch (configuration.Lifetime)
+                if (configuration.Lifetime is ServiceLifetime.Singleton)
                 {
-                    case ServiceLifetime.Singleton:
-                        classSelector.WithSingletonLifetime();
-                        break;
-                    case ServiceLifetime.Scoped:
-                        classSelector.WithScopedLifetime();
-                        break;
-                    case ServiceLifetime.Transient:
-                        classSelector.WithTransientLifetime();
-                        break;
-                    default:
-                        classSelector.WithTransientLifetime();
-                        break;
+                    classSelector.WithSingletonLifetime();
+                }
+                else if (configuration.Lifetime is ServiceLifetime.Scoped)
+                {
+                    classSelector.WithScopedLifetime();
+                }
+                else
+                {
+                    classSelector.WithTransientLifetime();
                 }
             });
         }
