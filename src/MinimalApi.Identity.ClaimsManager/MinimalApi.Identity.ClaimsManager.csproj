@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <Authors>Angelo Pirola</Authors>
         <Company>Angelo Pirola</Company>
-        <Product>MinimalApi.Identity.EmailManager</Product>
-        <Title>Identity.Module.EmailManager</Title>
+        <Product>MinimalApi.Identity.ClaimsManager</Product>
+        <Title>Identity.Module.ClaimsManager</Title>
         <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
-        <PackageId>Identity.Module.EmailManager</PackageId>
+        <PackageId>Identity.Module.ClaimsManager</PackageId>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
@@ -18,20 +18,19 @@
         <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Identity.Module.Core" Version="2.5.177" />
-    </ItemGroup>    
-    
+    </ItemGroup>
+
     <ItemGroup>
         <None Include="..\..\identityLibrary.png">
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
-    </ItemGroup>    
-    
+    </ItemGroup>
 </Project>

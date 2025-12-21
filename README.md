@@ -200,9 +200,11 @@ You can manage the state of the Swagger UI with the following configuration:
 
 - Enable/Disable Swagger UI: set via `SwaggerSettings:IsEnabled` (supported values: `true`, `false`)
 
+<!--
 ## 🔰 Feature Flags
 
 🚧 coming soon
+-->
 
 ## 💡 Usage Examples
 
@@ -296,6 +298,7 @@ A default administrator account is created automatically with the following conf
 - Username: set via `AppSettings:AssignAdminUsername`
 - Password: set via `AppSettings:AssignAdminPassword`
 
+<!--
 ## 📚 API Reference
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
@@ -316,6 +319,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 |[Identity.Module.ProfileManager](https://www.nuget.org/packages/Identity.Module.ProfileManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ProfileManager)](https://www.nuget.org/packages/Identity.Module.ProfileManager)|
 |[Identity.Module.RolesManager](https://www.nuget.org/packages/Identity.Module.RolesManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.RolesManager)](https://www.nuget.org/packages/Identity.Module.RolesManager)|
 |[Identity.Module.Shared](https://www.nuget.org/packages/Identity.Module.Shared)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Shared)](https://www.nuget.org/packages/Identity.Module.Shared)|
+-->
 
 ## 🏆 Badges
 
@@ -342,11 +346,12 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
+- [ ] Add endpoints for two-factor authentication and management
+- [ ] Add endpoints for downloading and deleting personal data
 - [ ] Code Review and Refactoring
 - [ ] Migrate solution to .NET 10
 - [ ] Add support for multi tenancy
-- [ ] Add endpoints for two-factor authentication and management
-- [ ] Add endpoints for downloading and deleting personal data
+- [ ] Align endpoints with the updated version of ASP.NET Core Identity
 - [ ] Change the entity ID type from INT to GUID
 - [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
 
