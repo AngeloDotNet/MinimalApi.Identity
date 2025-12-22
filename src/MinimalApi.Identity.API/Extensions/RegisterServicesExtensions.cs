@@ -91,7 +91,6 @@ public static class RegisterServicesExtensions
             .AuthManagerRegistrationService()
             //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
             .EmailManagerRegistrationService()
-            //.ModuleManagerRegistrationService() // Disabled for now (not implemented)
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
             .RolesManagerRegistrationService();
