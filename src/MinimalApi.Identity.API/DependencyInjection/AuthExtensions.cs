@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Models;
+//using MinimalApi.Identity.API.Services.Interfaces;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
@@ -15,7 +16,6 @@ using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.EmailManager.Services;
 using MinimalApi.Identity.LicenseManager.Services;
-using MinimalApi.Identity.ModuleManager.Services;
 using MinimalApi.Identity.ProfileManager.Models;
 using MinimalApi.Identity.ProfileManager.Services;
 
@@ -49,11 +49,11 @@ public static class AuthExtensions
     {
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
-        var moduleService = scope.ServiceProvider.GetRequiredService<IModuleService>();
+        //var moduleService = scope.ServiceProvider.GetRequiredService<IModuleService>(); //TODO: Review Module
         var licenseService = scope.ServiceProvider.GetRequiredService<ILicenseService>();
 
         var userProfileTask = await profileService.GetClaimUserProfileAsync(user, CancellationToken.None);
-        var userClaimModulesTask = await moduleService.GetClaimsModuleUserAsync(user);
+        //var userClaimModulesTask = await moduleService.GetClaimsModuleUserAsync(user);
 
         var userLicensesTask = await licenseService.GetClaimLicenseUserAsync(user, CancellationToken.None);
         var customClaims = new List<Claim>();
@@ -63,10 +63,10 @@ public static class AuthExtensions
             customClaims.AddRange(userProfileTask);
         }
 
-        if (userClaimModulesTask is { Count: > 0 })
-        {
-            customClaims.AddRange(userClaimModulesTask);
-        }
+        //if (userClaimModulesTask is { Count: > 0 })
+        //{
+        //    customClaims.AddRange(userClaimModulesTask);
+        //}
 
         if (userLicensesTask is not null)
         {
@@ -81,7 +81,8 @@ public static class AuthExtensions
         using var scope = serviceProvider.CreateScope();
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None).ConfigureAwait(false);
+        await profileService.CreateProfileAsync(new CreateUserProfileModel(user.Id, model.Firstname, model.Lastname), CancellationToken.None)
+            .ConfigureAwait(false);
     }
 
     public static bool CheckLastDateChangePassword(DateOnly? lastDate, AppSettings options)

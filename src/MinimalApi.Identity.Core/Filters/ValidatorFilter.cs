@@ -27,6 +27,7 @@ internal class ValidatorFilter<TModel>(IValidator<TModel> validator, IOptions<Va
         }
 
         var errors = validationResult.ToDictionary();
+
         var result = TypedResults.Problem(
             statusCode: StatusCodes.Status422UnprocessableEntity,
             instance: context.HttpContext.Request.Path,

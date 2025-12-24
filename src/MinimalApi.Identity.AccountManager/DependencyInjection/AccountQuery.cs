@@ -22,7 +22,8 @@ public static class AccountQuery
             throw new BadRequestException(MessagesApi.UserIdTokenRequired);
         }
 
-        var user = await userManager.FindByIdAsync(request.UserId) ?? throw new BadRequestException(MessagesApi.UserNotFound);
+        var user = await userManager.FindByIdAsync(request.UserId)
+            ?? throw new BadRequestException(MessagesApi.UserNotFound);
 
         var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Token));
         var result = await userManager.ConfirmEmailAsync(user, code);
@@ -37,10 +38,11 @@ public static class AccountQuery
             throw new BadRequestException(MessagesApi.RequiredNewEmail);
         }
 
-        var user = await userManager.FindByEmailAsync(request.Email) ?? throw new BadRequestException(MessagesApi.UserNotFound);
+        var user = await userManager.FindByEmailAsync(request.Email)
+            ?? throw new BadRequestException(MessagesApi.UserNotFound);
+
         var userId = await userManager.GetUserIdAsync(user);
         var token = await userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
-
         token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
         var callbackUrl = await CallBackGenerator.GenerateCallBackUrlAsync(new GenerateCallBackUrlModel(userId, token, request.NewEmail), httpContextAccessor);

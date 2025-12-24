@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.HttpOverrides;
 using MinimalApi.Identity.API.Extensions;
 using MinimalApi.Identity.API.Middleware;
 using MinimalApi.Identity.API.Services;
@@ -48,11 +47,11 @@ public class Program
         await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
 
         // If behind a proxy, uncomment and configure the KnownProxies collection
-        app.UseForwardedHeaders(new()
-        {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-            KnownProxies = { }
-        });
+        //app.UseForwardedHeaders(new()
+        //{
+        //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+        //    KnownProxies = { }
+        //});
 
         app.UseHttpsRedirection();
         app.UseStatusCodePages();

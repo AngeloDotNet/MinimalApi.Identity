@@ -48,7 +48,8 @@ public static class PolicyQuery
 
     public static async Task<string> DeletePolicyAsync(DeletePolicyModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var policyToDelete = await dbContext.Set<AuthPolicy>().Where(x => x.Id == model.Id)
+        var policyToDelete = await dbContext.Set<AuthPolicy>()
+            .Where(x => x.Id == model.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.PolicyNotFound);
 
         if (policyToDelete.IsDefault)
@@ -63,5 +64,6 @@ public static class PolicyQuery
     }
 
     private static async Task<bool> CheckPolicyExistAsync(string policyName, MinimalApiAuthDbContext dbContext)
-        => await dbContext.Set<AuthPolicy>().AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
+        => await dbContext.Set<AuthPolicy>()
+            .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
 }

@@ -89,7 +89,7 @@ public static class RegisterServicesExtensions
         services
             .AccountManagerRegistrationService()
             .AuthManagerRegistrationService()
-            //.ClaimsManagerRegistrationService()
+            //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
@@ -100,6 +100,7 @@ public static class RegisterServicesExtensions
             services.LicenseManagerRegistrationService();
         }
 
+        // Disabled for now (not implemented)
         //if (activeModules.EnabledFeatureModule)
         //{
         //    services.ModuleManagerRegistrationService();
@@ -112,8 +113,7 @@ public static class RegisterServicesExtensions
     {
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
-        //app.MapClaimsEndpoints();
-        //app.MapEndpointsFromAssemblyContaining<ClaimsEndpoints>();
+        //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
         app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         app.MapEndpointsFromAssemblyContaining<RolesEndpoints>();
@@ -123,10 +123,10 @@ public static class RegisterServicesExtensions
             app.MapEndpointsFromAssemblyContaining<LicenseEndpoints>();
         }
 
+        // Disabled for now (not implemented)
         //if (activeModules.EnabledFeatureModule)
         //{
         //    app.MapModuliEndpoints();
-        //    app.MapEndpointsFromAssemblyContaining<ModuliEndpoints>();
         //}
     }
 
