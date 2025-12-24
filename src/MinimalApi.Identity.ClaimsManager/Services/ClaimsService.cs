@@ -77,9 +77,7 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var user = await userManager.FindByIdAsync(model.UserId.ToString())
-            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
-
+        var user = await userManager.FindByIdAsync(model.UserId.ToString()).ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
         var userHasClaim = await userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
         if (!userHasClaim.Any(c => c.Type == model.Type && c.Value == model.Value))
@@ -97,19 +95,17 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var claim = await dbContext.Set<ClaimType>()
-            .FirstOrDefaultAsync(c => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
-            && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase)).ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.ClaimNotFound);
+        var claim = await dbContext.Set<ClaimType>().FirstOrDefaultAsync(c =>
+        c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase) &&
+        c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase)).ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.ClaimNotFound);
 
         if (claim.Default)
         {
             throw new BadRequestException(MessagesApi.ClaimNotDeleted);
         }
 
-        var isClaimAssigned = await dbContext.Users
-            .AnyAsync(user => user.UserClaims.Any(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value))
-            .ConfigureAwait(false);
+        var isClaimAssigned = await dbContext.Users.AnyAsync(user
+            => user.UserClaims.Any(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value)).ConfigureAwait(false);
 
         if (isClaimAssigned)
         {
@@ -126,7 +122,6 @@ public class ClaimsService(MinimalApiAuthDbContext dbContext, UserManager<Applic
         => !string.IsNullOrWhiteSpace(claimType) && Enum.TryParse<ClaimsType>(claimType, true, out _);
 
     private async Task<bool> CheckClaimExistAsync(CreateClaimModel model)
-        => await dbContext.Set<ClaimType>()
-        .AnyAsync(c => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
+        => await dbContext.Set<ClaimType>().AnyAsync(c => c.Type.Equals(model.Type, StringComparison.InvariantCultureIgnoreCase)
         && c.Value.Equals(model.Value, StringComparison.InvariantCultureIgnoreCase)).ConfigureAwait(false);
 }

@@ -14,8 +14,7 @@ public static class ProfileQuery
 {
     public static async Task<List<UserProfileModel>> GetAllProfilesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var profiles = await dbContext.Set<UserProfile>()
-            .Select(profile => ProfileMapper.ToEntity(profile))
+        var profiles = await dbContext.Set<UserProfile>().Select(profile => ProfileMapper.ToEntity(profile))
             .ToListAsync(cancellationToken);
 
         return profiles.Count == 0 ? throw new NotFoundException(MessagesApi.ProfilesNotFound) : profiles;
@@ -25,8 +24,7 @@ public static class ProfileQuery
     {
         var user = await userManager.FindByIdAsync(userId.ToString()) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
-        var profile = await dbContext.Set<UserProfile>()
-            .Where(x => x.UserId == user.Id)
+        var profile = await dbContext.Set<UserProfile>().Where(x => x.UserId == user.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         return ProfileMapper.ToEntity(profile);
@@ -51,8 +49,7 @@ public static class ProfileQuery
 
     public static async Task<string> EditProfileAsync(EditUserProfileModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var profile = await dbContext.Set<UserProfile>()
-            .Where(x => x.UserId == model.UserId)
+        var profile = await dbContext.Set<UserProfile>().Where(x => x.UserId == model.UserId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         profile.FirstName = model.FirstName;
@@ -66,10 +63,8 @@ public static class ProfileQuery
 
     public static async Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var result = await dbContext.Set<UserProfile>()
-            .Where(ul => ul.UserId == user.Id)
-            .Select(ul => new { ul.FirstName, ul.LastName })
-            .FirstOrDefaultAsync(cancellationToken);
+        var result = await dbContext.Set<UserProfile>().Where(ul => ul.UserId == user.Id)
+            .Select(ul => new { ul.FirstName, ul.LastName }).FirstOrDefaultAsync(cancellationToken);
 
         return result switch
         {
@@ -84,8 +79,7 @@ public static class ProfileQuery
 
     public static async Task<string> ChangeEnablementStatusUserProfileAsync(ChangeEnableProfileModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var profile = await dbContext.Set<UserProfile>()
-            .Where(x => x.UserId == model.UserId)
+        var profile = await dbContext.Set<UserProfile>().Where(x => x.UserId == model.UserId)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
 
         profile.IsEnabled = model.IsEnabled;

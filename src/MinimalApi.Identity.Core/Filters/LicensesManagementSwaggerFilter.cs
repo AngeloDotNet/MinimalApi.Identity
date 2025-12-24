@@ -10,8 +10,8 @@ public class LicensesManagementSwaggerFilter(bool enabledFeatureLicense) : IDocu
     {
         if (!enabledFeatureLicense)
         {
-            var toRemove = swaggerDoc.Paths.Keys.Where(path
-                => path.StartsWith(EndpointGenerator.EndpointsLicenseGroup, StringComparison.OrdinalIgnoreCase)).ToList();
+            var toRemove = swaggerDoc.Paths.Keys
+                .Where(path => path.StartsWith(EndpointGenerator.EndpointsLicenseGroup, StringComparison.OrdinalIgnoreCase)).ToList();
 
             foreach (var path in toRemove)
             {

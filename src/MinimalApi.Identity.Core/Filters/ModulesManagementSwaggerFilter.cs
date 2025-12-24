@@ -10,8 +10,8 @@ public class ModulesManagementSwaggerFilter(bool enabledFeatureModule) : IDocume
     {
         if (!enabledFeatureModule)
         {
-            var toRemove = swaggerDoc.Paths.Keys.Where(path
-                => path.StartsWith(EndpointGenerator.EndpointsModulesGroup, StringComparison.OrdinalIgnoreCase)).ToList();
+            var toRemove = swaggerDoc.Paths.Keys
+                .Where(path => path.StartsWith(EndpointGenerator.EndpointsModulesGroup, StringComparison.OrdinalIgnoreCase)).ToList();
 
             foreach (var path in toRemove)
             {

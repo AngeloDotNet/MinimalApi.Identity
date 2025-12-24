@@ -40,8 +40,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
             };
         }
 
-        var user = await userManager.FindByNameAsync(model.Username).ConfigureAwait(false)
-            ?? throw new NotFoundException(MessagesApi.UserNotFound);
+        var user = await userManager.FindByNameAsync(model.Username)
+            .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
         if (!user.EmailConfirmed)
         {
@@ -49,7 +49,6 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         }
 
         await AuthExtensions.CheckUserProfileAndPasswordAsync(user, options, serviceProvider).ConfigureAwait(false);
-
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
         var userRolesTask = await userManager.GetRolesAsync(user);
@@ -118,9 +117,7 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
     public async Task<AuthResponseModel> RefreshTokenAsync(RefreshTokenModel model)
     {
-        var user = ValidateAccessToken(model.AccessToken)
-            ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
-
+        var user = ValidateAccessToken(model.AccessToken) ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
         var userId = user.GetUserId();
         var dbUser = await userManager.FindByIdAsync(userId).ConfigureAwait(false);
 
@@ -144,7 +141,6 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
     public async Task<string> LogoutAsync()
     {
         await signInManager.SignOutAsync().ConfigureAwait(false);
-
         return MessagesApi.UserLogOut;
     }
 
@@ -247,12 +243,10 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecurityKey));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
         var jwtSecurityToken = new JwtSecurityToken(jwtOptions.Issuer, jwtOptions.Audience, claims, DateTime.UtcNow,
             DateTime.UtcNow.AddMinutes(jwtOptions.AccessTokenExpirationMinutes), signingCredentials);
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
         var italyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
         var expiredLocalNow = TimeZoneInfo.ConvertTimeFromUtc(jwtSecurityToken.ValidTo, italyTimeZone);
 
@@ -286,18 +280,16 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
     private async Task<IdentityResult> AddClaimsToAdminUserAsync(ApplicationUser user)
     {
         var claims = Enum.GetValues<Permissions>()
-            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
-            .ToList();
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString())).ToList();
 
         return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
     }
 
     private async Task<IdentityResult> AddClaimsToDefaultUserAsync(ApplicationUser user)
     {
-        var claims = Enum.GetValues<Permissions>()
-            .Where(claim => claim.ToString().Contains("profilo", StringComparison.InvariantCultureIgnoreCase))
-            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
-            .ToList();
+        var claims = Enum.GetValues<Permissions>().Where(claim => claim.ToString()
+        .Contains("profilo", StringComparison.InvariantCultureIgnoreCase))
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString())).ToList();
 
         return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
     }

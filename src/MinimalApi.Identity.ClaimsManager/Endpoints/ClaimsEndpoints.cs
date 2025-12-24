@@ -8,13 +8,16 @@ using MinimalApi.Identity.ClaimsManager.Models;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 
 namespace MinimalApi.Identity.ClaimsManager.Endpoints;
 
-public static class ClaimsEndpoints
+//public static class ClaimsEndpoints
+public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapClaimsEndpoints(this IEndpointRouteBuilder endpoints)
+    //public static IEndpointRouteBuilder MapClaimsEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsClaimsGroup)
@@ -68,6 +71,6 @@ public static class ClaimsEndpoints
             .WithDescription("Delete claim")
             .WithSummary("Delete claim");
 
-        return apiGroup;
+        //return apiGroup;
     }
 }

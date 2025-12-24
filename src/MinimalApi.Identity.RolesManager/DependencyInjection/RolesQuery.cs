@@ -11,8 +11,7 @@ public static class RolesQuery
 {
     public static async Task<List<RoleResponseModel>> GetAllRolesAsync(RoleManager<ApplicationRole> roleManager, CancellationToken cancellationToken)
     {
-        var roles = await roleManager.Roles
-            .Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
+        var roles = await roleManager.Roles.Select(r => new RoleResponseModel(r.Id, r.Name!, r.Default))
             .ToListAsync().ConfigureAwait(false);
 
         return roles.Count == 0 ? throw new NotFoundException(MessagesApi.RoleNotFound) : roles;

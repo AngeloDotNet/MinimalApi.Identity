@@ -33,8 +33,7 @@ public static class EmailQuery
 
     public static async Task<string> UpdateEmailAsync(EmailSending model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var emailToUpdate = await dbContext.Set<EmailSending>()
-            .Where(x => x.Id == model.Id)
+        var emailToUpdate = await dbContext.Set<EmailSending>().Where(x => x.Id == model.Id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.EmailNotFound);
 
         emailToUpdate.EmailTo = model.EmailTo;
@@ -55,8 +54,7 @@ public static class EmailQuery
 
     public static async Task<string> UpdateEmailStatusAsync(int id, int typeEmailStatusId, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var emailToUpdate = await dbContext.Set<EmailSending>()
-            .Where(x => x.Id == id)
+        var emailToUpdate = await dbContext.Set<EmailSending>().Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.EmailNotFound);
 
         emailToUpdate.TypeEmailStatusId = typeEmailStatusId;
@@ -68,8 +66,7 @@ public static class EmailQuery
 
     public static async Task<string> DeleteEmailAsync(int id, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var emailToDelete = await dbContext.Set<EmailSending>()
-            .Where(x => x.Id == id)
+        var emailToDelete = await dbContext.Set<EmailSending>().Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException(MessagesApi.EmailNotFound);
 
         emailToDelete.TypeEmailStatusId = (int)EmailStatusType.Cancelled;
