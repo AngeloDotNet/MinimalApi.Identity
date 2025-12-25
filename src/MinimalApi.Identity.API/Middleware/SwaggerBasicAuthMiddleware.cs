@@ -28,14 +28,11 @@ public class SwaggerBasicAuthMiddleware(RequestDelegate next, IOptions<SwaggerSe
 
         if (authenticationHeader?.StartsWith("Basic ") == true)
         {
-            // Get the credentials from request header
             var header = AuthenticationHeaderValue.Parse(authenticationHeader);
-
             var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(header.Parameter!)).Split(':', count: 2);
             var userName = credentials.ElementAtOrDefault(0);
             var password = credentials.ElementAtOrDefault(1);
 
-            // validate credentials
             if (userName == settings.AuthSettings.UserName && password == settings.AuthSettings.Password)
             {
                 await next.Invoke(context).ConfigureAwait(false);
