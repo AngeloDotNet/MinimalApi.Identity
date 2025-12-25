@@ -40,8 +40,8 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor
 
         if (exception is ValidationModelException validationException)
         {
-            problemDetails.Extensions["errors"] = settings.ErrorResponseFormat == nameof(ErrorResponseFormat.List)
-                ? CreateErrorList(validationException) : validationException.Errors;
+            problemDetails.Extensions["errors"] = settings.ErrorResponseFormat ==
+                nameof(ErrorResponseFormat.List) ? CreateErrorList(validationException) : validationException.Errors;
         }
 
         context.Response.ContentType = "application/json";
