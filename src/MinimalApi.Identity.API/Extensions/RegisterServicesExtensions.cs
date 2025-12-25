@@ -15,6 +15,8 @@ using MinimalApi.Identity.AccountManager.Endpoints;
 using MinimalApi.Identity.API.Endpoints;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
+using MinimalApi.Identity.ClaimsManager.DependencyInjection;
+using MinimalApi.Identity.ClaimsManager.Endpoints;
 using MinimalApi.Identity.Core.Converter;
 using MinimalApi.Identity.Core.Database;
 using MinimalApi.Identity.Core.DependencyInjection;
@@ -25,6 +27,7 @@ using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.EmailManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.DependencyInjection;
 using MinimalApi.Identity.LicenseManager.Endpoints;
+using MinimalApi.Identity.ModuleManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.DependencyInjection;
 using MinimalApi.Identity.PolicyManager.Endpoints;
 using MinimalApi.Identity.ProfileManager.DependencyInjection;
@@ -89,7 +92,7 @@ public static class RegisterServicesExtensions
         services
             .AccountManagerRegistrationService()
             .AuthManagerRegistrationService()
-            //.ClaimsManagerRegistrationService() // Disabled for now (not implemented)
+            .ClaimsManagerRegistrationService()
             .EmailManagerRegistrationService()
             .PolicyManagerRegistrationService()
             .ProfileManagerRegistrationService()
@@ -100,11 +103,10 @@ public static class RegisterServicesExtensions
             services.LicenseManagerRegistrationService();
         }
 
-        // Disabled for now (not implemented)
-        //if (activeModules.EnabledFeatureModule)
-        //{
-        //    services.ModuleManagerRegistrationService();
-        //}
+        if (activeModules.EnabledFeatureModule)
+        {
+            services.ModuleManagerRegistrationService();
+        }
 
         return services;
     }
@@ -113,7 +115,7 @@ public static class RegisterServicesExtensions
     {
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
-        //app.MapClaimsEndpoints(); // Disabled for now (not implemented)
+        app.MapClaimsEndpoints(); //TODO: Fix this to use MapEndpointsFromAssemblyContaining once Claims endpoints are moved to their own assembly
         app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         app.MapEndpointsFromAssemblyContaining<RolesEndpoints>();
@@ -123,11 +125,11 @@ public static class RegisterServicesExtensions
             app.MapEndpointsFromAssemblyContaining<LicenseEndpoints>();
         }
 
-        // Disabled for now (not implemented)
-        //if (activeModules.EnabledFeatureModule)
-        //{
-        //    app.MapModuliEndpoints();
-        //}
+        if (activeModules.EnabledFeatureModule)
+        {
+            app.MapModuliEndpoints();
+            //app.MapEndpointsFromAssemblyContaining<ModuleEndpoints>(); //TODO: Uncomment once Module endpoints are implemented and moved to their own assembly
+        }
     }
 
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
