@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using MinimalApi.Identity.Core.Configurations;
 using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Enums;
+using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Utility.Generators;
 using MinimalApi.Identity.ModuleManager.DependencyInjection;
 using MinimalApi.Identity.ModuleManager.Extensions;
@@ -12,12 +13,13 @@ using MinimalApi.Identity.ModuleManager.Models;
 
 namespace MinimalApi.Identity.API.Endpoints;
 
-public static class ModuliEndpoints
+public class ModuliEndpoints : IEndpointRouteHandlerBuilder
 {
-    public static IEndpointRouteBuilder MapModuliEndpoints(this IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var apiGroup = endpoints
             .MapGroup(EndpointGenerator.EndpointsModulesGroup)
+            .WithTags(EndpointGenerator.EndpointsModulesTag)
             .RequireAuthorization();
 
         apiGroup.MapGet(EndpointGenerator.EndpointsStringEmpty, EndpointsHandler.GetAllModulesAsync)
