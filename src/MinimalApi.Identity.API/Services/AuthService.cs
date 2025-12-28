@@ -166,7 +166,8 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
         await Task.WhenAll(userRolesTask, userClaimsTask, customClaimsTask).ConfigureAwait(false);
 
-        var identity = UsersExtensions.GetIdentity(httpContextAccessor);
+        var identity = UsersExtensions.GetIdentity(httpContextAccessor)
+            ?? throw new UnauthorizeException("Unable to retrieve current user identity");
 
         UpdateClaim(ClaimTypes.NameIdentifier, user.Id.ToString());
         UpdateClaim(ClaimTypes.Name, user.UserName ?? string.Empty);
