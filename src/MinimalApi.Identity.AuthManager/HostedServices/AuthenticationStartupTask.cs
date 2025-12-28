@@ -14,14 +14,11 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
-
         var settings = new AppSettings();
 
         configuration.Bind(nameof(AppSettings), settings);
 
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
         var administratorUser = new ApplicationUser
         {
             UserName = settings.AssignAdminUsername,
