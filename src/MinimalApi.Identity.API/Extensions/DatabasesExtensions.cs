@@ -87,12 +87,8 @@ public static class DatabasesExtensions
 
         try
         {
-            // Search loaded assemblies for a public static method with signature:
-            // static void UseExceptionProcessor(DbContextOptionsBuilder)
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            var method = assemblies
-                .SelectMany(a => GetTypesSafe(a))
+            var method = assemblies.SelectMany(a => GetTypesSafe(a))
                 .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Static))
                 .FirstOrDefault(m =>
                 {
