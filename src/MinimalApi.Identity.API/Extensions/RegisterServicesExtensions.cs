@@ -115,7 +115,7 @@ public static class RegisterServicesExtensions
     {
         app.MapEndpointsFromAssemblyContaining<AuthEndpoints>();
         app.MapEndpointsFromAssemblyContaining<AccountEndpoints>();
-        app.MapClaimsEndpoints(); //TODO: Fix this to use MapEndpointsFromAssemblyContaining once Claims endpoints are moved to their own assembly
+        app.MapEndpointsFromAssemblyContaining<ClaimsEndpoints>();
         app.MapEndpointsFromAssemblyContaining<PolicyEndpoints>();
         app.MapEndpointsFromAssemblyContaining<ProfilesEndpoints>();
         app.MapEndpointsFromAssemblyContaining<RolesEndpoints>();
@@ -127,8 +127,7 @@ public static class RegisterServicesExtensions
 
         if (activeModules.EnabledFeatureModule)
         {
-            app.MapModuliEndpoints();
-            //app.MapEndpointsFromAssemblyContaining<ModuleEndpoints>(); //TODO: Uncomment once Module endpoints are implemented and moved to their own assembly
+            app.MapEndpointsFromAssemblyContaining<ModuliEndpoints>();
         }
     }
 
