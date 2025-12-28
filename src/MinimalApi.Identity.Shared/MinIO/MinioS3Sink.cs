@@ -51,7 +51,7 @@ public class MinioS3Sink : ILogEventSink
         {
             var getObjectResponse = await s3Client.GetObjectAsync(bucketName, logObjectKey);
             using var reader = new StreamReader(getObjectResponse.ResponseStream);
-            existingLogs = reader.ReadToEnd();
+            existingLogs = await reader.ReadToEndAsync();
         }
         catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
