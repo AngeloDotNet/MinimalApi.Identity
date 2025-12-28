@@ -69,7 +69,5 @@ public class ClaimsEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<DeleteClaimModel>()
             .WithDescription("Delete claim")
             .WithSummary("Delete claim");
-
-        return apiGroup;
     }
 }
