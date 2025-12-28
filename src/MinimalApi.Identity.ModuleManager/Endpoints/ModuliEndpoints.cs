@@ -69,7 +69,5 @@ public class ModuliEndpoints : IEndpointRouteHandlerBuilder
             .WithValidation<DeleteModuleModel>()
             .WithDescription("Delete module")
             .WithSummary("Delete module");
-
-        return apiGroup;
     }
 }
