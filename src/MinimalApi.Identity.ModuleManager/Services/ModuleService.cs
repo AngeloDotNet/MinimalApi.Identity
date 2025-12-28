@@ -13,8 +13,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
 {
     public async Task<List<ModuleResponseModel>> GetAllModulesAsync()
     {
-        var result = await dbContext.Set<Module>()
-            .Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
+        var result = await dbContext.Set<Module>().Select(m => new ModuleResponseModel(m.Id, m.Name, m.Description))
             .ToListAsync().ConfigureAwait(false);
 
         if (result.Count == 0)
@@ -46,8 +45,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
 
     public async Task<string> AssignModuleAsync(AssignModuleModel model)
     {
-        var userHasModuleTask = await dbContext.Set<UserModule>()
-            .AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
+        var userHasModuleTask = await dbContext.Set<UserModule>().AnyAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId);
 
         if (userHasModuleTask)
         {
@@ -68,8 +66,7 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
 
     public async Task<string> RevokeModuleAsync(RevokeModuleModel model)
     {
-        var userModule = await dbContext.Set<UserModule>()
-            .SingleOrDefaultAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId)
+        var userModule = await dbContext.Set<UserModule>().SingleOrDefaultAsync(um => um.UserId == model.UserId && um.ModuleId == model.ModuleId)
             .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.ModuleNotFound);
 
         dbContext.Set<UserModule>().Remove(userModule);
@@ -112,7 +109,6 @@ public class ModuleService(MinimalApiAuthDbContext dbContext) : IModuleService
     }
 
     private async Task<bool> CheckModuleExistAsync(CreateModuleModel inputModel)
-        => await dbContext.Set<Module>()
-        .AnyAsync(m => m.Name.Equals(inputModel.Name, StringComparison.InvariantCultureIgnoreCase))
+        => await dbContext.Set<Module>().AnyAsync(m => m.Name.Equals(inputModel.Name, StringComparison.InvariantCultureIgnoreCase))
         .ConfigureAwait(false);
 }
