@@ -9,9 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.API.DependencyInjection;
 using MinimalApi.Identity.API.Models;
-using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
-using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
 using MinimalApi.Identity.Core.Extensions;
 using MinimalApi.Identity.Core.Options;
@@ -43,30 +41,10 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         var user = await userManager.FindByNameAsync(model.Username).ConfigureAwait(false)
             ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        if (!user.EmailConfirmed)
-        {
-            throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
-        }
-
-        await AuthExtensions.CheckUserProfileAndPasswordAsync(user, options, serviceProvider).ConfigureAwait(false);
-
+        await AuthExtensions.CheckUserAsync(user, options, serviceProvider).ConfigureAwait(false);
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
-        var userRolesTask = await userManager.GetRolesAsync(user);
-        var userClaimsTask = await userManager.GetClaimsAsync(user);
-        var customClaimsTask = await AuthExtensions.GetCustomClaimsUserAsync(user, serviceProvider);
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName ?? string.Empty),
-            new(ClaimTypes.Email, user.Email ?? string.Empty),
-            new(ClaimTypes.SerialNumber, user.SecurityStamp!)
-        };
-        claims.AddRange(userClaimsTask);
-        claims.AddRange(userRolesTask.Select(role => new Claim(ClaimTypes.Role, role)));
-        claims.AddRange(customClaimsTask);
-
+        var claims = await AuthExtensions.GenerateUserClaimsAsync(userManager, user, serviceProvider).ConfigureAwait(false);
         var loginResponse = CreateToken(claims, jwtOptions.Value);
 
         user.RefreshToken = loginResponse.RefreshToken;
@@ -93,40 +71,21 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         }
 
         await AuthExtensions.CreateProfileAsync(model, user, serviceProvider).ConfigureAwait(false);
+        await AuthExtensions.AssignRoleAndClaimsUserAsync(userManager, user, options.Value).ConfigureAwait(false);
 
-        var role = await CheckUserIsAdminDesignedAsync(user.Email, options.Value)
-            .ConfigureAwait(false) ? DefaultRoles.Admin : DefaultRoles.User;
-
-        var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
-
-        if (!roleAssignResult.Succeeded)
-        {
-            throw new BadRequestException(MessagesApi.RoleNotAssigned);
-        }
-
-        var claimsAssignResult = await AddClaimsToUserAsync(user, role).ConfigureAwait(false);
-
-        if (!claimsAssignResult.Succeeded)
-        {
-            throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
-        }
-
-        await AuthExtensions.SendEmailRegisterUserAsync(userManager, user, httpContextAccessor, serviceProvider).ConfigureAwait(false);
+        await AuthExtensions.SendEmailRegisterUserAsync(userManager, user, httpContextAccessor, serviceProvider)
+            .ConfigureAwait(false);
 
         return MessagesApi.UserCreated;
     }
 
     public async Task<AuthResponseModel> RefreshTokenAsync(RefreshTokenModel model)
     {
-        var user = ValidateAccessToken(model.AccessToken)
-            ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
-
+        var user = ValidateAccessToken(model.AccessToken) ?? throw new BadRequestException(MessagesExceptions.InvalidAccessToken);
         var userId = user.GetUserId();
         var dbUser = await userManager.FindByIdAsync(userId).ConfigureAwait(false);
 
-        if (dbUser?.RefreshToken is null ||
-            dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow ||
-            dbUser.RefreshToken != model.RefreshToken)
+        if (dbUser?.RefreshToken is null || dbUser.RefreshTokenExpirationDate <= DateTime.UtcNow || dbUser.RefreshToken != model.RefreshToken)
         {
             throw new BadRequestException(MessagesExceptions.InvalidRefreshToken);
         }
@@ -160,24 +119,22 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
 
         await userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
 
-        var userRolesTask = userManager.GetRolesAsync(user);
-        var userClaimsTask = userManager.GetClaimsAsync(user);
-        var customClaimsTask = AuthExtensions.GetCustomClaimsUserAsync(user, serviceProvider);
-
-        await Task.WhenAll(userRolesTask, userClaimsTask, customClaimsTask).ConfigureAwait(false);
+        var userRolesTask = await userManager.GetRolesAsync(user);
+        var userClaimsTask = await userManager.GetClaimsAsync(user);
+        var customClaimsTask = await AuthExtensions.GetCustomClaimsUserAsync(user, serviceProvider);
 
         var identity = UsersExtensions.GetIdentity(httpContextAccessor)
             ?? throw new UnauthorizeException("Unable to retrieve current user identity");
 
-        UpdateClaim(ClaimTypes.NameIdentifier, user.Id.ToString());
-        UpdateClaim(ClaimTypes.Name, user.UserName ?? string.Empty);
-        UpdateClaim(ClaimTypes.Email, user.Email ?? string.Empty);
-        UpdateClaim(ClaimTypes.SerialNumber, user.SecurityStamp!);
+        UpdateClaim(identity, ClaimTypes.NameIdentifier, user.Id.ToString());
+        UpdateClaim(identity, ClaimTypes.Name, user.UserName ?? string.Empty);
+        UpdateClaim(identity, ClaimTypes.Email, user.Email ?? string.Empty);
+        UpdateClaim(identity, ClaimTypes.SerialNumber, user.SecurityStamp!);
 
         var updateIdentity = identity.Claims
-            .Union(userClaimsTask.Result)
-            .Union(customClaimsTask.Result)
-            .Union(userRolesTask.Result.Select(role => new Claim(ClaimTypes.Role, role)))
+            .Union(userClaimsTask)
+            .Union(customClaimsTask)
+            .Union(userRolesTask.Select(role => new Claim(ClaimTypes.Role, role)))
             .ToList();
 
         var loginResponse = CreateToken(updateIdentity, jwtOptions.Value);
@@ -188,18 +145,18 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         await userManager.UpdateAsync(user).ConfigureAwait(false);
 
         return loginResponse;
+    }
 
-        void UpdateClaim(string type, string value)
+    private static void UpdateClaim(ClaimsIdentity identity, string type, string value)
+    {
+        var existingClaim = identity.FindFirst(type);
+
+        if (existingClaim is not null)
         {
-            var existingClaim = identity.FindFirst(type);
-
-            if (existingClaim is not null)
-            {
-                identity.RemoveClaim(existingClaim);
-            }
-
-            identity.AddClaim(new Claim(type, value));
+            identity.RemoveClaim(existingClaim);
         }
+
+        identity.AddClaim(new Claim(type, value));
     }
 
     public async Task<string> ForgotPasswordAsync(ForgotPasswordModel inputModel)
@@ -258,49 +215,16 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         var expiredLocalNow = TimeZoneInfo.ConvertTimeFromUtc(jwtSecurityToken.ValidTo, italyTimeZone);
 
         return new AuthResponseModel(accessToken, GenerateRefreshToken(), expiredLocalNow);
-
-        static string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[256];
-            using var generator = RandomNumberGenerator.Create();
-            generator.GetBytes(randomNumber);
-
-            return Convert.ToBase64String(randomNumber);
-        }
     }
 
-    private async Task<bool> CheckUserIsAdminDesignedAsync(string email, AppSettings options)
+    private static string GenerateRefreshToken()
     {
-        var user = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
+        var randomNumber = new byte[256];
+        using var generator = RandomNumberGenerator.Create();
 
-        return user is not null && user.Email is not null && user.Email.Equals(options.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
-    }
+        generator.GetBytes(randomNumber);
 
-    private async Task<IdentityResult> AddClaimsToUserAsync(ApplicationUser user, DefaultRoles role)
-        => role switch
-        {
-            DefaultRoles.Admin => await AddClaimsToAdminUserAsync(user).ConfigureAwait(false),
-            DefaultRoles.User => await AddClaimsToDefaultUserAsync(user).ConfigureAwait(false),
-            _ => IdentityResult.Failed()
-        };
-
-    private async Task<IdentityResult> AddClaimsToAdminUserAsync(ApplicationUser user)
-    {
-        var claims = Enum.GetValues<Permissions>()
-            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
-            .ToList();
-
-        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
-    }
-
-    private async Task<IdentityResult> AddClaimsToDefaultUserAsync(ApplicationUser user)
-    {
-        var claims = Enum.GetValues<Permissions>()
-            .Where(claim => claim.ToString().Contains("profilo", StringComparison.InvariantCultureIgnoreCase))
-            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
-            .ToList();
-
-        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
+        return Convert.ToBase64String(randomNumber);
     }
 
     private ClaimsPrincipal ValidateAccessToken(string accessToken)

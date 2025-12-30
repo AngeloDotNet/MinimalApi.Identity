@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Models;
+using MinimalApi.Identity.Core.DependencyInjection;
 using MinimalApi.Identity.Core.Entities;
 using MinimalApi.Identity.Core.Enums;
 using MinimalApi.Identity.Core.Exceptions;
@@ -23,9 +24,14 @@ namespace MinimalApi.Identity.API.DependencyInjection;
 
 public static class AuthExtensions
 {
-    public static async Task CheckUserProfileAndPasswordAsync(ApplicationUser user, IOptions<AppSettings> options, IServiceProvider serviceProvider)
+    public static async Task CheckUserAsync(ApplicationUser user, IOptions<AppSettings> options, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
+
+        if (!user.EmailConfirmed)
+        {
+            throw new BadRequestException(MessagesApi.UserNotEmailConfirmed);
+        }
 
         var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
         var profileUser = await profileService.GetProfileAsync(user.Id, CancellationToken.None)
@@ -136,5 +142,84 @@ public static class AuthExtensions
         };
 
         await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
+    }
+
+    public static async Task<List<Claim>> GenerateUserClaimsAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, IServiceProvider serviceProvider)
+    {
+        var userRolesTask = await userManager.GetRolesAsync(user);
+        var userClaimsTask = await userManager.GetClaimsAsync(user);
+        var customClaimsTask = await GetCustomClaimsUserAsync(user, serviceProvider);
+
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName ?? string.Empty),
+            new(ClaimTypes.Email, user.Email ?? string.Empty),
+            new(ClaimTypes.SerialNumber, user.SecurityStamp!)
+        };
+        claims.AddRange(userClaimsTask);
+        claims.AddRange(userRolesTask.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(customClaimsTask);
+
+        return claims;
+    }
+
+    public static async Task AssignRoleAndClaimsUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, AppSettings options)
+    {
+        if (user.Email is null)
+        {
+            throw new BadRequestException(MessagesApi.EmailNotFound);
+        }
+
+        var role = await CheckUserIsAdminDesignedAsync(userManager, user.Email, options)
+            .ConfigureAwait(false) ? DefaultRoles.Admin : DefaultRoles.User;
+
+        var roleAssignResult = await userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
+
+        if (!roleAssignResult.Succeeded)
+        {
+            throw new BadRequestException(MessagesApi.RoleNotAssigned);
+        }
+
+        var claimsAssignResult = await AddClaimsToUserAsync(userManager, user, role).ConfigureAwait(false);
+
+        if (!claimsAssignResult.Succeeded)
+        {
+            throw new BadRequestException(MessagesApi.ClaimsNotAssigned);
+        }
+    }
+
+    public static async Task<bool> CheckUserIsAdminDesignedAsync(UserManager<ApplicationUser> userManager, string email, AppSettings options)
+    {
+        var user = await userManager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        return user is not null && user.Email is not null && user.Email.Equals(options.AssignAdminEmail, StringComparison.InvariantCultureIgnoreCase);
+    }
+
+    public static async Task<IdentityResult> AddClaimsToUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, DefaultRoles role)
+        => role switch
+        {
+            DefaultRoles.Admin => await AddClaimsToAdminUserAsync(userManager, user).ConfigureAwait(false),
+            DefaultRoles.User => await AddClaimsToDefaultUserAsync(userManager, user).ConfigureAwait(false),
+            _ => IdentityResult.Failed()
+        };
+
+    private static async Task<IdentityResult> AddClaimsToAdminUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user)
+    {
+        var claims = Enum.GetValues<Permissions>()
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
+            .ToList();
+
+        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
+    }
+
+    private static async Task<IdentityResult> AddClaimsToDefaultUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user)
+    {
+        var claims = Enum.GetValues<Permissions>()
+            .Where(claim => claim.ToString().Contains("profilo", StringComparison.InvariantCultureIgnoreCase))
+            .Select(claim => new Claim(ServiceCoreExtensions.Permission, claim.ToString()))
+            .ToList();
+
+        return await userManager.AddClaimsAsync(user, claims).ConfigureAwait(false);
     }
 }
