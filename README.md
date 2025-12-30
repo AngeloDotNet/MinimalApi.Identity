@@ -341,7 +341,6 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 - [ ] Replacing exceptions with implementation of operation results 
 - [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Code Review and Refactoring
 - [ ] Migrate solution to .NET 9
 - [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
