@@ -14,8 +14,7 @@ public static class LicenseQuery
     public static async Task<List<LicenseResponseModel>> GetAllLicensesAsync(MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var licenses = await dbContext.Set<License>()
-            .ToLicenseResponseModel()
-            .ToListAsync(cancellationToken);
+            .ToLicenseResponseModel().ToListAsync(cancellationToken);
 
         return licenses.Count == 0 ? [] : licenses;
     }
@@ -41,8 +40,8 @@ public static class LicenseQuery
 
     public static async Task<string> AssignLicenseAsync(AssignLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
-        var userHasLicense = await dbContext.Set<UserLicense>()
-            .AnyAsync(ul => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId, cancellationToken);
+        var userHasLicense = await dbContext.Set<UserLicense>().AnyAsync(ul
+            => ul.UserId == model.UserId && ul.LicenseId == model.LicenseId, cancellationToken);
 
         if (userHasLicense)
         {
@@ -104,6 +103,5 @@ public static class LicenseQuery
     }
 
     private static async Task<bool> CheckLicenseExistAsync(CreateLicenseModel model, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
-        => await dbContext.Set<License>()
-        .AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
+        => await dbContext.Set<License>().AnyAsync(l => l.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
 }
