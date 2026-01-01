@@ -64,6 +64,5 @@ public static class PolicyQuery
     }
 
     private static async Task<bool> CheckPolicyExistAsync(string policyName, MinimalApiAuthDbContext dbContext)
-        => await dbContext.Set<AuthPolicy>()
-            .AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
+        => await dbContext.Set<AuthPolicy>().AnyAsync(x => x.PolicyName.Equals(policyName, StringComparison.InvariantCultureIgnoreCase));
 }
