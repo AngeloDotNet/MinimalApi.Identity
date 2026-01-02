@@ -26,13 +26,13 @@ public class PerformanceInterceptor(ILogger<PerformanceInterceptor> logger) : Db
 
     private static string Truncate(string s, int len = 200)
     {
+        System.ArgumentNullException.ThrowIfNull(s);
+
         if (s.Length <= len)
         {
-            return string.IsNullOrEmpty(s) ? s : (s);
+            return s;
         }
-        else
-        {
-            return string.IsNullOrEmpty(s) ? s : (s[..len] + "...");
-        }
+
+        return s[..len] + "...";
     }
 }
