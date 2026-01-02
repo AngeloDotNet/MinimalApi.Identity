@@ -14,8 +14,11 @@ public static class SharedExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        // Register interceptors as IInterceptor so GetServices<IInterceptor>() returns them
+        // Documentation: https://dev.to/madusanka_bandara/mastering-database-interceptors-in-net-core-web-api-beginner-to-hero-18g8
         services.AddScoped<IInterceptor, LoggingInterceptor>();
         services.AddScoped<IInterceptor, PerformanceInterceptor>();
+        services.AddScoped<IInterceptor, SecurityInterceptor>();
         services.AddScoped<IInterceptor, AuditSaveChangesInterceptor>();
 
         return services;
