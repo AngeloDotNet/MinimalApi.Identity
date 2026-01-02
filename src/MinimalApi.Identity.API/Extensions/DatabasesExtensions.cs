@@ -15,7 +15,6 @@ public static class DatabasesExtensions
             opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
             TryApplyExceptionProcessor(optionsBuilder);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return optionsBuilder;
@@ -30,7 +29,6 @@ public static class DatabasesExtensions
             opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
             TryApplyExceptionProcessor(optionsBuilder);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return optionsBuilder;
@@ -45,7 +43,6 @@ public static class DatabasesExtensions
             opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
             TryApplyExceptionProcessor(optionsBuilder);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return optionsBuilder;
@@ -60,7 +57,6 @@ public static class DatabasesExtensions
             opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
             TryApplyExceptionProcessor(optionsBuilder);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return optionsBuilder;
@@ -75,7 +71,6 @@ public static class DatabasesExtensions
             opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 
             TryApplyExceptionProcessor(optionsBuilder);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
         return optionsBuilder;

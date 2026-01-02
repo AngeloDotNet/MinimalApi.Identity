@@ -24,5 +24,15 @@ public class PerformanceInterceptor(ILogger<PerformanceInterceptor> logger) : Db
         return base.NonQueryExecuted(command, eventData, result);
     }
 
-    private static string Truncate(string s, int len = 200) => string.IsNullOrEmpty(s) ? s : (s.Length <= len ? s : s[..len] + "...");
+    private static string Truncate(string s, int len = 200)
+    {
+        System.ArgumentNullException.ThrowIfNull(s);
+
+        if (s.Length <= len)
+        {
+            return s;
+        }
+
+        return s[..len] + "...";
+    }
 }

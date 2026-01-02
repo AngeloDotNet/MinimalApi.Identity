@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
 using MinimalApi.Identity.AccountManager.Endpoints;
@@ -49,7 +51,7 @@ public static class RegisterServicesExtensions
         services
             .AddSingleton(TimeProvider.System)
             .AddHttpContextAccessor()
-            .AddInterceptor() // Add Logging, Performance and EF Core (for auditing) interceptors
+            .AddInterceptor() // Add Logging, Security, Performance and EF Core (for auditing) interceptors
             .ConfigureHttpJsonOptions(options =>
             {
                 options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
@@ -58,7 +60,7 @@ public static class RegisterServicesExtensions
             })
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
-            .AddDatabaseContext<TDbContext>(configuration, appSettings.DatabaseType, appSettings.MigrationsAssembly)
+            .AddDatabaseContext<TDbContext>(configuration, appSettings)
             .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
             .AddRegisterPackagedServices(activeModules)
             .AddProblemDetails()
@@ -131,36 +133,33 @@ public static class RegisterServicesExtensions
         }
     }
 
-    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
-        string databaseType, string migrationAssembly) where TDbContext : DbContext
+    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings) where TDbContext : DbContext
     {
-        if (databaseType is null)
-        {
-            throw new InvalidOperationException("Database type is not configured.");
-        }
+        var databaseType = appSettings.DatabaseType.ToLowerInvariant() ?? throw new InvalidOperationException("Database type is not configured.");
+        var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
 
-        var dbType = databaseType.ToLowerInvariant();
-        var sqlConnection = dbType switch
-        {
-            "sqlserver" => configuration.GetConnectionString("SQLServer"),
-            "azuresql" => configuration.GetConnectionString("AzureSQL"),
-            "postgresql" => configuration.GetConnectionString("PostgreSQL"),
-            "mysql" => configuration.GetConnectionString("MySQL"),
-            "sqlite" => configuration.GetConnectionString("SQLite"),
-            _ => null
-        } ?? throw new InvalidOperationException($"Connection string for '{databaseType.ToUpperInvariant()}' is not configured.");
+        var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
+        var optionsAction = GetDatabaseOptionsBuilder(databaseType, sqlConnection, migrationsAssembly);
 
-        Action<DbContextOptionsBuilder> optionsAction = dbType switch
+        services.AddDbContext<TDbContext>((serviceProvider, options) =>
         {
-            "sqlserver" => options => options.AddSqlServerBuilder(sqlConnection, migrationAssembly),
-            "azuresql" => options => options.AddAzureSqlBuilder(sqlConnection, migrationAssembly),
-            "postgresql" => options => options.AddPostgreSqlBuilder(sqlConnection, migrationAssembly),
-            "mysql" => options => options.AddMySqlBuilder(sqlConnection, migrationAssembly),
-            "sqlite" => options => options.AddSqLiteBuilder(sqlConnection, migrationAssembly),
-            _ => _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
-        };
+            // Apply the base options configured by optionsAction
+            optionsAction(options);
 
-        services.AddDbContext<TDbContext>(optionsAction);
+            // Resolve EF Core interceptors registered in DI and add them dynamically.
+            var interceptors = serviceProvider.GetServices<IInterceptor>().ToArray();
+
+            if (interceptors.Length != 0)
+            {
+                options.AddInterceptors(interceptors);
+            }
+
+            // Helpful for debugging — optional in production
+            options.EnableSensitiveDataLogging();
+            options.LogTo(Console.WriteLine, LogLevel.Information);
+
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
 
         return services;
     }
@@ -231,6 +230,39 @@ public static class RegisterServicesExtensions
         };
 
         return activeModules;
+    }
+
+    internal static string GetDatabaseConnectionString(IConfiguration configuration, string databaseType)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(databaseType);
+
+        return databaseType.ToLowerInvariant() switch
+        {
+            "sqlserver" => configuration.GetConnectionString("SQLServer") ?? string.Empty,
+            "azuresql" => configuration.GetConnectionString("AzureSQL") ?? string.Empty,
+            "postgresql" => configuration.GetConnectionString("PostgreSQL") ?? string.Empty,
+            "mysql" => configuration.GetConnectionString("MySQL") ?? string.Empty,
+            "sqlite" => configuration.GetConnectionString("SQLite") ?? string.Empty,
+            _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
+        };
+    }
+
+    internal static Action<DbContextOptionsBuilder> GetDatabaseOptionsBuilder(string databaseType, string sqlConnection, string migrationsAssembly)
+    {
+        ArgumentNullException.ThrowIfNull(databaseType);
+        ArgumentNullException.ThrowIfNull(sqlConnection);
+        ArgumentNullException.ThrowIfNull(migrationsAssembly);
+
+        return databaseType.ToLowerInvariant() switch
+        {
+            "sqlserver" => options => options.AddSqlServerBuilder(sqlConnection, migrationsAssembly),
+            "azuresql" => options => options.AddAzureSqlBuilder(sqlConnection, migrationsAssembly),
+            "postgresql" => options => options.AddPostgreSqlBuilder(sqlConnection, migrationsAssembly),
+            "mysql" => options => options.AddMySqlBuilder(sqlConnection, migrationsAssembly),
+            "sqlite" => options => options.AddSqLiteBuilder(sqlConnection, migrationsAssembly),
+            _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
+        };
     }
 
     internal static IServiceCollection AddMinimalApiIdentityServices<TDbContext, TEntityUser>(this IServiceCollection services, JwtOptions settings)
