@@ -22,7 +22,6 @@ public static class OperationResultExtensions
     {
         if (result.Success)
         {
-            //var routeValueDictionary = new RouteValueDictionary(routeValues);
             return TypedResults.CreatedAtRoute(routeName, routeValues);
         }
 
@@ -40,7 +39,6 @@ public static class OperationResultExtensions
             {
                 if (!string.IsNullOrWhiteSpace(routeName))
                 {
-                    //var routeValueDictionary = new RouteValueDictionary(routeValues);
                     return TypedResults.CreatedAtRoute(result.Content, routeName, routeValues);
                 }
                 else if (result.Content is StreamFileContent streamFileContent)
