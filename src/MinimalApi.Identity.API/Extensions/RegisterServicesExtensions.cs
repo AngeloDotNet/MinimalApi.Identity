@@ -135,7 +135,9 @@ public static class RegisterServicesExtensions
 
     public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings) where TDbContext : DbContext
     {
-        var databaseType = appSettings.DatabaseType.ToLowerInvariant() ?? throw new InvalidOperationException("Database type is not configured.");
+        ArgumentNullException.ThrowIfNull(appSettings);
+
+        var databaseType = appSettings.DatabaseType.ToLowerInvariant();
         var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
 
         var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
