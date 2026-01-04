@@ -27,15 +27,7 @@ public static class SharedExtensions
     public static IHostBuilder UseSerilogToStorageCloud(this IHostBuilder hostBuilder,
         Action<HostBuilderContext, IServiceProvider, LoggerConfiguration> configureLogger, MinioOptions minioOptions)
     {
-        if (!string.IsNullOrEmpty(minioOptions.AccessKey) || !string.IsNullOrEmpty(minioOptions.SecretKey))
-        {
-            return hostBuilder.UseSerilog((context, services, config) =>
-            {
-                config.ReadFrom.Configuration(context.Configuration);
-                config.WriteTo.Sink(new MinioS3Sink(minioOptions));
-            });
-        }
-
-        return hostBuilder.UseSerilog(configureLogger);
+        return hostBuilder.UseSerilog((context, services, config)
+            => config.ReadFrom.Configuration(context.Configuration).WriteTo.Sink(new MinioS3Sink(minioOptions)));
     }
 }
