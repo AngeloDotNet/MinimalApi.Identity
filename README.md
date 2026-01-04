@@ -49,6 +49,9 @@ The configuration can be completely managed by adding this section to the _appse
 > [!WARNING]
 >  The library is still under development, so the configuration may change in future updates.
 
+A complete example of the configurations in AppSettings.json is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
+
+<!--
 ```json
 "Kestrel": {
     "Limits": {
@@ -158,6 +161,7 @@ The configuration can be completely managed by adding this section to the _appse
     "AllowedHeaders": []
 }
 ```
+-->
 
 > [!NOTE]
 > For migrations you can use a specific project to add to your solution, then configuring the assembly in _AppSettings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
@@ -211,6 +215,9 @@ You can manage the state of the Swagger UI with the following configuration:
 > [!WARNING]
 > The library is still under development, so the Program.cs configuration may change in future updates.
 
+A complete example of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs).
+
+<!--
 ```csharp
 public class Program
 {
@@ -219,8 +226,12 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
 
-        builder.Host.UseSerilogToStorageCloud((context, services, config)
-            => config.ReadFrom.Configuration(context.Configuration), minioOptions);
+        // Configure Serilog to use MinIO storage if access key or secret key is provided
+        if (!string.IsNullOrEmpty(minioOptions.AccessKey) || !string.IsNullOrEmpty(minioOptions.SecretKey))
+        {
+            builder.Host.UseSerilogToStorageCloud((context, services, config)
+                => config.ReadFrom.Configuration(context.Configuration), minioOptions);
+        }
 
         var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
         var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
@@ -283,6 +294,7 @@ public class Program
     }
 }
 ```
+-->
 
 ## 🔐 Authentication
 
@@ -339,24 +351,23 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 ## 🗺️ Roadmap
 
-- [ ] Replacing exceptions with implementation of operation results 
-- [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Migrate solution to .NET 9
-- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
-- [ ] Add endpoints for two-factor authentication and management
-- [ ] Add endpoints for downloading and deleting personal data
-- [ ] Code Review and Refactoring
+- [ ] Replacing the hosted service email sender using Coravel jobs
 - [ ] Migrate solution to .NET 10
+- [ ] Replacing exceptions with implementation of operation results
 - [ ] Add support for multi tenancy
-- [ ] Align endpoints with the updated version of ASP.NET Core Identity
-- [ ] Change the entity ID type from INT to GUID
-- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
+- [ ] Align endpoints with the updated version of ASP.NET Core Identity (including endpoints for two-factor authentication and management, downloading and deleting personal data)
+- [ ] Code Review and Refactoring
+- [ ] Update documentation
 
 ## 🚀 Future implementations
 
+- [ ] Change the entity ID type from INT to GUID
+- [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+- [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 
 ## 📜 License
 
