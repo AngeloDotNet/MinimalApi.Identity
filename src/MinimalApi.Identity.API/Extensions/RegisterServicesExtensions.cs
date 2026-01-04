@@ -261,8 +261,17 @@ public static class RegisterServicesExtensions
         var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
 
         // Fast-path when the returned collection exposes Count to avoid enumerator allocation.
-        var hasPending = pendingMigrations is ICollection<string> coll ? coll.Count > 0 : pendingMigrations.GetEnumerator().MoveNext();
+        bool hasPending;
 
+        if (pendingMigrations is ICollection<string> coll)
+        {
+            hasPending = coll.Count > 0;
+        }
+        else
+        {
+            using var enumerator = pendingMigrations.GetEnumerator();
+            hasPending = enumerator.MoveNext();
+        }
         if (hasPending)
         {
             await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
