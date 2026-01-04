@@ -189,9 +189,6 @@ public static class RegisterServicesExtensions
         //var databaseType = appSettings.DatabaseType.ToLowerInvariant();
         //var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
 
-        //var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
-        //var optionsAction = GetDatabaseOptionsBuilder(databaseType, sqlConnection, migrationsAssembly);
-
         var databaseType = appSettings.DatabaseType ?? throw new InvalidOperationException("Database type is not configured.");
         var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
 
