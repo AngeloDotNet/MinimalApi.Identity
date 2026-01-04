@@ -1,12 +1,32 @@
 # Changelog
 
+## [Identity.Module.ProfileManager_v2.5.85](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ProfileManager_v2.5.85) (2026-01-04)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.363...Identity.Module.ProfileManager_v2.5.85)
+
+**Implemented enhancements:**
+
+- Develop [\#231](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/231) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+**Merged pull requests:**
+
+- Update CHANGELOG.md for tag main \[auto\] [\#230](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/230) ([github-actions[bot]](https://github.com/apps/github-actions))
+
+## [Identity.Module.API_v2.5.363](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.363) (2026-01-04)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Core_v2.5.193...Identity.Module.API_v2.5.363)
+
 ## [Identity.Module.Core_v2.5.193](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Core_v2.5.193) (2026-01-04)
 
 [Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.63...Identity.Module.Core_v2.5.193)
 
 ## [Identity.Module.EmailManager_v2.5.63](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.63) (2026-01-04)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ModuleManager_v2.5.15...Identity.Module.EmailManager_v2.5.63)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.75...Identity.Module.EmailManager_v2.5.63)
+
+## [Identity.Module.LicenseManager_v2.5.75](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.75) (2026-01-04)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ModuleManager_v2.5.15...Identity.Module.LicenseManager_v2.5.75)
 
 ## [Identity.Module.ModuleManager_v2.5.15](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ModuleManager_v2.5.15) (2026-01-04)
 
