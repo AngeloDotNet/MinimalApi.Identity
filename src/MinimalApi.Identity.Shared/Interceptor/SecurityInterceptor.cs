@@ -17,7 +17,24 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
             return base.NonQueryExecuting(command, eventData, result);
         }
 
-        // Walk past leading whitespace and SQL comments (single-line -- and block /* */)
+        var index = SkipLeadingCommentsAndWhitespace(text);
+
+        if (index >= text.Length)
+        {
+            return base.NonQueryExecuting(command, eventData, result);
+        }
+
+        if (IsDeleteStatementWithoutWhere(text, index))
+        {
+            logger.LogWarning("[SECURITY] Blocked dangerous DELETE without WHERE.");
+            throw new InvalidOperationException("Blocked dangerous DELETE without WHERE clause.");
+        }
+
+        return base.NonQueryExecuting(command, eventData, result);
+    }
+
+    private static int SkipLeadingCommentsAndWhitespace(string text)
+    {
         var i = 0;
         var len = text.Length;
 
@@ -51,8 +68,7 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
                 if (end == -1)
                 {
                     // unterminated block comment: treat as end of text
-                    i = len;
-                    break;
+                    return len;
                 }
 
                 i = end + 2;
@@ -63,23 +79,19 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
             break;
         }
 
-        if (i >= len)
+        return i;
+    }
+
+    private static bool IsDeleteStatementWithoutWhere(string text, int startIndex)
+    {
+        var span = text.AsSpan(startIndex);
+
+        if (!span.StartsWith("DELETE".AsSpan(), StringComparison.OrdinalIgnoreCase))
         {
-            return base.NonQueryExecuting(command, eventData, result);
+            return false;
         }
 
-        // Check if statement starts with DELETE (case-insensitive) and ensure a WHERE exists later.
-        var span = text.AsSpan(i);
-        if (span.StartsWith("DELETE".AsSpan(), StringComparison.OrdinalIgnoreCase))
-        {
-            // Use string.IndexOf with start index to avoid allocation of substring.
-            if (text.IndexOf("WHERE", i, StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                logger.LogWarning("[SECURITY] Blocked dangerous DELETE without WHERE.");
-                throw new InvalidOperationException("Blocked dangerous DELETE without WHERE clause.");
-            }
-        }
-
-        return base.NonQueryExecuting(command, eventData, result);
+        // Use string.IndexOf with start index to avoid allocation of substring.
+        return text.IndexOf("WHERE", startIndex, StringComparison.OrdinalIgnoreCase) == -1;
     }
 }
