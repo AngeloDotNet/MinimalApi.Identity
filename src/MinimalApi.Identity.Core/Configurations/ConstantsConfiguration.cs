@@ -22,5 +22,6 @@ public static class ConstantsConfiguration
     public const string EndpointsAuthLogout = "/logout";
     public const string EndpointsForgotPassword = "/forgot-password";
     public const string EndpointsResetPassword = "/reset-password/{code}";
+    public const string EndpointsResetPasswordNoCode = "/reset-password";
     public const string EndpointsImpersonateUser = "/impersonate-user";
 }
