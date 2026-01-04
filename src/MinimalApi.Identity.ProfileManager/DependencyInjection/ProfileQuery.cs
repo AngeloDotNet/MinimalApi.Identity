@@ -61,6 +61,26 @@ public static class ProfileQuery
         return result > 0 ? MessagesApi.ProfileUpdated : throw new BadRequestException(MessagesApi.ProfileNotUpdated);
     }
 
+    public static async Task<bool> UpdateLastDateChangePasswordAsync(int userId, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
+    {
+        var profile = await dbContext.Set<UserProfile>().Where(x => x.UserId == userId)
+            .FirstOrDefaultAsync(cancellationToken) ?? throw new NotFoundException(MessagesApi.ProfileNotFound);
+
+        profile.LastDateChangePassword = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        dbContext.Set<UserProfile>().Update(profile);
+        var result = await dbContext.SaveChangesAsync(cancellationToken);
+
+        if (result > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static async Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user, MinimalApiAuthDbContext dbContext, CancellationToken cancellationToken)
     {
         var result = await dbContext.Set<UserProfile>()
