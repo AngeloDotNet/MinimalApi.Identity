@@ -100,4 +100,28 @@ public static class UsersExtensions
         var lockoutEnd = utente.LockoutEnd.GetValueOrDefault();
         return lockoutEnd <= DateTimeOffset.UtcNow;
     }
+
+    public static Guid GetUserId(this IHttpContextAccessor httpContextAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+
+        var userIdString = httpContextAccessor.HttpContext?.User?.GetUserId();
+
+        if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+        {
+            throw new ApplicationException("User ID is missing or invalid.");
+        }
+
+        return userId;
+    }
+
+    public static bool IsAuthenticated(this IHttpContextAccessor httpContextAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+
+        var isAuthenticated = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated
+            ?? throw new ApplicationException("User context is unavailable");
+
+        return isAuthenticated;
+    }
 }
