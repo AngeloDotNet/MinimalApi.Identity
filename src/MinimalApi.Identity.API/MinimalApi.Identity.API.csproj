@@ -30,16 +30,16 @@
     <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
-    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.75" />
-    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.65" />
-    <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.10" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.190" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.61" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.73" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.13" />
+    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.76" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.66" />
+    <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.11" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.193" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.63" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.75" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.15" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.93" />
     <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.81" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.41" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.43" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
@@ -56,5 +56,4 @@
     </None>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
 </ItemGroup>
-
 </Project>

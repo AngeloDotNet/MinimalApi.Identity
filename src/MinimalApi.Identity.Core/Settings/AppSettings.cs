@@ -1,17 +1,15 @@
-﻿using httpResults = MinimalApi.Identity.Shared.Results.AspNetCore.Http;
-
-namespace MinimalApi.Identity.Core.Settings;
+﻿namespace MinimalApi.Identity.Core.Settings;
 
 public class AppSettings
 {
-    public string DatabaseType { get; set; } = null!;
-    public string MigrationsAssembly { get; set; } = null!;
+    //public string DatabaseType { get; set; } = null!;
+    //public string MigrationsAssembly { get; set; } = null!;
     public string AssignAdminUsername { get; set; } = null!;
     public string AssignAdminEmail { get; set; } = null!;
     public string AssignAdminPassword { get; set; } = null!;
     public int PasswordExpirationDays { get; set; } = 90;
     public int IntervalEmailSenderMinutes { get; set; } = 5;
-    public string ErrorResponseFormat { get; set; } = nameof(httpResults.ErrorResponseFormat.Default);
+    //public string ErrorResponseFormat { get; set; } = nameof(httpResults.ErrorResponseFormat.Default);
     public bool EnabledFeatureLicense { get; set; } = true;
     public bool EnabledFeatureModule { get; set; } = true;
     public int ValidateMinLength { get; set; } = 3;

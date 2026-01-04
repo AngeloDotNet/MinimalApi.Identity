@@ -26,4 +26,7 @@ public class ProfileService(MinimalApiAuthDbContext dbContext, UserManager<Appli
 
     public async Task<string> ChangeEnablementStatusUserProfileAsync(ChangeEnableProfileModel model, CancellationToken cancellationToken)
         => await ProfileQuery.ChangeEnablementStatusUserProfileAsync(model, dbContext, cancellationToken);
+
+    public async Task<bool> UpdateLastDateChangePasswordAsync(int userId, CancellationToken cancellationToken)
+        => await ProfileQuery.UpdateLastDateChangePasswordAsync(userId, dbContext, cancellationToken);
 }

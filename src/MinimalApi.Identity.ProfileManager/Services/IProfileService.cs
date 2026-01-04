@@ -12,4 +12,5 @@ public interface IProfileService
     Task<string> EditProfileAsync(EditUserProfileModel model, CancellationToken cancellationToken);
     Task<List<Claim>> GetClaimUserProfileAsync(ApplicationUser user, CancellationToken cancellationToken);
     Task<string> ChangeEnablementStatusUserProfileAsync(ChangeEnableProfileModel model, CancellationToken cancellationToken);
+    Task<bool> UpdateLastDateChangePasswordAsync(int userId, CancellationToken cancellationToken);
 }
