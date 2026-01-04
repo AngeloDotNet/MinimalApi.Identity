@@ -43,9 +43,19 @@ namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
-        AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
+    //public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
+    //    AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration) where TDbContext : DbContext
     {
+        //var appSettings = new AppSettings();
+        //configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
+
+        //var jwtOptions = new JwtOptions();
+        //configuration.GetSection(nameof(JwtOptions)).Bind(jwtOptions);
+
+        var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? new AppSettings();
+        var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>() ?? new JwtOptions();
+
         var activeModules = ReadFeatureFlags(appSettings);
 
         services
@@ -60,10 +70,47 @@ public static class RegisterServicesExtensions
             })
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
-            .AddDatabaseContext<TDbContext>(configuration, appSettings)
-            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions)
-            .AddRegisterPackagedServices(activeModules)
-            .AddProblemDetails()
+            //.AddDatabaseContext<TDbContext>(configuration, appSettings)
+            .AddDatabaseContext<TDbContext>(configuration)
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions);
+        //.AddRegisterPackagedServices(activeModules)
+        //.AddProblemDetails()
+        //.AddCorsConfiguration(configuration)
+        //.AddScoped<SignInManager<ApplicationUser>>();
+
+        //switch (appSettings.ErrorResponseFormat)
+        //{
+        //    case "Default":
+        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
+        //        break;
+        //    case "List":
+        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.List));
+        //        break;
+        //    default:
+        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
+        //        break;
+        //}
+
+        services
+            .AccountManagerRegistrationService()
+            .AuthManagerRegistrationService()
+            .ClaimsManagerRegistrationService()
+            .EmailManagerRegistrationService()
+            .PolicyManagerRegistrationService()
+            .ProfileManagerRegistrationService()
+            .RolesManagerRegistrationService();
+
+        if (activeModules.EnabledFeatureLicense)
+        {
+            services.LicenseManagerRegistrationService();
+        }
+
+        if (activeModules.EnabledFeatureModule)
+        {
+            services.ModuleManagerRegistrationService();
+        }
+
+        services.AddProblemDetails()
             .AddCorsConfiguration(configuration)
             .AddScoped<SignInManager<ApplicationUser>>();
 
@@ -89,29 +136,29 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions activeModules)
-    {
-        services
-            .AccountManagerRegistrationService()
-            .AuthManagerRegistrationService()
-            .ClaimsManagerRegistrationService()
-            .EmailManagerRegistrationService()
-            .PolicyManagerRegistrationService()
-            .ProfileManagerRegistrationService()
-            .RolesManagerRegistrationService();
+    //public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions activeModules)
+    //{
+    //    services
+    //        .AccountManagerRegistrationService()
+    //        .AuthManagerRegistrationService()
+    //        .ClaimsManagerRegistrationService()
+    //        .EmailManagerRegistrationService()
+    //        .PolicyManagerRegistrationService()
+    //        .ProfileManagerRegistrationService()
+    //        .RolesManagerRegistrationService();
 
-        if (activeModules.EnabledFeatureLicense)
-        {
-            services.LicenseManagerRegistrationService();
-        }
+    //    if (activeModules.EnabledFeatureLicense)
+    //    {
+    //        services.LicenseManagerRegistrationService();
+    //    }
 
-        if (activeModules.EnabledFeatureModule)
-        {
-            services.ModuleManagerRegistrationService();
-        }
+    //    if (activeModules.EnabledFeatureModule)
+    //    {
+    //        services.ModuleManagerRegistrationService();
+    //    }
 
-        return services;
-    }
+    //    return services;
+    //}
 
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions activeModules)
     {
@@ -133,12 +180,22 @@ public static class RegisterServicesExtensions
         }
     }
 
-    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings) where TDbContext : DbContext
+    //public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings) where TDbContext : DbContext
+    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration) where TDbContext : DbContext
     {
-        ArgumentNullException.ThrowIfNull(appSettings);
+        //ArgumentNullException.ThrowIfNull(appSettings);
+        var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? new AppSettings();
 
-        var databaseType = appSettings.DatabaseType.ToLowerInvariant();
+        //var databaseType = appSettings.DatabaseType.ToLowerInvariant();
+        //var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
+
+        //var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
+        //var optionsAction = GetDatabaseOptionsBuilder(databaseType, sqlConnection, migrationsAssembly);
+
+        var databaseType = appSettings.DatabaseType ?? throw new InvalidOperationException("Database type is not configured.");
         var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
+
+        databaseType = databaseType.ToLowerInvariant();
 
         var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
         var optionsAction = GetDatabaseOptionsBuilder(databaseType, sqlConnection, migrationsAssembly);
@@ -166,16 +223,39 @@ public static class RegisterServicesExtensions
         return services;
     }
 
+    //public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+    //{
+    //    ArgumentNullException.ThrowIfNull(serviceProvider);
+
+    //    await using var scope = serviceProvider.CreateAsyncScope();
+
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
+    //    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken).ConfigureAwait(false);
+
+    //    if (!canConnect)
+    //    {
+    //        await dbContext.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
+    //        return;
+    //    }
+
+    //    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
+
+    //    using var enumerator = pendingMigrations.GetEnumerator();
+
+    //    if (enumerator.MoveNext())
+    //    {
+    //        await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
+    //    }
+    //}
+
     public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
         await using var scope = serviceProvider.CreateAsyncScope();
-
         var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
-        var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken).ConfigureAwait(false);
 
-        if (!canConnect)
+        if (!await dbContext.Database.CanConnectAsync(cancellationToken).ConfigureAwait(false))
         {
             await dbContext.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
             return;
@@ -183,9 +263,10 @@ public static class RegisterServicesExtensions
 
         var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
 
-        using var enumerator = pendingMigrations.GetEnumerator();
+        // Fast-path when the returned collection exposes Count to avoid enumerator allocation.
+        var hasPending = pendingMigrations is ICollection<string> coll ? coll.Count > 0 : pendingMigrations.GetEnumerator().MoveNext();
 
-        if (enumerator.MoveNext())
+        if (hasPending)
         {
             await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -195,9 +276,7 @@ public static class RegisterServicesExtensions
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-            .RequireAuthenticatedUser()
-            .Build();
+        var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
 
         options.DefaultPolicy = policy;
         options.FallbackPolicy = policy;
