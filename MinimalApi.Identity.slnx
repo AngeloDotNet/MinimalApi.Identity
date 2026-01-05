@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/Manager/">
+    <Project Path="src/MinimalApi.Identity.ClaimsManager/MinimalApi.Identity.ClaimsManager.csproj" Id="b78ea3ac-b7be-4d3a-ae9c-0071512d8f1e" />
+    <Project Path="src/MinimalApi.Identity.ModuleManager/MinimalApi.Identity.ModuleManager.csproj" Id="d9b4b26e-e7c5-4c02-a8be-d0f09d2d1cc9" />
+    <Project Path="src/MinimalApi.Identity.RolesManager/MinimalApi.Identity.RolesManager.csproj" Id="a2963449-dbe3-42e3-8554-c49de9781f3f" />
+    <Project Path="src/MinimalApi.Identity.AccountManager/MinimalApi.Identity.AccountManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.AuthManager/MinimalApi.Identity.AuthManager.csproj" Id="65a70cce-da5d-47f5-8afa-e53e759e12f4" />
+    <Project Path="src/MinimalApi.Identity.EmailManager/MinimalApi.Identity.EmailManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.LicenseManager/MinimalApi.Identity.LicenseManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.PolicyManager/MinimalApi.Identity.PolicyManager.csproj" />
+    <Project Path="src/MinimalApi.Identity.ProfileManager/MinimalApi.Identity.ProfileManager.csproj" Id="c62f961a-06b9-487d-9cb6-b622828e45fc" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Docs/" />
+  <Folder Name="/Solution Items/Docs/Endpoints/">
+    <File Path="docs/Endpoints/AccountEndpoints.md" />
+    <File Path="docs/Endpoints/AuthenticationEndpoints.md" />
+    <File Path="docs/Endpoints/ClaimsEndpoints.md" />
+    <File Path="docs/Endpoints/PolicyEndpoints.md" />
+  </Folder>
+  <Project Path="IdentityManager.API/IdentityManager.API.csproj" />
+  <Project Path="src/MinimalApi.Identity.API/MinimalApi.Identity.API.csproj" />
+  <Project Path="src/MinimalApi.Identity.Core/MinimalApi.Identity.Core.csproj" />
+  <Project Path="src/MinimalApi.Identity.Migrations.SQLServer/MinimalApi.Identity.Migrations.SQLServer.csproj" />
+  <Project Path="src/MinimalApi.Identity.Shared/MinimalApi.Identity.Shared.csproj" Id="0af09666-dbe7-448e-84dd-1d3c257da4bc" />
+</Solution>

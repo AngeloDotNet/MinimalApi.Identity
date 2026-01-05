@@ -1,0 +1,36 @@
+name: Delete old workflow runs and releases
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */8 * * *' # Run daily, every 8 hours.
+
+env:
+  REPOSITORY: AngeloDotNet/MinimalApi.Identity
+
+jobs:
+  delete_runs:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    
+    steps:
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ env.REPOSITORY }}
+          retain_days: 3
+          keep_minimum_runs: 2
+          
+      - name: Delete older releases
+        uses: jay2610/delete-older-releases@1.0.0
+        with:
+          repo: AngeloDotNet/MinimalApi.Identity # defaults to current repo
+          keep_latest: 1
+          #delete_tag_pattern: beta # defaults to ""
+          delete_type: 'release'
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  

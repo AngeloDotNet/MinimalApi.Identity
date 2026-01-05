@@ -1,0 +1,27 @@
+﻿namespace MinimalApi.Identity.Core.Configurations;
+
+public static class ConstantsConfiguration
+{
+    public static string LicenseMIT => "https://opensource.org/licenses/MIT";
+    public static string NoActivePoliciesFound => "No active policies found in the database.";
+    public static string BadRequest => "Bad Request"; // 400
+    public static string Unauthorized => "Unauthorized"; // 401
+    public static string NotFound => "Not Found"; // 404
+    public static string Conflict => "Conflict"; // 409
+    public static string ValidationOccurred => "One or more validation errors occurred."; // 422
+    public static string ValidationErrors => "Validation error"; // 422
+
+    public static DateTime Today => DateTime.UtcNow.Date;
+    public static DateOnly DateOnlyToday => DateOnly.FromDateTime(Today);
+    public static DateTime DateNull => new DateTime(1900, 1, 1);
+    public static DateOnly DateOnlyNull => DateOnly.FromDateTime(DateNull);
+
+    public const string EndpointsAuthRegister = "/register";
+    public const string EndpointsAuthLogin = "/login";
+    public const string EndpointsAuthRefreshToken = "/refresh-token";
+    public const string EndpointsAuthLogout = "/logout";
+    public const string EndpointsForgotPassword = "/forgot-password";
+    public const string EndpointsResetPassword = "/reset-password/{code}";
+    public const string EndpointsResetPasswordNoCode = "/reset-password";
+    public const string EndpointsImpersonateUser = "/impersonate-user";
+}

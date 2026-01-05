@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Authors>Angelo Pirola</Authors>
+        <Company>Angelo Pirola</Company>
+        <Product>Identity.Module.Core</Product>
+        <Title>Identity.Module.Core</Title>
+        <Description>A set of libraries to easily integrate and extend authentication in ASP.NET Core projects, using ASP.NET Core Identity.</Description>
+        <PackageId>Identity.Module.Core</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
+        <PackageIcon>identityLibrary.png</PackageIcon>
+        <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
+        <RepositoryBranch>main</RepositoryBranch>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+        <PackageReference Include="Identity.Module.Shared" Version="2.5.83" />
+        <PackageReference Include="MailKit" Version="4.14.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Scrutor" Version="7.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.2" /> <!-- Non aggiornare a versioni più recenti -->
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.3.2" /> <!-- Non aggiornare a versioni più recenti -->
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\identityLibrary.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>

@@ -3,11 +3,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Middleware;
-using MinimalApi.Identity.API.Options;
+using MinimalApi.Identity.Core.Settings;
+
 namespace IdentityManager.API.Middleware;
 
-public class ExtendedExceptionMiddleware(RequestDelegate next, IOptions<ValidationOptions> options)
-    : MinimalApiExceptionMiddleware(next, options)
+public class ExtendedExceptionMiddleware(RequestDelegate next, IOptionsMonitor<AppSettings> settings)
+    : MinimalApiExceptionMiddleware(next, settings)
 {
     public static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {

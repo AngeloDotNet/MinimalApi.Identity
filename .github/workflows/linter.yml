@@ -1,0 +1,33 @@
+name: Lint Code Base
+
+on:
+    push:
+      branches-ignore: [ main ]
+      # Remove the line above to run when pushing to main  
+      paths: [ 'src/**' ]
+#    pull_request:   
+#      branches: [ main, develop ]
+#      paths: [ 'src/**' ]    
+    workflow_dispatch:
+    
+jobs:
+    build:
+      name: Lint Code Base
+      runs-on: ubuntu-latest
+    
+      steps:
+        - name: Checkout Code
+          uses: actions/checkout@v4
+          with:
+            # Full git history is needed to get a proper list of changed files within `super-linter`
+            fetch-depth: 0
+    
+        - name: Lint Code Base
+          uses: super-linter/super-linter@v7.2.0
+          env:
+            LINTER_RULES_PATH: '.'
+            EDITORCONFIG_FILE_NAME: '.editorconfig'
+            VALIDATE_ALL_CODEBASE: false
+            VALIDATE_CSHARP: true
+            DEFAULT_BRANCH: main
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
