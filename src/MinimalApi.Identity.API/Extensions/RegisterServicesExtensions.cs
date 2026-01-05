@@ -14,7 +14,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Identity.AccountManager.DependencyInjection;
 using MinimalApi.Identity.AccountManager.Endpoints;
+using MinimalApi.Identity.API.Configurations;
 using MinimalApi.Identity.API.Endpoints;
+using MinimalApi.Identity.API.Enums;
 using MinimalApi.Identity.API.Validator;
 using MinimalApi.Identity.AuthManager.DependencyInjection;
 using MinimalApi.Identity.ClaimsManager.DependencyInjection;
@@ -37,26 +39,18 @@ using MinimalApi.Identity.RolesManager.DependencyInjection;
 using MinimalApi.Identity.RolesManager.Endpoints;
 using MinimalApi.Identity.Shared.DependencyInjection;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
-using optionsCors = MinimalApi.Identity.Core.Options;
 
 namespace MinimalApi.Identity.API.Extensions;
 
 public static class RegisterServicesExtensions
 {
-    //public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration,
-    //    AppSettings appSettings, JwtOptions jwtOptions) where TDbContext : DbContext
-    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services, IConfiguration configuration) where TDbContext : DbContext
+    public static IServiceCollection AddRegisterDefaultServices<TDbContext>(this IServiceCollection services,
+        Action<ServiceDefaultRegistrationConfiguration> configure) where TDbContext : DbContext
     {
-        //var appSettings = new AppSettings();
-        //configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
+        var config = new ServiceDefaultRegistrationConfiguration(services);
+        configure.Invoke(config);
 
-        //var jwtOptions = new JwtOptions();
-        //configuration.GetSection(nameof(JwtOptions)).Bind(jwtOptions);
-
-        var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? new AppSettings();
-        var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>() ?? new JwtOptions();
-
-        var activeModules = ReadFeatureFlags(appSettings);
+        var activeModules = config.ActiveModules;
 
         services
             .AddSingleton(TimeProvider.System)
@@ -70,26 +64,8 @@ public static class RegisterServicesExtensions
             })
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(opt => opt.AddSwaggerGenOptions(activeModules))
-            //.AddDatabaseContext<TDbContext>(configuration, appSettings)
-            .AddDatabaseContext<TDbContext>(configuration)
-            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(jwtOptions);
-        //.AddRegisterPackagedServices(activeModules)
-        //.AddProblemDetails()
-        //.AddCorsConfiguration(configuration)
-        //.AddScoped<SignInManager<ApplicationUser>>();
-
-        //switch (appSettings.ErrorResponseFormat)
-        //{
-        //    case "Default":
-        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
-        //        break;
-        //    case "List":
-        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.List));
-        //        break;
-        //    default:
-        //        services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
-        //        break;
-        //}
+            .AddDatabaseContext<TDbContext>(config.Configuration, config.TypeDatabase, config.MigrationsAssembly)
+            .AddMinimalApiIdentityServices<TDbContext, ApplicationUser>(config.JwtSettings);
 
         services
             .AccountManagerRegistrationService()
@@ -110,16 +86,17 @@ public static class RegisterServicesExtensions
             services.ModuleManagerRegistrationService();
         }
 
-        services.AddProblemDetails()
-            .AddCorsConfiguration(configuration)
+        services
+            .AddProblemDetails()
+            .AddCorsConfiguration(config.CorsSettings)
             .AddScoped<SignInManager<ApplicationUser>>();
 
-        switch (appSettings.ErrorResponseFormat)
+        switch (config.ErrorResponseFormat)
         {
-            case "Default":
+            case ErrorResponseFormat.Default:
                 services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
                 break;
-            case "List":
+            case ErrorResponseFormat.List:
                 services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.List));
                 break;
             default:
@@ -128,37 +105,14 @@ public static class RegisterServicesExtensions
         }
 
         services
-            .Configure<SmtpOptions>(options => configuration.GetSection(nameof(SmtpOptions)).Bind(options))
+            //.Configure<SmtpOptions>(options => config.Configuration.GetSection(nameof(SmtpOptions)).Bind(options))
+            .Configure<SmtpOptions>(options => options = config.SmtpSettings)
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-            .Configure<KestrelServerOptions>(options => configuration.GetSection("Kestrel").Bind(options))
+            .Configure<KestrelServerOptions>(options => config.Configuration.GetSection("Kestrel").Bind(options))
             .ConfigureFluentValidation<LoginValidator>();
 
         return services;
     }
-
-    //public static IServiceCollection AddRegisterPackagedServices(this IServiceCollection services, FeatureFlagsOptions activeModules)
-    //{
-    //    services
-    //        .AccountManagerRegistrationService()
-    //        .AuthManagerRegistrationService()
-    //        .ClaimsManagerRegistrationService()
-    //        .EmailManagerRegistrationService()
-    //        .PolicyManagerRegistrationService()
-    //        .ProfileManagerRegistrationService()
-    //        .RolesManagerRegistrationService();
-
-    //    if (activeModules.EnabledFeatureLicense)
-    //    {
-    //        services.LicenseManagerRegistrationService();
-    //    }
-
-    //    if (activeModules.EnabledFeatureModule)
-    //    {
-    //        services.ModuleManagerRegistrationService();
-    //    }
-
-    //    return services;
-    //}
 
     public static void UseMapEndpoints(this WebApplication app, FeatureFlagsOptions activeModules)
     {
@@ -180,19 +134,18 @@ public static class RegisterServicesExtensions
         }
     }
 
-    //public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings) where TDbContext : DbContext
-    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration) where TDbContext : DbContext
+    public static IServiceCollection AddDatabaseContext<TDbContext>(this IServiceCollection services, IConfiguration configuration,
+        DatabaseType databaseType, string migrationsAssembly) where TDbContext : DbContext
     {
-        //ArgumentNullException.ThrowIfNull(appSettings);
-        var appSettings = configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? new AppSettings();
-
-        //var databaseType = appSettings.DatabaseType.ToLowerInvariant();
-        //var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
-
-        var databaseType = appSettings.DatabaseType ?? throw new InvalidOperationException("Database type is not configured.");
-        var migrationsAssembly = appSettings.MigrationsAssembly ?? throw new InvalidOperationException("Migrations assembly is not configured.");
-
-        databaseType = databaseType.ToLowerInvariant();
+        databaseType = databaseType switch
+        {
+            DatabaseType.SQLServer => DatabaseType.SQLServer,
+            DatabaseType.AzureSQL => DatabaseType.AzureSQL,
+            DatabaseType.PostgreSQL => DatabaseType.PostgreSQL,
+            DatabaseType.MySQL => DatabaseType.MySQL,
+            DatabaseType.SQLite => DatabaseType.SQLite,
+            _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}"),
+        };
 
         var sqlConnection = GetDatabaseConnectionString(configuration, databaseType);
         var optionsAction = GetDatabaseOptionsBuilder(databaseType, sqlConnection, migrationsAssembly);
@@ -219,31 +172,6 @@ public static class RegisterServicesExtensions
 
         return services;
     }
-
-    //public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
-    //{
-    //    ArgumentNullException.ThrowIfNull(serviceProvider);
-
-    //    await using var scope = serviceProvider.CreateAsyncScope();
-
-    //    var dbContext = scope.ServiceProvider.GetRequiredService<MinimalApiAuthDbContext>();
-    //    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken).ConfigureAwait(false);
-
-    //    if (!canConnect)
-    //    {
-    //        await dbContext.Database.EnsureCreatedAsync(cancellationToken).ConfigureAwait(false);
-    //        return;
-    //    }
-
-    //    var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
-
-    //    using var enumerator = pendingMigrations.GetEnumerator();
-
-    //    if (enumerator.MoveNext())
-    //    {
-    //        await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
-    //    }
-    //}
 
     public static async Task ConfigureDatabaseAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
     {
@@ -272,6 +200,7 @@ public static class RegisterServicesExtensions
             using var enumerator = pendingMigrations.GetEnumerator();
             hasPending = enumerator.MoveNext();
         }
+
         if (hasPending)
         {
             await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
@@ -319,35 +248,35 @@ public static class RegisterServicesExtensions
         return activeModules;
     }
 
-    internal static string GetDatabaseConnectionString(IConfiguration configuration, string databaseType)
+    internal static string GetDatabaseConnectionString(IConfiguration configuration, DatabaseType databaseType)
     {
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(databaseType);
 
-        return databaseType.ToLowerInvariant() switch
+        return databaseType switch
         {
-            "sqlserver" => configuration.GetConnectionString("SQLServer") ?? string.Empty,
-            "azuresql" => configuration.GetConnectionString("AzureSQL") ?? string.Empty,
-            "postgresql" => configuration.GetConnectionString("PostgreSQL") ?? string.Empty,
-            "mysql" => configuration.GetConnectionString("MySQL") ?? string.Empty,
-            "sqlite" => configuration.GetConnectionString("SQLite") ?? string.Empty,
+            DatabaseType.SQLServer => configuration.GetConnectionString("SQLServer") ?? string.Empty,
+            DatabaseType.AzureSQL => configuration.GetConnectionString("AzureSQL") ?? string.Empty,
+            DatabaseType.PostgreSQL => configuration.GetConnectionString("PostgreSQL") ?? string.Empty,
+            DatabaseType.MySQL => configuration.GetConnectionString("MySQL") ?? string.Empty,
+            DatabaseType.SQLite => configuration.GetConnectionString("SQLite") ?? string.Empty,
             _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
         };
     }
 
-    internal static Action<DbContextOptionsBuilder> GetDatabaseOptionsBuilder(string databaseType, string sqlConnection, string migrationsAssembly)
+    internal static Action<DbContextOptionsBuilder> GetDatabaseOptionsBuilder(DatabaseType databaseType, string sqlConnection, string migrationsAssembly)
     {
         ArgumentNullException.ThrowIfNull(databaseType);
         ArgumentNullException.ThrowIfNull(sqlConnection);
         ArgumentNullException.ThrowIfNull(migrationsAssembly);
 
-        return databaseType.ToLowerInvariant() switch
+        return databaseType switch
         {
-            "sqlserver" => options => options.AddSqlServerBuilder(sqlConnection, migrationsAssembly),
-            "azuresql" => options => options.AddAzureSqlBuilder(sqlConnection, migrationsAssembly),
-            "postgresql" => options => options.AddPostgreSqlBuilder(sqlConnection, migrationsAssembly),
-            "mysql" => options => options.AddMySqlBuilder(sqlConnection, migrationsAssembly),
-            "sqlite" => options => options.AddSqLiteBuilder(sqlConnection, migrationsAssembly),
+            DatabaseType.SQLServer => options => options.AddSqlServerBuilder(sqlConnection, migrationsAssembly),
+            DatabaseType.AzureSQL => options => options.AddAzureSqlBuilder(sqlConnection, migrationsAssembly),
+            DatabaseType.PostgreSQL => options => options.AddPostgreSqlBuilder(sqlConnection, migrationsAssembly),
+            DatabaseType.MySQL => options => options.AddMySqlBuilder(sqlConnection, migrationsAssembly),
+            DatabaseType.SQLite => options => options.AddSqLiteBuilder(sqlConnection, migrationsAssembly),
             _ => throw new InvalidOperationException($"Unsupported database type: {databaseType}")
         };
     }
@@ -406,12 +335,10 @@ public static class RegisterServicesExtensions
         return services;
     }
 
-    internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddCorsConfiguration(this IServiceCollection services, CorsOptions corsOptions)
     {
         ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        var corsOptions = configuration.GetSection(nameof(optionsCors.CorsOptions)).Get<optionsCors.CorsOptions>() ?? new optionsCors.CorsOptions();
+        ArgumentNullException.ThrowIfNull(corsOptions);
 
         var policyName = corsOptions.PolicyName ?? string.Empty;
         var allowAnyOrigin = corsOptions.AllowAnyOrigin;
