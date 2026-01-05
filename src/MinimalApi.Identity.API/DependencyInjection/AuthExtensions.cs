@@ -92,6 +92,14 @@ public static class AuthExtensions
             .ConfigureAwait(false);
     }
 
+    public static async Task UpdateDateLastChangePasswordAsync(int userId, IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
+
+        await profileService.UpdateLastDateChangePasswordAsync(userId, CancellationToken.None).ConfigureAwait(false);
+    }
+
     public static bool CheckLastDateChangePassword(DateOnly? lastDate, AppSettings options)
         => lastDate is not null && lastDate.Value.AddDays(options.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
 
