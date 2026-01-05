@@ -38,7 +38,7 @@
     <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.75" />
     <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.15" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.93" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.81" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.85" />
     <PackageReference Include="Identity.Module.RolesManager" Version="2.5.43" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
