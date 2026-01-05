@@ -42,15 +42,18 @@ public static class EndpointsHandler
         return TypedResults.Ok("User logged out successfully.");
     }
 
+    [AllowAnonymous]
     public static async Task<IResult> ForgotPasswordAsync([FromServices] IAuthService authService, [FromBody] ForgotPasswordModel inputModel)
     {
         await authService.ForgotPasswordAsync(inputModel);
         return TypedResults.Ok("Password reset instructions have been sent to your email.");
     }
 
-    public static async Task<IResult> ResetPasswordAsync([FromServices] IAuthService authService, [FromBody] ResetPasswordModel inputModel, [FromRoute] string code)
+    [AllowAnonymous]
+    //public static async Task<IResult> ResetPasswordAsync([FromServices] IAuthService authService, [FromBody] ResetPasswordModel inputModel, [FromRoute] string code)
+    public static async Task<IResult> ResetPasswordAsync([FromServices] IAuthService authService, [FromBody] ResetPasswordModel inputModel)
     {
-        await authService.ResetPasswordAsync(inputModel, code);
+        await authService.ResetPasswordAsync(inputModel, inputModel.Code);
         return TypedResults.Ok("Password has been reset successfully.");
     }
 }
