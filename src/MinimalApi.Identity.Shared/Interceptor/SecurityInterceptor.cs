@@ -35,23 +35,39 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
 
     private static int SkipLeadingCommentsAndWhitespace(string text)
     {
+        ArgumentNullException.ThrowIfNull(text);
+
+        var span = text.AsSpan();
+        var blockEnd = "*/".AsSpan();
+
+        var len = span.Length;
         var i = 0;
-        var len = text.Length;
 
         while (i < len)
         {
             // skip whitespace
-            while (i < len && char.IsWhiteSpace(text[i]))
+            while (i < len && char.IsWhiteSpace(span[i]))
             {
                 i++;
             }
 
+            if (i + 1 >= len)
+            {
+                break;
+            }
+
             // single-line comment: -- ... (skip to end of line)
-            if (i + 1 < len && text[i] == '-' && text[i + 1] == '-')
+            if (span[i] == '-' && span[i + 1] == '-')
             {
                 i += 2;
-                while (i < len && text[i] != '\n' && text[i] != '\r')
+                while (i < len)
                 {
+                    var c = span[i];
+                    if (c is '\n' or '\r')
+                    {
+                        break;
+                    }
+
                     i++;
                 }
 
@@ -60,18 +76,19 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
             }
 
             // block comment: /* ... */
-            if (i + 1 < len && text[i] == '/' && text[i + 1] == '*')
+            if (span[i] == '/' && span[i + 1] == '*')
             {
                 i += 2;
-                var end = text.IndexOf("*/", i, StringComparison.Ordinal);
+                var slice = span.Slice(i);
+                var idx = slice.IndexOf(blockEnd); // ordinal search on span
 
-                if (end == -1)
+                if (idx == -1)
                 {
                     // unterminated block comment: treat as end of text
                     return len;
                 }
 
-                i = end + 2;
+                i += idx + 2;
                 continue;
             }
 
