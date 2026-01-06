@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!--<PackageReference Include="Identity.Module.API" Version="2.5.360" />-->
+        <PackageReference Include="Identity.Module.API" Version="2.5.367" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\MinimalApi.Identity.API\MinimalApi.Identity.API.csproj" />
       <ProjectReference Include="..\src\MinimalApi.Identity.Migrations.SQLServer\MinimalApi.Identity.Migrations.SQLServer.csproj" />
     </ItemGroup>
 
