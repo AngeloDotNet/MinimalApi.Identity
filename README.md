@@ -51,132 +51,15 @@ The configuration can be completely managed by adding this section to the _appse
 
 A complete example of the configurations in AppSettings.json is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
 
-<!--
-```json
-"Kestrel": {
-    "Limits": {
-        "MaxRequestBodySize": 5242880
-    }
-},
-"Serilog": {
-    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
-    "MinimumLevel": "Warning",
-    "WriteTo": [
-        {
-            "Name": "Console",
-            "Args": {
-                "outputTemplate": "{Timestamp:HH:mm:ss}\t{Level:u3}\t{SourceContext}\t{Message}{NewLine}{Exception}"
-            }
-        },
-        {
-            "Name": "File",
-            "Args": {
-                "path": "Logs/log.txt",
-                "rollingInterval": "Day",
-                "retainedFileCountLimit": 7,
-                "restrictedToMinimumLevel": "Warning",
-                "formatter": "Serilog.Formatting.Json.JsonFormatter, Serilog"
-            }
-        }
-        // The custom MinioS3Sink sink must be added via code (not here)
-    ],
-    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
-    "Properties": {
-        "Application": "MinimalApi.Identity"
-    }
-},
-"ConnectionStrings": {
-    "AzureSQL": "Server=tcp:[SERVER].database.windows.net,1433;Initial Catalog=IdentityManager;Persist Security Info=False;User ID=[USERNAME];Password=[PASSWORD];MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-    "MySQL": "Server=[HOSTNAME];Port=3306;Database=IdentityManager;Uid=[USERNAME];Pwd=[PASSWORD]",
-    "PostgreSQL": "Host=[HOSTNAME];Port=5432;Database=IdentityManager;Username=[USERNAME];Password=[PASSWORD];Include Error Detail=true",
-    "SQLite": "Data Source=Data/IdentityManager.db", // OR "SQLite": "Data Source=MinimalApi.Identity.db;Cache=Shared"
-    "SQLServer": "Data Source=[HOSTNAME];Initial Catalog=IdentityManager;User ID=[USERNAME];Password=[PASSWORD];Encrypt=False"
-},
-"JwtOptions": {
-    "Issuer": "[ISSUER]",
-    "Audience": "[AUDIENCE]",
-    "SecurityKey": "[SECURITY-KEY]", // Must be 512 characters long
-    "ClockSkew": "00:05:00", 
-    "AccessTokenExpirationMinutes": 60, 
-    "RefreshTokenExpirationMinutes": 60, 
-    "RequireUniqueEmail": true,
-    "RequireDigit": true,
-    "RequiredLength": 8,
-    "RequireUppercase": true,
-    "RequireLowercase": true,
-    "RequireNonAlphanumeric": true,
-    "RequiredUniqueChars": 4,
-    "RequireConfirmedEmail": true,
-    "MaxFailedAccessAttempts": 3,
-    "AllowedForNewUsers": true,
-    "DefaultLockoutTimeSpan": "00:05:00" 
-},
-"SmtpOptions": {
-    "Host": "smtp.example.org",
-    "Port": 25,
-    "Security": "StartTls",
-    "Username": "Username del server SMTP",
-    "Password": "Password del server SMTP",
-    "Sender": "MyApplication <noreply@example.org>",
-    "MaxRetryAttempts": 10
-},
-"AppSettings": {
-    "DatabaseType": "sqlserver",
-	"MigrationsAssembly": "MinimalApi.Identity.Migrations.SQLServer",
-    "AssignAdminUsername": "admin",
-    "AssignAdminEmail": "admin@example.org",
-    "AssignAdminPassword": "StrongPassword",
-    "PasswordExpirationDays": 90,
-    "IntervalEmailSenderMinutes": 5,
-    "ErrorResponseFormat": "List",
-    "EnabledFeatureLicense": true,
-    "EnabledFeatureModule": true,
-    "ValidateMinLength": 3,
-    "ValidateMaxLength": 50,
-    "ValidateMinLengthDescription": 5,
-    "ValidateMaxLengthDescription": 100
-},
-"SwaggerSettings": {
-    "IsEnabled": true,
-    "AuthSettings": {
-        "IsRequired": false,
-        "Username": "admin",
-        "Password": "StrongPassword"
-    }
-},
-"MinioOptions": {
-    "Endpoint": "http://127.0.0.1:9000",
-    "AccessKey": "",
-    "SecretKey": "",
-    "BucketName": "logs",
-    "LogObjectKey": "serilog-demo.json"
-},
-"CorsOptions": {
-    "PolicyName": "DefaultCorsPolicy",
-    "AllowAnyOrigin": true,
-    "AllowAnyMethod": true,
-    "AllowAnyHeader": true,
-    "AllowedOrigins": [],
-    "AllowedMethods": [],
-    "AllowedHeaders": []
-}
-```
--->
-
-> [!NOTE]
-> For migrations you can use a specific project to add to your solution, then configuring the assembly in _AppSettings:MigrationsAssembly_, otherwise leave it blank and the assembly containing the _Program.cs_ class will be used.
-
 ## 🗃️ Database
 
 ### Configuration
 
 The library uses Entity Framework Core to manage the database.
 
-The connection string is configured in the `AppSettings` section of the _appsettings.json_ file.
+The connection string is configured in the AppSettings section of the appsettings.json file, while the database type is configured in the Program.cs class.
 
-- Database Type: Set via `AppSettings:DatabaseType` (supported values: `sqlserver`, `azuresql`, `postgresql`, `mysql`, `sqlite`)
-
-After setting the type of database you want to use, modify the corresponding connection string.
+After configuring the Program.cs class, modify the connection string for the corresponding database.
 
 ### Migrations
 
@@ -217,85 +100,6 @@ You can manage the state of the Swagger UI with the following configuration:
 
 A complete example of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs).
 
-<!--
-```csharp
-public class Program
-{
-    public static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
-
-        // Configure Serilog to use MinIO storage if access key or secret key is provided
-        if (!string.IsNullOrEmpty(minioOptions.AccessKey) || !string.IsNullOrEmpty(minioOptions.SecretKey))
-        {
-            builder.Host.UseSerilogToStorageCloud((context, services, config)
-                => config.ReadFrom.Configuration(context.Configuration), minioOptions);
-        }
-
-        var appSettings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings)) ?? new();
-        var jwtOptions = builder.Services.ConfigureAndGet<JwtOptions>(builder.Configuration, nameof(JwtOptions)) ?? new();
-        var swaggerSettings = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings)) ?? new();
-        var corsOptions = builder.Services.ConfigureAndGet<CorsOptions>(builder.Configuration, nameof(CorsOptions)) ?? new();
-
-        builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(builder.Configuration, appSettings, jwtOptions);
-        //If you need to register services with a lifecycle other than Transient, do not modify this configuration,
-        //but create one (or more) duplicates of this configuration, modifying it as needed.
-        builder.Services.AddRegisterServices(options =>
-        {
-            options.Interfaces = [typeof(IAuthService)]; // Register your interfaces here, but do not remove the IAuthService service.
-            options.StringEndsWith = "Service"; // This will register all services that end with "Service" in the assembly.
-            options.Lifetime = ServiceLifetime.Transient; // This will register the services with a Transient lifetime.
-        });
-
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddDefaultSecurityOptions();
-            // Here you can add additional authorization policies
-        });
-
-        var app = builder.Build();
-
-		var activeModules = RegisterServicesExtensions.ReadFeatureFlags(appSettings);
-		var appName = app.Environment.ApplicationName;
-		
-		await RegisterServicesExtensions.ConfigureDatabaseAsync(app.Services);
-		
-		// If behind a proxy, uncomment and configure the KnownProxies collection
-		//app.UseForwardedHeaders(new()
-		//{
-		//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-		//    KnownProxies = { }
-		//});
-		
-		app.UseHttpsRedirection();
-		app.UseStatusCodePages();
-		
-		app.UseMiddleware<MinimalApiExceptionMiddleware>();
-		if (swaggerSettings.IsEnabled)
-		{
-			if (swaggerSettings.AuthSettings.IsRequired)
-			{
-				app.UseMiddleware<SwaggerBasicAuthMiddleware>();
-			}
-		
-			app.UseSwagger();
-			app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appName} v1"));
-		}
-		
-		app.UseRouting();
-		app.UseCors(corsOptions.PolicyName);
-		
-		app.UseAuthentication();
-		app.UseAuthorization();
-		
-		app.UseMapEndpoints(activeModules);
-        await app.RunAsync();
-    }
-}
-```
--->
-
 ## 🔐 Authentication
 
 The following authentication types are currently supported:
@@ -314,23 +118,6 @@ A default administrator account is created automatically with the following conf
 ## 📚 API Reference
 
 See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
-
-## 📦 Packages
-
-|Name|Type|Version|
-|----|----|-------|
-|[Identity.Module.API](https://www.nuget.org/packages/Identity.Module.API)|Main|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.API)](https://www.nuget.org/packages/Identity.Module.API)
-|[Identity.Module.AccountManager](https://www.nuget.org/packages/Identity.Module.AccountManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.AccountManager)](https://www.nuget.org/packages/Identity.Module.AccountManager)|
-|[Identity.Module.AuthManager](https://www.nuget.org/packages/Identity.Module.AuthManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.AuthManager)](https://www.nuget.org/packages/Identity.Module.AuthManager)|
-|[Identity.Module.ClaimsManager](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ClaimsManager)](https://www.nuget.org/packages/Identity.Module.ClaimsManager)|
-|[Identity.Module.Core](https://www.nuget.org/packages/Identity.Module.Core)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Core)](https://www.nuget.org/packages/Identity.Module.Core)|
-|[Identity.Module.EmailManager](https://www.nuget.org/packages/Identity.Module.EmailManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.EmailManager)](https://www.nuget.org/packages/Identity.Module.EmailManager)|
-|[Identity.Module.LicenseManager](https://www.nuget.org/packages/Identity.Module.LicenseManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.LicenseManager)](https://www.nuget.org/packages/Identity.Module.LicenseManager)|
-|[Identity.Module.ModuleManager](https://www.nuget.org/packages/Identity.Module.ModuleManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ModuleManager)](https://www.nuget.org/packages/Identity.Module.ModuleManager)|
-|[Identity.Module.PolicyManager](https://www.nuget.org/packages/Identity.Module.PolicyManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.PolicyManager)](https://www.nuget.org/packages/Identity.Module.PolicyManager)|
-|[Identity.Module.ProfileManager](https://www.nuget.org/packages/Identity.Module.ProfileManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.ProfileManager)](https://www.nuget.org/packages/Identity.Module.ProfileManager)|
-|[Identity.Module.RolesManager](https://www.nuget.org/packages/Identity.Module.RolesManager)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.RolesManager)](https://www.nuget.org/packages/Identity.Module.RolesManager)|
-|[Identity.Module.Shared](https://www.nuget.org/packages/Identity.Module.Shared)|Dependence|[![Nuget Package](https://badgen.net/nuget/v/Identity.Module.Shared)](https://www.nuget.org/packages/Identity.Module.Shared)|
 -->
 
 ## 🏆 Badges

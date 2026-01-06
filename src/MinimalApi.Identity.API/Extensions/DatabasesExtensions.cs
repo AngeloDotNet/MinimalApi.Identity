@@ -119,7 +119,8 @@ public static class DatabasesExtensions
         }
         catch (ReflectionTypeLoadException ex)
         {
-            return ex.Types.Where(t => t is not null)!;
+            //return ex.Types.Where(t => t is not null)!;
+            return ex.Types.OfType<Type>();
         }
         catch
         {
