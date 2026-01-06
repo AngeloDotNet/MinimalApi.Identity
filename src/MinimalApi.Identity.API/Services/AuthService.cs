@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -184,10 +185,12 @@ public class AuthService(IOptions<JwtOptions> jwtOptions, IOptions<AppSettings> 
         var user = await userManager.FindByEmailAsync(inputModel.Email)
             .ConfigureAwait(false) ?? throw new NotFoundException(MessagesApi.UserNotFound);
 
-        var result = await userManager.ResetPasswordAsync(user, code, inputModel.Password).ConfigureAwait(false);
+        var userCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+        var result = await userManager.ResetPasswordAsync(user, userCode, inputModel.Password).ConfigureAwait(false);
 
         if (result.Succeeded)
         {
+            await AuthExtensions.UpdateDateLastChangePasswordAsync(user.Id, serviceProvider).ConfigureAwait(false);
             return MessagesApi.ResetPassword;
         }
 
