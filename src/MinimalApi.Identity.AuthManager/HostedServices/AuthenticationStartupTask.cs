@@ -23,17 +23,23 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
         {
             UserName = settings.AssignAdminUsername,
             Email = settings.AssignAdminEmail,
+            EmailConfirmed = true,
+            LockoutEnabled = false,
+            TwoFactorEnabled = false,
+            RefreshToken = "",
+
+            // TODO: Spostare in background job
             UserProfile = new UserProfile
             {
                 FirstName = "Application",
                 LastName = "Admin",
                 IsEnabled = true,
                 LastDateChangePassword = ConstantsConfiguration.DateOnlyToday
-            },
-            EmailConfirmed = true,
-            LockoutEnabled = false,
-            TwoFactorEnabled = false,
-            RefreshToken = ""
+            }
+            //EmailConfirmed = true,
+            //LockoutEnabled = false,
+            //TwoFactorEnabled = false,
+            //RefreshToken = ""
         };
 
         await CheckCreateUserAsync(userManager, administratorUser, settings.AssignAdminPassword, nameof(DefaultRoles.Admin));
