@@ -85,7 +85,7 @@ public class Program
         if (swaggerSettings is { IsEnabled: true })
         {
             // Enable basic authentication for Swagger UI
-            if (swaggerSettings.AuthSettings?.IsRequired == true)
+            if (swaggerSettings.AuthSettings?.IsRequired is true)
             {
                 app.UseMiddleware<SwaggerBasicAuthMiddleware>();
             }
