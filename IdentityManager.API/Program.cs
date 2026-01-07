@@ -26,8 +26,8 @@ public class Program
         var minioOptions = builder.Services.ConfigureAndGet<MinioOptions>(builder.Configuration, nameof(MinioOptions)) ?? new MinioOptions();
         var smtpOptions = builder.Services.ConfigureAndGet<SmtpOptions>(builder.Configuration, nameof(SmtpOptions)) ?? new SmtpOptions();
 
-        // Configure Serilog to use MinIO storage if access key or secret key is provided
-        if (!string.IsNullOrEmpty(minioOptions.AccessKey) || !string.IsNullOrEmpty(minioOptions.SecretKey))
+        // Configure Serilog to use MinIO storage only if both access key and secret key are provided
+        if (!string.IsNullOrEmpty(minioOptions.AccessKey) && !string.IsNullOrEmpty(minioOptions.SecretKey))
         {
             builder.Host.UseSerilogToStorageCloud((context, services, config)
                 => config.ReadFrom.Configuration(context.Configuration), minioOptions);
