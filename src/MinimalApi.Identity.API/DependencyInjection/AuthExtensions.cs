@@ -83,6 +83,7 @@ public static class AuthExtensions
         return customClaims;
     }
 
+    // TODO: Spostare in background job
     public static async Task CreateProfileAsync(RegisterModel model, ApplicationUser user, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -92,6 +93,7 @@ public static class AuthExtensions
             .ConfigureAwait(false);
     }
 
+    // TODO: Spostare in background job
     public static async Task UpdateDateLastChangePasswordAsync(int userId, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -103,6 +105,7 @@ public static class AuthExtensions
     public static bool CheckLastDateChangePassword(DateOnly? lastDate, AppSettings options)
         => lastDate is not null && lastDate.Value.AddDays(options.PasswordExpirationDays) <= DateOnly.FromDateTime(DateTime.UtcNow);
 
+    // TODO: Spostare in background job
     public static async Task SendEmailRegisterUserAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, IHttpContextAccessor httpContextAccessor, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
@@ -130,6 +133,7 @@ public static class AuthExtensions
         await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None).ConfigureAwait(false);
     }
 
+    // TODO: Spostare in background job
     public static async Task SendEmailForgotPasswordAsync(UserManager<ApplicationUser> userManager, ApplicationUser user, IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();

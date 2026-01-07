@@ -17,6 +17,6 @@ public class ServiceDefaultRegistrationConfiguration(IServiceCollection services
     public JwtOptions JwtSettings { get; set; }
     public CorsOptions CorsSettings { get; set; }
     public FeatureFlagsOptions ActiveModules { get; set; }
-    public SmtpOptions SmtpSettings { get; set; }
+    //public SmtpOptions SmtpSettings { get; set; }
     public string MigrationsAssembly { get; set; } = string.Empty;
 }
