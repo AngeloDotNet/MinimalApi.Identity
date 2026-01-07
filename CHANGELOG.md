@@ -1,11 +1,19 @@
 # Changelog
 
-## [Identity.Module.Shared_v2.5.74](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.74) (2026-01-01)
+## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.Shared_v2.5.74)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
 
 **Implemented enhancements:**
 
+- Develop [\#237](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/237) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#236](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/236) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#235](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/235) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#233](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/233) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#231](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/231) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#229](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/229) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#228](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/228) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#226](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/226) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#225](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/225) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#221](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/221) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#219](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/219) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -184,6 +192,9 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#232](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/232) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Update CHANGELOG.md for tag main \[auto\] [\#230](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/230) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Update CHANGELOG.md for tag main \[auto\] [\#227](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/227) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#224](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/224) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Develop [\#223](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/223) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Update CHANGELOG.md for tag main \[auto\] [\#222](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/222) ([github-actions[bot]](https://github.com/apps/github-actions))
