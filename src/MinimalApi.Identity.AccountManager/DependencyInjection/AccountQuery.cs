@@ -56,6 +56,7 @@ public static class AccountQuery
             RetrySender = 0
         };
 
+        // TODO: Spostare in background job
         await emailManager.GenerateAutomaticEmailAsync(emailModel, CancellationToken.None);
 
         return MessagesApi.SendEmailForChangeEmail;
