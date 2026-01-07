@@ -28,7 +28,7 @@ public class AuthenticationStartupTask(IServiceProvider serviceProvider, IConfig
             TwoFactorEnabled = false,
             RefreshToken = "",
 
-            // TODO: Spostare in background job
+            // TODO: Move to background job
             UserProfile = new UserProfile
             {
                 FirstName = "Application",
