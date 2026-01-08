@@ -1,11 +1,44 @@
 # Changelog
 
-## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
+## [Identity.Module.API_v2.5.384](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.384) (2026-01-08)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.ClaimsManager_v2.5.13...Identity.Module.API_v2.5.384)
+
+## [Identity.Module.ClaimsManager_v2.5.13](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.ClaimsManager_v2.5.13) (2026-01-08)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.EmailManager_v2.5.66...Identity.Module.ClaimsManager_v2.5.13)
+
+## [Identity.Module.EmailManager_v2.5.66](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.EmailManager_v2.5.66) (2026-01-08)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.LicenseManager_v2.5.77...Identity.Module.EmailManager_v2.5.66)
+
+## [Identity.Module.LicenseManager_v2.5.77](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.LicenseManager_v2.5.77) (2026-01-08)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.Shared_v2.5.90...Identity.Module.LicenseManager_v2.5.77)
+
+## [Identity.Module.Shared_v2.5.90](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.90) (2026-01-08)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.API_v2.5.381...Identity.Module.Shared_v2.5.90)
 
 **Implemented enhancements:**
 
+- Develop [\#240](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/240) ([AngeloDotNet](https://github.com/AngeloDotNet))
+
+## [Identity.Module.API_v2.5.381](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.API_v2.5.381) (2026-01-07)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AccountManager_v2.5.82...Identity.Module.API_v2.5.381)
+
+## [Identity.Module.AccountManager_v2.5.82](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AccountManager_v2.5.82) (2026-01-07)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/Identity.Module.AuthManager_v2.5.71...Identity.Module.AccountManager_v2.5.82)
+
+## [Identity.Module.AuthManager_v2.5.71](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.AuthManager_v2.5.71) (2026-01-07)
+
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.AuthManager_v2.5.71)
+
+**Implemented enhancements:**
+
+- Develop [\#239](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/239) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#237](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/237) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#236](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/236) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#235](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/235) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -192,6 +225,7 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#238](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/238) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#232](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/232) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#230](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/230) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#227](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/227) ([github-actions[bot]](https://github.com/apps/github-actions))
