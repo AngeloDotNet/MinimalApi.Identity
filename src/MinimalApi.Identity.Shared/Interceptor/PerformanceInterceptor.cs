@@ -26,7 +26,7 @@ public class PerformanceInterceptor(ILogger<PerformanceInterceptor> logger) : Db
 
     private static string Truncate(string s, int len = 200)
     {
-        System.ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(s);
 
         if (s.Length <= len)
         {

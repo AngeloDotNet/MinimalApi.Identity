@@ -38,57 +38,25 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
         ArgumentNullException.ThrowIfNull(text);
 
         var span = text.AsSpan();
-        var blockEnd = "*/".AsSpan();
-
         var len = span.Length;
         var i = 0;
 
         while (i < len)
         {
-            // skip whitespace
-            while (i < len && char.IsWhiteSpace(span[i]))
-            {
-                i++;
-            }
+            i = SkipWhitespace(span, i, len);
 
             if (i + 1 >= len)
             {
                 break;
             }
 
-            // single-line comment: -- ... (skip to end of line)
-            if (span[i] == '-' && span[i + 1] == '-')
+            if (TrySkipSingleLineComment(span, len, ref i))
             {
-                i += 2;
-                while (i < len)
-                {
-                    var c = span[i];
-                    if (c is '\n' or '\r')
-                    {
-                        break;
-                    }
-
-                    i++;
-                }
-
-                // continue to outer loop to skip further whitespace/comments
                 continue;
             }
 
-            // block comment: /* ... */
-            if (span[i] == '/' && span[i + 1] == '*')
+            if (TrySkipBlockComment(span, len, ref i))
             {
-                i += 2;
-                var slice = span.Slice(i);
-                var idx = slice.IndexOf(blockEnd); // ordinal search on span
-
-                if (idx == -1)
-                {
-                    // unterminated block comment: treat as end of text
-                    return len;
-                }
-
-                i += idx + 2;
                 continue;
             }
 
@@ -97,6 +65,64 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
         }
 
         return i;
+    }
+
+    private static int SkipWhitespace(ReadOnlySpan<char> span, int start, int len)
+    {
+        var i = start;
+
+        while (i < len && char.IsWhiteSpace(span[i]))
+        {
+            i++;
+        }
+
+        return i;
+    }
+
+    private static bool TrySkipSingleLineComment(ReadOnlySpan<char> span, int len, ref int i)
+    {
+        if (!(i + 1 < len && span[i] == '-' && span[i + 1] == '-'))
+        {
+            return false;
+        }
+
+        i += 2;
+
+        while (i < len)
+        {
+            var c = span[i];
+
+            if (c is '\n' or '\r')
+            {
+                break;
+            }
+
+            i++;
+        }
+
+        return true;
+    }
+
+    private static bool TrySkipBlockComment(ReadOnlySpan<char> span, int len, ref int i)
+    {
+        if (!(i + 1 < len && span[i] == '/' && span[i + 1] == '*'))
+        {
+            return false;
+        }
+
+        i += 2;
+        var slice = span.Slice(i);
+        var idx = slice.IndexOf("*/".AsSpan());
+
+        if (idx == -1)
+        {
+            // unterminated block comment: treat as end of text
+            i = len;
+            return true;
+        }
+
+        i += idx + 2;
+        return true;
     }
 
     private static bool IsDeleteStatementWithoutWhere(string text, int startIndex)
