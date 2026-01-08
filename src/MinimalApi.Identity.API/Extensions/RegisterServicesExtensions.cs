@@ -105,8 +105,6 @@ public static class RegisterServicesExtensions
         }
 
         services
-            //.Configure<SmtpOptions>(options => config.Configuration.GetSection(nameof(SmtpOptions)).Bind(options))
-            //.Configure<SmtpOptions>(options => options = config.SmtpSettings)
             .Configure<RouteOptions>(options => options.LowercaseUrls = true)
             .Configure<KestrelServerOptions>(options => config.Configuration.GetSection("Kestrel").Bind(options))
             .ConfigureFluentValidation<LoginValidator>();
