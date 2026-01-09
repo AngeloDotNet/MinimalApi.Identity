@@ -50,7 +50,6 @@ public static class EndpointsHandler
     }
 
     [AllowAnonymous]
-    //public static async Task<IResult> ResetPasswordAsync([FromServices] IAuthService authService, [FromBody] ResetPasswordModel inputModel, [FromRoute] string code)
     public static async Task<IResult> ResetPasswordAsync([FromServices] IAuthService authService, [FromBody] ResetPasswordModel inputModel)
     {
         await authService.ResetPasswordAsync(inputModel, inputModel.Code);
