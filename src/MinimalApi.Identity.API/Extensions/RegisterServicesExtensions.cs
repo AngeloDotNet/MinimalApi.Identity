@@ -94,13 +94,13 @@ public static class RegisterServicesExtensions
         switch (config.ErrorResponseFormat)
         {
             case ErrorResponseFormat.Default:
-                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
+                services.ConfigureValidation(options => config.ErrorResponseFormat = ErrorResponseFormat.Default);
                 break;
             case ErrorResponseFormat.List:
-                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.List));
+                services.ConfigureValidation(options => config.ErrorResponseFormat = ErrorResponseFormat.List);
                 break;
             default:
-                services.ConfigureValidation(options => options.ErrorResponseFormat = nameof(ErrorResponseFormat.Default));
+                services.ConfigureValidation(options => config.ErrorResponseFormat = ErrorResponseFormat.Default);
                 break;
         }
 
@@ -209,7 +209,8 @@ public static class RegisterServicesExtensions
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+        var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser().Build();
 
         options.DefaultPolicy = policy;
         options.FallbackPolicy = policy;

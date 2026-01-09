@@ -71,8 +71,7 @@ public class AuthEndpoints : IEndpointRouteHandlerBuilder
             .WithDescription("Forgot password")
             .WithSummary("Forgot password");
 
-        apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPassword, EndpointsHandler.ResetPasswordAsync) // TODO: Aggiornare firma endpoint
-        //apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPasswordNoCode, EndpointsHandler.ResetPasswordAsync)
+        apiGroup.MapPost(ConstantsConfiguration.EndpointsResetPasswordNoCode, EndpointsHandler.ResetPasswordAsync)
             .Produces<Ok<string>>(StatusCodes.Status200OK).WithDescription("Your password has been reset.")
             .ProducesProblem(StatusCodes.Status400BadRequest).WithDescription(ConstantsConfiguration.BadRequest)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity).WithDescription(ConstantsConfiguration.ValidationErrors)
