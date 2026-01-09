@@ -8,17 +8,15 @@ using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using MinimalApi.Identity.Core.Exceptions;
-using MinimalApi.Identity.Core.Settings;
 using MinimalApi.Identity.Core.Utility.Messages;
 using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace MinimalApi.Identity.API.Middleware;
 
-public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor<AppSettings> settings)
+public class MinimalApiExceptionMiddleware(RequestDelegate next, ErrorResponseFormat errorResponseFormat)
 {
-    private readonly AppSettings settings = settings.CurrentValue;
+    //private readonly AppSettings settings = settings.CurrentValue;
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -28,11 +26,12 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(httpContext, ex, settings).ConfigureAwait(false);
+            await HandleExceptionAsync(httpContext, ex, errorResponseFormat).ConfigureAwait(false);
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, Exception exception, AppSettings settings)
+    //private static async Task HandleExceptionAsync(HttpContext context, Exception exception, AppSettings settings)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception, ErrorResponseFormat errorResponseFormat)
     {
         var statusCode = GetStatusCodeFromException(exception);
         var message = GetMessageFromException(exception);
@@ -40,8 +39,14 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, IOptionsMonitor
 
         if (exception is ValidationModelException validationException)
         {
-            problemDetails.Extensions["errors"] = settings.ErrorResponseFormat ==
-                nameof(ErrorResponseFormat.List) ? CreateErrorList(validationException) : validationException.Errors;
+            //problemDetails.Extensions["errors"] = errorResponseFormat ==
+            //    nameof(ErrorResponseFormat.List) ? CreateErrorList(validationException) : validationException.Errors;
+            problemDetails.Extensions["errors"] = errorResponseFormat switch
+            {
+                ErrorResponseFormat.List => CreateErrorList(validationException),
+                ErrorResponseFormat.Default => validationException.Errors,
+                _ => CreateErrorList(validationException)
+            };
         }
 
         context.Response.ContentType = "application/json";
