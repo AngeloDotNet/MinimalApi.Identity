@@ -6,8 +6,7 @@ using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace IdentityManager.API.Middleware;
 
-public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseFormat errorResponseFormat)
-    : MinimalApiExceptionMiddleware(next, errorResponseFormat)
+public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseFormat errorResponseFormat) : MinimalApiExceptionMiddleware(next, errorResponseFormat)
 {
     public static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
@@ -26,8 +25,6 @@ public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseForm
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = problemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
 
-        //var json = JsonSerializer.Serialize(problemDetails);
-        //return context.Response.WriteAsync(json);
         return context.Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
     }
 }
