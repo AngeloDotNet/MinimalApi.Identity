@@ -1,14 +1,13 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using MinimalApi.Identity.API.Middleware;
-using MinimalApi.Identity.Core.Settings;
+using MinimalApi.Identity.Shared.Results.AspNetCore.Http;
 
 namespace IdentityManager.API.Middleware;
 
-public class ExtendedExceptionMiddleware(RequestDelegate next, IOptionsMonitor<AppSettings> settings)
-    : MinimalApiExceptionMiddleware(next, settings)
+public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseFormat errorResponseFormat)
+    : MinimalApiExceptionMiddleware(next, errorResponseFormat)
 {
     public static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
