@@ -33,13 +33,14 @@ public class Program
         }
 
         var activeModules = RegisterServicesExtensions.ReadFeatureFlags(appSettings);
+        var errorResponseFormat = ErrorResponseFormat.List;             // Alternatively: Default
 
         builder.Services.ConfigureAndGet<SmtpOptions>(builder.Configuration, nameof(SmtpOptions));
         builder.Services.AddRegisterDefaultServices<MinimalApiAuthDbContext>(options =>
         {
             options.Configuration = builder.Configuration;
             options.TypeDatabase = DatabaseType.SQLServer;                              // Alternatively: AzureSQL, PostgreSQL, MySQL, SQLite
-            options.ErrorResponseFormat = ErrorResponseFormat.List;                     // Alternatively: Default
+            options.ErrorResponseFormat = errorResponseFormat;
             options.ApplicationSettings = appSettings;
             options.JwtSettings = jwtOptions;
             options.CorsSettings = corsOptions;
@@ -77,12 +78,11 @@ public class Program
         app.UseHttpsRedirection();
         app.UseStatusCodePages();
 
-        app.UseMiddleware<MinimalApiExceptionMiddleware>();
+        app.UseMiddleware<MinimalApiExceptionMiddleware>(errorResponseFormat);
+        //app.UseMiddleware<ExtendedExceptionMiddleware>(errorResponseFormat);        //Alternative to MinimalApiExceptionMiddleware
 
-        // Enable Swagger only if it's enabled in settings
         if (swaggerSettings is { IsEnabled: true })
         {
-            // Enable basic authentication for Swagger UI
             if (swaggerSettings.AuthSettings?.IsRequired is true)
             {
                 app.UseMiddleware<SwaggerBasicAuthMiddleware>();
