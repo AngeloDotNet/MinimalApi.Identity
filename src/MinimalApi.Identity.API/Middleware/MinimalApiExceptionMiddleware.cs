@@ -16,8 +16,6 @@ namespace MinimalApi.Identity.API.Middleware;
 
 public class MinimalApiExceptionMiddleware(RequestDelegate next, ErrorResponseFormat errorResponseFormat)
 {
-    //private readonly AppSettings settings = settings.CurrentValue;
-
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
@@ -30,7 +28,6 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, ErrorResponseFo
         }
     }
 
-    //private static async Task HandleExceptionAsync(HttpContext context, Exception exception, AppSettings settings)
     private static async Task HandleExceptionAsync(HttpContext context, Exception exception, ErrorResponseFormat errorResponseFormat)
     {
         var statusCode = GetStatusCodeFromException(exception);
@@ -39,8 +36,6 @@ public class MinimalApiExceptionMiddleware(RequestDelegate next, ErrorResponseFo
 
         if (exception is ValidationModelException validationException)
         {
-            //problemDetails.Extensions["errors"] = errorResponseFormat ==
-            //    nameof(ErrorResponseFormat.List) ? CreateErrorList(validationException) : validationException.Errors;
             problemDetails.Extensions["errors"] = errorResponseFormat switch
             {
                 ErrorResponseFormat.List => CreateErrorList(validationException),
