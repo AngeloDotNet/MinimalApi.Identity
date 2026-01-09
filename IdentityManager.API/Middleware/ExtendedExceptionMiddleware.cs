@@ -15,10 +15,8 @@ public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseForm
 
         switch (exception)
         {
-            //case CustomException customException:
-            //    problemDetails = CreateProblemDetails(context, HttpStatusCode.BadRequest, customException.Message);
-            //    problemDetails.Extensions["customProperty"] = customException.CustomProperty;
-            //    break;
+            // Here you can add additional exception cases to handle them specifically
+
             default:
                 problemDetails = CreateProblemDetails(context, HttpStatusCode.InternalServerError, "An unexpected error occurred!");
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
@@ -28,7 +26,8 @@ public class ExtendedExceptionMiddleware(RequestDelegate next, ErrorResponseForm
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = problemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
 
-        var json = JsonSerializer.Serialize(problemDetails);
-        return context.Response.WriteAsync(json);
+        //var json = JsonSerializer.Serialize(problemDetails);
+        //return context.Response.WriteAsync(json);
+        return context.Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
     }
 }
