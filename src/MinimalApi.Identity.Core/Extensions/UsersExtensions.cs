@@ -101,27 +101,27 @@ public static class UsersExtensions
         return lockoutEnd <= DateTimeOffset.UtcNow;
     }
 
-    public static Guid GetUserId(this IHttpContextAccessor httpContextAccessor)
-    {
-        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+    //public static Guid GetUserId(this IHttpContextAccessor httpContextAccessor)
+    //{
+    //    ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
-        var userIdString = httpContextAccessor.HttpContext?.User?.GetUserId();
+    //    var userIdString = httpContextAccessor.HttpContext?.User?.GetUserId();
 
-        if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
-        {
-            throw new ApplicationException("User ID is missing or invalid.");
-        }
+    //    if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out var userId))
+    //    {
+    //        throw new NotFoundException("User ID is missing or invalid.");
+    //    }
 
-        return userId;
-    }
+    //    return userId;
+    //}
 
-    public static bool IsAuthenticated(this IHttpContextAccessor httpContextAccessor)
-    {
-        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+    //public static bool IsAuthenticated(this IHttpContextAccessor httpContextAccessor)
+    //{
+    //    ArgumentNullException.ThrowIfNull(httpContextAccessor);
 
-        var isAuthenticated = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated
-            ?? throw new ApplicationException("User context is unavailable");
+    //    var isAuthenticated = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated
+    //        ?? throw new NotFoundException("User context is unavailable");
 
-        return isAuthenticated;
-    }
+    //    return isAuthenticated;
+    //}
 }
