@@ -1,5 +1,4 @@
-﻿using System.Timers;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,7 +27,8 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         {
             while (await periodicTimer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
             {
-                _ = Task.Run(() => Timer_ElapsedAsync(null, null), stoppingToken);
+                //_ = Task.Run(() => Timer_ElapsedAsync(null, null), stoppingToken);
+                _ = Task.Run(() => Timer_ElapsedAsync(), stoppingToken);
             }
         }
         catch (OperationCanceledException)
@@ -37,7 +37,8 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         }
     }
 
-    private async Task Timer_ElapsedAsync(object? sender, ElapsedEventArgs? e)
+    //private async Task Timer_ElapsedAsync(object? sender, ElapsedEventArgs? e)
+    private async Task Timer_ElapsedAsync()
     {
         using var scope = serviceScopeFactory.CreateScope();
         var provider = scope.ServiceProvider;
