@@ -27,7 +27,6 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         {
             while (await periodicTimer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
             {
-                //_ = Task.Run(() => Timer_ElapsedAsync(null, null), stoppingToken);
                 _ = Task.Run(() => Timer_ElapsedAsync(), stoppingToken);
             }
         }
@@ -37,7 +36,6 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         }
     }
 
-    //private async Task Timer_ElapsedAsync(object? sender, ElapsedEventArgs? e)
     private async Task Timer_ElapsedAsync()
     {
         using var scope = serviceScopeFactory.CreateScope();
@@ -61,7 +59,7 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
                     MaxRetryAttempts = maxRetryAttempts
                 };
 
-                if (!await CheckIfShouldRetryAsync(emailSenderOptions, emailService, logger).ConfigureAwait(false))
+                if (!await EmailExtensions.CheckIfShouldRetryAsync(emailSenderOptions, emailService, logger).ConfigureAwait(false))
                 {
                     continue;
                 }
@@ -100,29 +98,5 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
         }
 
         await Task.Yield();
-    }
-
-    private static async Task<bool> CheckIfShouldRetryAsync(EmailSender email, IEmailManagerService emailManagerService, ILogger<BackgroundEmailSender> logger)
-    {
-        ArgumentNullException.ThrowIfNull(email);
-        ArgumentNullException.ThrowIfNull(emailManagerService);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        if (email.Email.RetrySender > email.MaxRetryAttempts)
-        {
-            await emailManagerService.UpdateEmailStatusAsync(email.Email.Id, (int)EmailStatusType.Cancelled, CancellationToken.None)
-                .ConfigureAwait(false);
-
-            logger.LogWarning(
-                "Email with Id {EmailId} has exceeded the maximum retry attempts ({MaxRetries}) and has been marked as Cancelled.",
-                email.Email.Id, email.MaxRetryAttempts);
-
-            return false;
-        }
-
-        logger.LogInformation("Email with Id {EmailId} will be retried. Current attempt: {RetryAttempt}.",
-            email.Email.Id, email.Email.RetrySender + 1);
-
-        return true;
     }
 }
