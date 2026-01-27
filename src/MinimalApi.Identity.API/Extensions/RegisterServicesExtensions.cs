@@ -250,7 +250,6 @@ public static class RegisterServicesExtensions
     internal static string GetDatabaseConnectionString(IConfiguration configuration, DatabaseType databaseType)
     {
         ArgumentNullException.ThrowIfNull(configuration);
-        ArgumentNullException.ThrowIfNull(databaseType);
 
         return databaseType switch
         {
@@ -265,7 +264,6 @@ public static class RegisterServicesExtensions
 
     internal static Action<DbContextOptionsBuilder> GetDatabaseOptionsBuilder(DatabaseType databaseType, string sqlConnection, string migrationsAssembly)
     {
-        ArgumentNullException.ThrowIfNull(databaseType);
         ArgumentNullException.ThrowIfNull(sqlConnection);
         ArgumentNullException.ThrowIfNull(migrationsAssembly);
 
