@@ -59,7 +59,8 @@ public static class OperationResultExtensions
         return Problem(httpContext, result.FailureReason, result.Content, result.ErrorMessage, result.ErrorDetail, result.ValidationErrors);
     }
 
-    private static IResult Problem(HttpContext httpContext, int failureReason, object? content = null, string? title = null, string? detail = null, IEnumerable<ValidationError>? validationErrors = null)
+    private static IResult Problem(HttpContext httpContext, int failureReason, object? content = null, string? title = null, string? detail = null,
+        IEnumerable<ValidationError>? validationErrors = null)
     {
         var options = httpContext.RequestServices.GetService<OperationResultOptions>() ?? new OperationResultOptions();
         var statusCode = options.MapStatusCodes ? options.GetStatusCode(failureReason) : failureReason;
@@ -83,7 +84,9 @@ public static class OperationResultExtensions
         {
             if (options.ErrorResponseFormat == ErrorResponseFormat.Default)
             {
-                var errors = validationErrors.GroupBy(v => v.Name).ToDictionary(k => k.Key, v => v.Select(e => e.Message));
+                var errors = validationErrors.GroupBy(v => v.Name)
+                    .ToDictionary(k => k.Key, v => v.Select(e => e.Message));
+
                 problemDetails.Extensions.Add("errors", errors);
             }
             else
