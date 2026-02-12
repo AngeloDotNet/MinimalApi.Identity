@@ -7,7 +7,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="2.5.208" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.210" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
             <PrivateAssets>all</PrivateAssets>
