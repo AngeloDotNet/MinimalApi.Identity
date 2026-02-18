@@ -1,11 +1,25 @@
 # Changelog
 
-## [Identity.Module.Shared_v2.5.96](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/Identity.Module.Shared_v2.5.96) (2026-01-24)
+## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...Identity.Module.Shared_v2.5.96)
+[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
 
 **Implemented enhancements:**
 
+- Develop [\#275](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/275) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#274](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/274) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#273](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/273) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#272](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/272) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#271](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/271) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#269](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/269) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#268](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/268) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#267](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/267) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#266](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/266) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#265](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/265) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#264](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/264) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#263](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/263) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#262](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/262) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#260](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/260) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#258](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/258) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#257](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/257) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#256](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/256) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -207,6 +221,8 @@
 
 **Merged pull requests:**
 
+- Bump super-linter/super-linter from 7.2.0 to 8.3.1 in /.github/workflows in the github\_actions group across 1 directory [\#270](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/270) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update CHANGELOG.md for tag main \[auto\] [\#259](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/259) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#255](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/255) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#253](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/253) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#250](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/250) ([github-actions[bot]](https://github.com/apps/github-actions))
