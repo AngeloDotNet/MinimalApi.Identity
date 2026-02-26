@@ -25,8 +25,8 @@
     
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-        <PackageReference Include="Identity.Module.Shared" Version="2.5.100" />
-        <PackageReference Include="MailKit" Version="4.14.1" />
+        <PackageReference Include="Identity.Module.Shared" Version="2.5.101" />
+        <PackageReference Include="MailKit" Version="4.15.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
