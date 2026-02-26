@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- Develop [\#277](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/277) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#275](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/275) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#274](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/274) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#273](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/273) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -221,6 +222,7 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#276](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/276) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Bump super-linter/super-linter from 7.2.0 to 8.3.1 in /.github/workflows in the github\_actions group across 1 directory [\#270](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/270) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update CHANGELOG.md for tag main \[auto\] [\#259](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/259) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#255](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/255) ([github-actions[bot]](https://github.com/apps/github-actions))
