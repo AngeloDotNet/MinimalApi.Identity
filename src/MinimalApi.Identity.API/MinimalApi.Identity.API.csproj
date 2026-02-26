@@ -30,16 +30,16 @@
     <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
-    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.97" />
-    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.79" />
-    <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.21" />
+    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.99" />
+    <PackageReference Include="Identity.Module.AuthManager" Version="2.5.80" />
+    <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.22" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.212" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.80" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.85" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.23" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.101" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.93" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.51" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.81" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.86" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.24" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.102" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.94" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.52" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
