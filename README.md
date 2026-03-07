@@ -144,7 +144,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 ## 🗺️ Roadmap
 
-- [ ] Updating Nuget packages to the latest version available for the SDK 8
+- [ ] Update NuGet packages to the latest versions available for .NET SDK 8
 - [ ] Migrate solution to .NET 9 (.NET 8 compatibility maintained)
 - [ ] Migrate solution to .NET 10
 - [ ] Migrate SwaggerSettings configuration to database
