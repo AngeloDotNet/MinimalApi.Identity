@@ -6,6 +6,14 @@
 
 **Implemented enhancements:**
 
+- Develop [\#286](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/286) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#285](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/285) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#284](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/284) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#283](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/283) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#282](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/282) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#281](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/281) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#280](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/280) ([AngeloDotNet](https://github.com/AngeloDotNet))
+- Develop [\#278](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/278) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#277](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/277) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#275](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/275) ([AngeloDotNet](https://github.com/AngeloDotNet))
 - Develop [\#274](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/274) ([AngeloDotNet](https://github.com/AngeloDotNet))
@@ -222,6 +230,7 @@
 
 **Merged pull requests:**
 
+- Update CHANGELOG.md for tag main \[auto\] [\#279](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/279) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Update CHANGELOG.md for tag main \[auto\] [\#276](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/276) ([github-actions[bot]](https://github.com/apps/github-actions))
 - Bump super-linter/super-linter from 7.2.0 to 8.3.1 in /.github/workflows in the github\_actions group across 1 directory [\#270](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/270) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update CHANGELOG.md for tag main \[auto\] [\#259](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/259) ([github-actions[bot]](https://github.com/apps/github-actions))
