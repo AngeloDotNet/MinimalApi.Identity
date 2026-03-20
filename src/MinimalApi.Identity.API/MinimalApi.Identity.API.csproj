@@ -34,9 +34,9 @@
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.85" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.28" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.218" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.85" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.91" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.29" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.86" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.92" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.30" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.107" />
     <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.99" />
     <PackageReference Include="Identity.Module.RolesManager" Version="2.5.57" />
