@@ -144,7 +144,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 ## 🗺️ Roadmap
 
-- [ ] Update NuGet packages to the latest versions available for .NET SDK 8
+- [X] Update NuGet packages to the latest versions available for .NET SDK 8
 - [ ] Migrate solution to .NET 9 (.NET 8 compatibility maintained)
 - [ ] Migrate solution to .NET 10
 - [ ] Migrate SwaggerSettings configuration to database
@@ -154,7 +154,6 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Add support for multi tenancy
 - [ ] Align endpoints with the updated version of ASP.NET Core Identity (including endpoints for two-factor authentication and management, downloading and deleting personal data)
 - [ ] Code Review and Refactoring
-- [ ] Update documentation
 
 ## 🚀 Future implementations
 
@@ -162,6 +161,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
 - [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
+- [ ] Update documentation
 
 ## 📜 License
 
