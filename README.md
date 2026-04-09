@@ -144,8 +144,9 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 
 ## 🗺️ Roadmap
 
-- [X] Update NuGet packages to the latest versions available for .NET SDK 8
-- [ ] Migrate solution to .NET 9 (.NET 8 compatibility maintained)
+- [ ] Migrate solution to .NET 9
+
+<!--
 - [ ] Migrate solution to .NET 10
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
@@ -162,6 +163,7 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 - [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
 - [ ] Migrate FeatureFlagsOptions to Feature Management (package Microsoft.FeatureManagement)
 - [ ] Update documentation
+-->
 
 ## 📜 License
 
