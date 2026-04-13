@@ -31,9 +31,7 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
             }
         }
         catch (OperationCanceledException)
-        {
-            // Expected when stoppingToken is cancelled — swallow to allow graceful shutdown.
-        }
+        { }
     }
 
     private async Task Timer_ElapsedAsync()
@@ -72,12 +70,10 @@ public class BackgroundEmailSender(IServiceScopeFactory serviceScopeFactory, IOp
                     {
                         email.TypeEmailStatusId = (int)EmailStatusType.Sent;
                         email.DateSent = DateTime.UtcNow;
-                        // keep retry values as they are on success
                     }
                     else
                     {
                         email.TypeEmailStatusId = (int)EmailStatusType.Failed;
-                        // preserve original DateSent; increment retry metadata
                         email.RetrySender = email.RetrySender + 1;
                         email.RetrySenderDate = DateTime.UtcNow;
                     }
