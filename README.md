@@ -8,11 +8,6 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 
 **MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and relational database (of your choice).
 
-<!--
-> [!IMPORTANT]
-> **This library is still under development of new implementations and in the process of creating the related documentation.**
--->
-
 ## 🧩 Features
 
 - **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
@@ -47,11 +42,6 @@ dotnet add package Identity.Module.API
 ## ⚙️ Configuration
 
 The configuration can be completely managed by adding this section to the _appsettings.json_ file:
-
-<!--
-> [!WARNING]
->  The library is still under development, so the configuration may change in future updates.
--->
 
 A complete example of the configurations in AppSettings.json is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/appsettings.json).
 
@@ -91,18 +81,7 @@ You can manage the state of the Swagger UI with the following configuration:
 
 - Enable/Disable Swagger UI: set via `SwaggerSettings:IsEnabled` (supported values: `true`, `false`)
 
-<!--
-## 🔰 Feature Flags
-
-🚧 coming soon
--->
-
 ## 💡 Usage Examples
-
-<!--
-> [!WARNING]
-> The library is still under development, so the Program.cs configuration may change in future updates.
--->
 
 A complete example of the Program.cs class is available [here](https://github.com/AngeloDotNet/MinimalApi.Identity/blob/main/IdentityManager.API/Program.cs).
 
@@ -119,12 +98,6 @@ A default administrator account is created automatically with the following conf
 - Email: set via `AppSettings:AssignAdminEmail`
 - Username: set via `AppSettings:AssignAdminUsername`
 - Password: set via `AppSettings:AssignAdminPassword`
-
-<!--
-## 📚 API Reference
-
-See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/main/docs/Endpoints) for a list of all available endpoints.
--->
 
 ## 🏆 Badges
 
@@ -145,9 +118,9 @@ See the [documentation](https://github.com/AngeloDotNet/MinimalApi.Identity/tree
 ## 🗺️ Roadmap
 
 - [ ] Migrate solution to .NET 9
+- [ ] Migrate solution to .NET 10
 
 <!--
-- [ ] Migrate solution to .NET 10
 - [ ] Migrate SwaggerSettings configuration to database
 - [ ] Migrate SmtpOptions configuration to database
 - [ ] Replacing the hosted service email sender using Coravel jobs

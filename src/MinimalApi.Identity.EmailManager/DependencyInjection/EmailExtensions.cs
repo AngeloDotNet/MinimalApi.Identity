@@ -37,8 +37,7 @@ public static class EmailExtensions
             await emailManagerService.UpdateEmailStatusAsync(email.Email.Id, (int)EmailStatusType.Cancelled, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            logger.LogWarning(
-                "Email with Id {EmailId} has exceeded the maximum retry attempts ({MaxRetries}) and has been marked as Cancelled.",
+            logger.LogWarning("Email with Id {EmailId} has exceeded the maximum retry attempts ({MaxRetries}) and has been marked as Cancelled.",
                 email.Email.Id, email.MaxRetryAttempts);
 
             return false;
