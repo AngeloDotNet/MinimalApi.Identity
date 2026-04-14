@@ -14,8 +14,6 @@ public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider
     {
         using var scope = serviceProvider.CreateScope();
         var policyService = scope.ServiceProvider.GetRequiredService<IAuthPolicyService>();
-
-        // You can pass a real cancellation token if needed
         var policies = await policyService.GetAllPoliciesAsync(CancellationToken.None);
         var policyModel = policies.FirstOrDefault(policy => policy.PolicyName == policyName);
 
@@ -27,7 +25,6 @@ public class DynamicAuthorizationPolicyProvider(IServiceProvider serviceProvider
             return policy;
         }
 
-        // Fallback to static policies
         return authorizationOptions.GetPolicy(policyName);
     }
 
