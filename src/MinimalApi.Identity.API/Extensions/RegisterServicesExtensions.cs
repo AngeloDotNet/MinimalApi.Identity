@@ -150,10 +150,7 @@ public static class RegisterServicesExtensions
 
         services.AddDbContext<TDbContext>((serviceProvider, options) =>
         {
-            // Apply the base options configured by optionsAction
             optionsAction(options);
-
-            // Resolve EF Core interceptors registered in DI and add them dynamically.
             var interceptors = serviceProvider.GetServices<IInterceptor>().ToArray();
 
             if (interceptors.Length != 0)
@@ -161,10 +158,8 @@ public static class RegisterServicesExtensions
                 options.AddInterceptors(interceptors);
             }
 
-            // Helpful for debugging — optional in production
             options.EnableSensitiveDataLogging();
             options.LogTo(Console.WriteLine, LogLevel.Information);
-
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
@@ -185,8 +180,6 @@ public static class RegisterServicesExtensions
         }
 
         var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync(cancellationToken).ConfigureAwait(false);
-
-        // Fast-path when the returned collection exposes Count to avoid enumerator allocation.
         bool hasPending;
 
         if (pendingMigrations is ICollection<string> coll)

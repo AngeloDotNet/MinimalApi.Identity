@@ -60,7 +60,6 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
                 continue;
             }
 
-            // no more leading comments/whitespace
             break;
         }
 
@@ -116,7 +115,6 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
 
         if (idx == -1)
         {
-            // unterminated block comment: treat as end of text
             i = len;
             return true;
         }
@@ -134,7 +132,6 @@ public class SecurityInterceptor(ILogger<SecurityInterceptor> logger) : DbComman
             return false;
         }
 
-        // Use string.IndexOf with start index to avoid allocation of substring.
         return text.IndexOf("WHERE", startIndex, StringComparison.OrdinalIgnoreCase) == -1;
     }
 }

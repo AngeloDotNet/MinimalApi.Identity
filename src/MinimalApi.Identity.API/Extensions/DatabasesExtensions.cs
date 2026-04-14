@@ -98,10 +98,7 @@ public static class DatabasesExtensions
             method?.Invoke(null, [optionsBuilder]);
         }
         catch
-        {
-            // Swallow: provider package may not be referenced / available at runtime.
-            // If you want diagnostics, log here using your logger.
-        }
+        { }
     }
 
     private static IEnumerable<Type> GetTypesSafe(Assembly assembly)
