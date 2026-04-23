@@ -13,7 +13,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
     <PackageIcon>identityLibrary.png</PackageIcon>
-    <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+    <PackageTags>csharp dotnet net9 open source aspnet core identity users roles claims minimal api</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
@@ -33,18 +33,18 @@
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.118" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.90" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.33" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.224" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.91" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.225" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.93" />
     <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.97" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.35" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.113" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.105" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.63" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.25" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.25" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.36" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.115" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.106" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.64" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.15" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
 </ItemGroup>
