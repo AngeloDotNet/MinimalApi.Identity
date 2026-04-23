@@ -13,7 +13,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
-        <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+        <PackageTags>csharp dotnet net9 open source aspnet core identity users roles claims minimal api</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
@@ -31,10 +31,10 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="4.0.21.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.25" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+      <PackageReference Include="AWSSDK.S3" Version="4.0.22" />
+      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.15" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.15" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.15">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
