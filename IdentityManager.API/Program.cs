@@ -33,7 +33,9 @@ public class Program
         }
         else if (hasAccess || hasSecret)
         {
-            Console.WriteLine("MinIO configuration is incomplete. Both AccessKey and SecretKey are required to enable Serilog to cloud storage. Serilog to cloud is disabled.");
+            Console.WriteLine("MinIO configuration is incomplete. " +
+                "Both AccessKey and SecretKey are required to enable Serilog to cloud storage. " +
+                "Serilog to cloud is disabled.");
         }
 
         var activeModules = RegisterServicesExtensions.ReadFeatureFlags(appSettings);

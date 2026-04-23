@@ -34,7 +34,8 @@ public static class SwaggerExtensions
             In = ParameterLocation.Header,
             Name = "Authorization",
             Description = "JWT Authorization header using the Bearer scheme.",
-            Type = SecuritySchemeType.ApiKey,
+            //Type = SecuritySchemeType.ApiKey,
+            Type = SecuritySchemeType.Http,
             Reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
