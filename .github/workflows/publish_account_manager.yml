@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
       
 env:
-  NET_VERSION: '8.x'
+  NET_VERSION: '9.x'
   PROJECT_NAME: src/MinimalApi.Identity.AccountManager
   PROJECT_FILE: MinimalApi.Identity.AccountManager.csproj
   TAG_NAME: Identity.Module.AccountManager

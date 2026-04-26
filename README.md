@@ -6,11 +6,11 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 
 ## 🏷️ Introduction
 
-**MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET 8 Minimal API, Entity Framework Core and relational database (of your choice).
+**MinimalApi.Identity** is a dynamic and modular identity manager for managing users, roles, claims and more for access control in Asp.Net Mvc Core and Web API, using .NET Minimal API, Entity Framework Core and relational database (of your choice).
 
 ## 🧩 Features
 
-- **Minimal API**: Built using .NET 8 Minimal API for a lightweight and efficient implementation.
+- **Minimal API**: Built using .NET 9 Minimal API for a lightweight and efficient implementation.
 - **Entity Framework Core**: Uses EF Core for data access, making it easy to integrate with your existing database.
 - **Modular**: The library is designed to be modular, allowing you to add or remove features as needed.
 - **Dynamic**: Supports dynamic management of users, roles, claims, forms, licensing and policies.
@@ -21,7 +21,7 @@ A set of libraries to easily integrate and extend authentication in ASP.NET Core
 
 ### Prerequisites
 
-- .NET 8.0 SDK (latest version)
+- .NET 9.0 SDK (latest version)
 - SQL Server 2022 Express installed ([setup for Windows](https://www.microsoft.com/it-it/download/details.aspx?id=104781)) or in Docker version ([example](https://github.com/AngeloDotNet/Docker.Database/tree/master/SQL-Server-2022-EXP))
 
 As an alternative to SQL Server you can use one of these databases:
@@ -117,7 +117,7 @@ A default administrator account is created automatically with the following conf
 
 ## 🗺️ Roadmap
 
-- [ ] Migrate solution to .NET 9
+- [X] Migrate solution to .NET 9
 - [ ] Migrate solution to .NET 10
 
 <!--
