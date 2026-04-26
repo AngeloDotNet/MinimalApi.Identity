@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Authors>Angelo Pirola</Authors>
@@ -13,7 +13,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AngeloDotNet/MinimalApi.Identity</PackageProjectUrl>
         <PackageIcon>identityLibrary.png</PackageIcon>
-        <PackageTags>csharp dotnet net8 open source aspnet core identity users roles claims minimal api</PackageTags>
+        <PackageTags>csharp dotnet net9 open source aspnet core identity users roles claims minimal api</PackageTags>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/AngeloDotNet/MinimalApi.Identity.git</RepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
@@ -25,11 +25,11 @@
     
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-        <PackageReference Include="Identity.Module.Shared" Version="2.5.110" />
-        <PackageReference Include="MailKit" Version="4.15.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.25" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+        <PackageReference Include="Identity.Module.Shared" Version="2.5.117" />
+        <PackageReference Include="MailKit" Version="4.16.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.15" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.15" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
