@@ -121,7 +121,7 @@ In this solution:
 
 - [ ] 
 
-In the .NET 10 solution (in a dedicated [repository](https://github.com/IdentitySystem))
+In the .NET 10 solution (in a dedicated temporarily private repository)
 
 - [ ] Migrate solution to .NET 10 (⌛ in progress)
 - [ ] Replacing the hosted service email sender using Coravel jobs
