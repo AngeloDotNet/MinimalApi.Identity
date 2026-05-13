@@ -117,9 +117,7 @@ A default administrator account is created automatically with the following conf
 
 ## 🗺️ Roadmap
 
-In this solution:
-
-- [ ] 
+In this solution no further development activities are currently planned.
 
 In the .NET 10 solution (in a dedicated, temporarily private repository):
 
