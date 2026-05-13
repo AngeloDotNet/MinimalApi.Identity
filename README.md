@@ -119,20 +119,18 @@ A default administrator account is created automatically with the following conf
 
 In this solution:
 
-- [X] Migrate solution to .NET 9
+- [ ] 
 
 In the .NET 10 solution (in a dedicated [repository](https://github.com/IdentitySystem))
 
 - [ ] Migrate solution to .NET 10 (⌛ in progress)
-- [X] Change the entity ID type from INT to GUID
-- [X] Make the ID entity type dynamic, so that it can accept both INT and GUID at runtime
-- [X] Migrate SwaggerSettings configuration to database
-- [X] Migrate SmtpOptions configuration to database
-- [X] Replacing exceptions with implementation of operation results
 - [ ] Replacing the hosted service email sender using Coravel jobs
-- [ ] Align endpoints with the updated version of ASP.NET Core Identity (including endpoints for two-factor authentication and management, downloading and deleting personal data)
 - [ ] Add support for multi tenancy
-- [ ] Add authentication support from third-party providers (e.g. Auth0, KeyCloak, GitHub, Azure)
+- [ ] Align endpoints with the updated version of ASP.NET Core Identity (including endpoints for two-factor authentication and management, downloading and deleting personal data)
+- [ ] Add authentication support from third-party providers Auth0
+- [ ] Add authentication support from third-party providers KeyCloak
+- [ ] Add authentication support from third-party providers GitHub
+- [ ] Add authentication support from third-party providers Azure
 - [ ] Code Review and Refactoring
 - [ ] Update documentation
 
