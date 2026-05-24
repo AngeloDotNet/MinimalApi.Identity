@@ -24,8 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="2.5.226" />
-        <PackageReference Include="Identity.Module.EmailManager" Version="2.5.94" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.227" />
+        <PackageReference Include="Identity.Module.EmailManager" Version="2.5.95" />
     </ItemGroup>
     
     <ItemGroup>
