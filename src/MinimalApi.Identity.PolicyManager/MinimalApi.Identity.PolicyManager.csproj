@@ -24,7 +24,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="2.5.231" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.233" />
     </ItemGroup>
     
     <ItemGroup>
@@ -32,6 +32,10 @@
             <Pack>True</Pack>
             <PackagePath></PackagePath>
         </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.85" />
     </ItemGroup>
     
 </Project>
