@@ -31,7 +31,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="4.0.25.2" />
+      <PackageReference Include="AWSSDK.S3" Version="4.0.25.3" />
       <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.17" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.17">
@@ -44,6 +44,10 @@
       <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
       <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.85" />
     </ItemGroup>
 
 </Project>
