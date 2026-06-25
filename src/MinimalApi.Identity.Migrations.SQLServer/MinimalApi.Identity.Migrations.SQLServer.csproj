@@ -7,11 +7,15 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Identity.Module.Core" Version="2.5.231" />
+        <PackageReference Include="Identity.Module.Core" Version="2.5.233" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.17" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.17">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.85" />
     </ItemGroup>
 </Project>
