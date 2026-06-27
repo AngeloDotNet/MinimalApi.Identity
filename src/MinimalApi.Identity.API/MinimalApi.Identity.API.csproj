@@ -33,13 +33,13 @@
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.130" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.100" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.43" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.233" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.102" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.106" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.43" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.122" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.113" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.71" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.234" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.103" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.107" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.44" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.123" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.114" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.72" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.17" />
