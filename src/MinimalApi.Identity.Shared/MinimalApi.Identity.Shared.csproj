@@ -38,7 +38,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Serilog" Version="4.3.1" />
+      <PackageReference Include="Serilog" Version="4.4.0" />
       <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
       <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
       <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
@@ -47,7 +47,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.85" />
+      <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.91" />
     </ItemGroup>
 
 </Project>
