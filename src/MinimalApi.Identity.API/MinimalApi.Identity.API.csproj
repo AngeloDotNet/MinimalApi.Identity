@@ -33,7 +33,7 @@
     <PackageReference Include="Identity.Module.AccountManager" Version="2.5.150" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.111" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.54" />
-    <PackageReference Include="Identity.Module.Core" Version="2.5.244" />
+    <PackageReference Include="Identity.Module.Core" Version="2.5.245" />
     <PackageReference Include="Identity.Module.EmailManager" Version="2.5.114" />
     <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.118" />
     <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.55" />
