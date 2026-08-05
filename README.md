@@ -99,6 +99,7 @@ A default administrator account is created automatically with the following conf
 - Username: set via `AppSettings:AssignAdminUsername`
 - Password: set via `AppSettings:AssignAdminPassword`
 
+<!--
 ## 🏆 Badges
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=progetti-2025_minimalapi-identity&metric=alert_status)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity)
@@ -114,6 +115,7 @@ A default administrator account is created automatically with the following conf
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=progetti-2025_minimalapi-identity&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity)
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=progetti-2025_minimalapi-identity)
+-->
 
 ## 🗺️ Roadmap
 
