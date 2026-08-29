@@ -34,12 +34,12 @@
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.117" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.60" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.251" />
-    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.120" />
-    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.124" />
-    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.61" />
-    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.140" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.131" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.89" />
+    <PackageReference Include="Identity.Module.EmailManager" Version="2.5.121" />
+    <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.125" />
+    <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.62" />
+    <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.141" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.132" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.90" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.19" />
@@ -58,6 +58,6 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.91" />
+  <PackageReference Update="Nerdbank.GitVersioning" Version="3.10.94" />
 </ItemGroup>
 </Project>
