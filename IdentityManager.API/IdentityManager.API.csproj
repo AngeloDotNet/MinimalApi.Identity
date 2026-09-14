@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Identity.Module.API" Version="2.5.515" />
+        <PackageReference Include="Identity.Module.API" Version="2.5.516" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.19">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
