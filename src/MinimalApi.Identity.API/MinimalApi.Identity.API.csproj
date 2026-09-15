@@ -30,7 +30,7 @@
     <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="8.1.3" />
     <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="8.1.3" />
-    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.168" />
+    <PackageReference Include="Identity.Module.AccountManager" Version="2.5.169" />
     <PackageReference Include="Identity.Module.AuthManager" Version="2.5.121" />
     <PackageReference Include="Identity.Module.ClaimsManager" Version="2.5.64" />
     <PackageReference Include="Identity.Module.Core" Version="2.5.253" />
@@ -38,8 +38,8 @@
     <PackageReference Include="Identity.Module.LicenseManager" Version="2.5.128" />
     <PackageReference Include="Identity.Module.ModuleManager" Version="2.5.65" />
     <PackageReference Include="Identity.Module.PolicyManager" Version="2.5.144" />
-    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.134" />
-    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.92" />
+    <PackageReference Include="Identity.Module.ProfileManager" Version="2.5.135" />
+    <PackageReference Include="Identity.Module.RolesManager" Version="2.5.93" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.19" />
