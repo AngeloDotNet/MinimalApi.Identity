@@ -290,8 +290,12 @@ public static class RegisterServicesExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
+                // Important: Prevents mapping of JWT claims to Microsoft-specific claim types
+                options.MapInboundClaims = false;
+
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
