@@ -1,307 +1,177 @@
 # Changelog
 
-## [Unreleased](https://github.com/AngeloDotNet/MinimalApi.Identity/tree/HEAD)
+All notable changes to this project are documented in this file.
 
-[Full Changelog](https://github.com/AngeloDotNet/MinimalApi.Identity/compare/e1d127caced0f06458003042e78ecb59b27c595f...HEAD)
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Every package of this solution is published to NuGet continuously from `main` and versioned automatically with [Nerdbank.GitVersioning](https://github.com/dotnet/Nerdbank.GitVersioning), and the repository has no release tags, so changes are grouped by month, newest first, instead of by version number. Package versions are shown on [NuGet](https://www.nuget.org/packages/Identity.Module.API).
 
-**Implemented enhancements:**
+Routine dependency bumps are summarized, not listed one by one. The full history is in the [commit log](https://github.com/AngeloDotNet/MinimalApi.Identity/commits/main).
 
-- Upgrade Identity.Module NuGet packages to latest versions [\#325](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/325) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module packages to latest versions [\#324](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/324) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update NuGet package versions and revise README roadmap [\#323](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/323) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade to .NET 9 and update related NuGet packages [\#322](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/322) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade to .NET 9 and Identity.Module.Core 2.5.225 [\#321](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/321) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade NuGet packages and improve MinIO config message [\#320](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/320) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade to .NET 9.0 and update Identity.Module packages [\#318](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/318) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Clean up comments and streamline dynamic policy handling [\#317](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/317) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade to .NET 9, clean documentation, and improve logging [\#316](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/316) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module and AWSSDK.S3 package versions [\#315](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/315) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update roadmap and upgrade Identity.Module.Core to 2.5.223 [\#314](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/314) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Bump Identity.Module.Core and EmailManager package versions [\#312](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/312) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.Core to version 2.5.222 across projects [\#311](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/311) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module and AWSSDK.S3 package versions [\#310](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/310) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module dependencies to latest versions [\#309](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/309) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module and AWSSDK.S3 package versions [\#308](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/308) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.Core to version 2.5.220 across projects [\#307](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/307) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade multiple NuGet packages to latest versions [\#306](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/306) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.API and Identity.Module.Core packages [\#305](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/305) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity and .NET SDK dependencies and update README [\#304](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/304) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update NuGet packages for AWSSDK.S3, Identity.Module.API, and AccountManager [\#303](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/303) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update Identity.Module packages to latest versions [\#302](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/302) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.Core to version 2.5.219 across projects [\#301](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/301) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.Core to version 2.5.219 and Identity.Module.API to 2.5.433 [\#300](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/300) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update Identity module versions and ConfigureAwait guidelines [\#299](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/299) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity module packages to latest versions [\#297](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/297) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.API and Core to latest versions [\#296](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/296) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module package versions in project files [\#295](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/295) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity and AWS SDK packages to latest versions [\#293](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/293) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Upgrade Identity.Module.API and related package references [\#292](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/292) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#291](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/291) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#290](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/290) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#289](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/289) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#287](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/287) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#286](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/286) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#285](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/285) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#284](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/284) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#283](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/283) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#282](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/282) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#281](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/281) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#280](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/280) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#278](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/278) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#277](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/277) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#275](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/275) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#273](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/273) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#272](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/272) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#271](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/271) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#269](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/269) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#268](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/268) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#267](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/267) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#266](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/266) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#265](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/265) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#264](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/264) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#263](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/263) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#262](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/262) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#260](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/260) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#258](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/258) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#257](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/257) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#254](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/254) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#252](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/252) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#251](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/251) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#249](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/249) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#248](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/248) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#247](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/247) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#246](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/246) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#244](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/244) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#243](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/243) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#242](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/242) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#240](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/240) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#239](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/239) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#235](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/235) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#233](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/233) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#231](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/231) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#229](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/229) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#228](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/228) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#226](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/226) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#225](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/225) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#221](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/221) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#219](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/219) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#218](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/218) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update Identity.Module.Core to 2.5.184, refactor endpoints [\#217](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/217) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#216](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/216) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#215](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/215) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#213](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/213) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#212](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/212) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#211](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/211) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#210](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/210) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#209](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/209) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#208](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/208) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#207](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/207) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#206](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/206) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#204](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/204) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#203](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/203) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#201](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/201) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#200](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/200) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#199](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/199) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#197](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/197) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#196](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/196) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#194](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/194) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#193](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/193) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#192](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/192) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#191](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/191) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#190](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/190) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#189](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/189) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#188](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/188) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#187](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/187) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#185](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/185) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#183](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/183) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#182](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/182) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#181](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/181) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#180](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/180) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#179](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/179) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#178](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/178) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#176](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/176) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#175](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/175) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#173](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/173) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#172](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/172) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#171](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/171) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#170](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/170) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#169](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/169) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#167](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/167) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#166](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/166) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#164](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/164) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#162](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/162) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#160](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/160) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#159](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/159) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#157](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/157) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#154](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/154) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#152](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/152) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#151](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/151) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#149](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/149) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#148](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/148) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#146](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/146) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#145](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/145) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#144](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/144) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#141](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/141) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#140](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/140) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#139](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/139) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#138](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/138) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#137](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/137) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#136](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/136) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#134](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/134) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#133](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/133) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#131](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/131) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#130](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/130) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#129](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/129) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#128](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/128) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#126](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/126) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#125](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/125) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#123](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/123) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#122](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/122) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#121](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/121) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#120](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/120) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#118](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/118) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#116](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/116) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#115](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/115) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update CHANGELOG.md for tag main \[auto\] [\#114](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/114) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Develop [\#113](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/113) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#111](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/111) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#110](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/110) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#109](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/109) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#108](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/108) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#106](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/106) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#104](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/104) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#103](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/103) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#102](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/102) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Refactor AppSettings for clarity and type safety [\#100](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/100) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#99](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/99) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#98](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/98) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Add AppSettings class for configuration management [\#97](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/97) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#96](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/96) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#95](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/95) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#94](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/94) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#93](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/93) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#92](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/92) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#91](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/91) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#90](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/90) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Remove user profile validation classes [\#89](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/89) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#88](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/88) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#87](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/87) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#86](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/86) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#85](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/85) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update package versions in Identity API project [\#83](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/83) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Refactor AuthService constructor and add options [\#82](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/82) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#81](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/81) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#80](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/80) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#79](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/79) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#78](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/78) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#77](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/77) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#76](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/76) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#75](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/75) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#74](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/74) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#73](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/73) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#72](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/72) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#71](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/71) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#70](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/70) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#68](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/68) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#67](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/67) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#66](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/66) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#65](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/65) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#64](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/64) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#63](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/63) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#62](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/62) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#61](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/61) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#60](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/60) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#59](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/59) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Add MailKit package for email functionalities [\#58](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/58) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Add SmtpOptions class for email configuration [\#57](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/57) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#56](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/56) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#55](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/55) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#54](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/54) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#53](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/53) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#52](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/52) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#51](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/51) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#50](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/50) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#49](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/49) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Add EF Core packages and dependency injection abstraction [\#48](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/48) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#47](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/47) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Downgrade EF Core packages to version 8.0.19 [\#46](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/46) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#45](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/45) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Refactoring [\#44](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/44) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Remove IdentityServicesConfiguration class and usings [\#43](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/43) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Remove Account and Email Manager projects from solution [\#42](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/42) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Refactor MinimalApiExceptionMiddleware for message handling [\#41](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/41) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Remove BadRequestUserException class and dependencies [\#40](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/40) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#39](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/39) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#38](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/38) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Remove and re-add Nerdbank.GitVersioning references [\#37](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/37) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Add build configuration and update project references [\#36](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/36) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#35](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/35) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#34](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/34) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- WIP: Develop [\#33](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/33) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#32](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/32) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#13](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/13) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#12](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/12) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#11](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/11) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#10](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/10) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#9](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/9) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Refactor OnModelCreating in MinimalApiAuthDbContext [\#8](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/8) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#7](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/7) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#6](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/6) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#5](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/5) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#4](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/4) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Develop [\#3](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/3) ([AngeloDotNet](https://github.com/AngeloDotNet))
+## [Unreleased]
 
-**Fixed bugs:**
+## 2026-10
 
-- API authorizations not working [\#69](https://github.com/AngeloDotNet/MinimalApi.Identity/issues/69)
+### Changed
 
-**Merged pull requests:**
+- JWT bearer authentication keeps the original claim names of the token by disabling inbound claim mapping, and validates the token issuer and audience against the configured `JwtOptions`.
+- Dependencies updated: `Identity.Module.Core` 2.5.261, `Identity.Module.API` 2.5.533, `Identity.Module.EmailManager` 2.5.130, `AWSSDK.S3` 4.0.104.6, `MailKit` 4.18.1 and `FluentValidation`.
 
-- Update CHANGELOG.md for tag main \[auto\] [\#294](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/294) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#288](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/288) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#279](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/279) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#276](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/276) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Bump super-linter/super-linter from 7.2.0 to 8.3.1 in /.github/workflows in the github\_actions group across 1 directory [\#270](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/270) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Update CHANGELOG.md for tag main \[auto\] [\#259](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/259) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#255](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/255) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#253](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/253) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#250](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/250) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#245](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/245) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#241](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/241) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#232](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/232) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#230](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/230) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#227](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/227) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#224](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/224) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Develop [\#223](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/223) ([AngeloDotNet](https://github.com/AngeloDotNet))
-- Update CHANGELOG.md for tag main \[auto\] [\#222](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/222) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#220](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/220) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#214](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/214) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#205](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/205) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#202](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/202) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#198](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/198) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#195](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/195) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#186](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/186) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#184](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/184) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#177](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/177) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#174](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/174) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#168](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/168) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#165](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/165) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#163](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/163) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#161](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/161) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#158](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/158) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#153](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/153) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#150](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/150) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#147](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/147) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#135](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/135) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#132](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/132) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#127](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/127) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#124](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/124) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#119](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/119) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#117](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/117) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#112](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/112) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#107](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/107) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update CHANGELOG.md for tag main \[auto\] [\#105](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/105) ([github-actions[bot]](https://github.com/apps/github-actions))
+## 2026-08
 
+### Changed
 
+- .NET SDK pinned to 9.0.317.
+- `.editorconfig` refined for modern C# style: static anonymous functions, implicitly typed lambdas, unbound generic types in `nameof`, index and range operators, and pattern local functions.
 
-\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*
+## 2026-05 and 2026-06
+
+### Changed
+
+- Roadmap in the README now states that no further development is planned for this .NET 9 solution; work continues in a .NET 10 version ([#328](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/328)).
+- `EmailManager` and related NuGet packages upgraded ([#332](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/332)).
+- SonarQube workflow no longer runs on a schedule or on push, and can only be started manually ([#327](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/327), [#345](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/345)).
+
+## 2026-04
+
+### Changed
+
+- Migrated the whole solution from .NET 8 to **.NET 9**: every project targets `net9.0`, the NuGet package tags reference `net9`, and the publish workflows build with .NET 9.x ([#316](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/316), [#321](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/321), [#322](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/322)).
+- `Directory.Build.props` moved to the `src` folder.
+- Entity Framework Core, ASP.NET Core Identity, `MailKit`, `AWSSDK.S3` and all `Identity.Module.*` packages upgraded to versions compatible with .NET 9.
+- Coding guidelines for AI assistants updated to C# 13.
+
+### Removed
+
+- Commented-out code and explanatory comments across the API, database, Swagger, shared and dynamic policy code ([#317](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/317)).
+
+## 2026-01 to 2026-03
+
+### Added
+
+- Packages are also published to GitHub Packages, in addition to NuGet.org ([#261](https://github.com/AngeloDotNet/MinimalApi.Identity/pull/261)).
+
+### Changed
+
+- `super-linter` upgraded from 7.2.0 to 8.3.1.
+- Maintenance period: mostly dependency updates for the `Identity.Module.*` packages and the .NET SDK.
+
+## 2025-12
+
+### Added
+
+- **Claims** and **Modules** management as separate modules (`ClaimsManager`, `ModuleManager`), with their endpoints and documentation.
+- Database provider selection through `DbContextOptionsBuilder` extensions for SQL Server, Azure SQL, PostgreSQL, MySQL and SQLite.
+- Dynamic registration of the license endpoints, controlled by the feature flags.
+- Swagger filters that hide the license and module endpoints when the feature is disabled.
+- `AuthSettings` for the optional protection of the Swagger UI.
+- Request and response models for authentication: registration, login, refresh token, forgot and reset password, impersonation.
+- Names and tags on the authentication endpoints, to group and describe them in Swagger.
+- Example of forwarded headers configuration for applications behind a reverse proxy.
+- The workflow that cleans up old workflow runs now also deletes old releases.
+
+### Changed
+
+- `AuthPolicyEndpoints` renamed to `PolicyEndpoints`.
+- Account endpoints are mapped automatically.
+- README: documentation, structure and roadmap updated.
+
+## 2025-11
+
+### Added
+
+- `CorsOptions` with a configurable policy name, to configure CORS from `appsettings.json`.
+- Serilog sink that sends logs to MinIO cloud storage.
+- `ValidationOptions` to configure the validation rules.
+
+### Changed
+
+- `Result<T>` improved with new properties and better nullability handling.
+- Endpoint handlers for authentication, claims and modules reorganized.
+
+## 2025-10
+
+### Added
+
+- **Roles** management as its own module (`RolesManager`): create, assign, revoke and delete roles, with validators and endpoints.
+- Support for **PostgreSQL**, **MySQL** and **SQLite** in addition to SQL Server and Azure SQL.
+- **Serilog** configuration with console and rolling file sinks.
+- `MinioS3Sink` and `MinioOptions` to write logs to S3-compatible storage such as MinIO.
+- `IsRequiredAuth` setting to require basic authentication on the Swagger UI.
+
+## 2025-09
+
+### Added
+
+- **Account** management (`AccountManager`): confirmed change of e-mail address and e-mail confirmation endpoints.
+- **Authentication** module (`AuthManager`) that creates the administrator account at startup from `AppSettings`.
+- **Dynamic authorization policies**: `DynamicAuthorizationPolicyProvider` builds the policies from the database at runtime.
+- **License management**: service, validators, models and endpoints to create, assign, revoke and delete licenses.
+- Automatic e-mail generation in `EmailManager`.
+- EF Core interceptors for SQL command logging, query performance and auditing of user activity.
+- Operation result types: `Result`, `Result<T>`, `PaginatedList<T>`, `FailureReasons` and mapping to ASP.NET Core HTTP responses, with a configurable `ErrorResponseFormat`.
+- `SwaggerBasicAuthMiddleware` to protect the Swagger UI with basic authentication, and `SwaggerSettings`.
+- Runtime `FeatureFlagsOptions`, `JwtOptions` and `AppSettings` configuration classes.
+- `UtcDateTimeConverter` for JSON date and time handling.
+- Workflow that updates `CHANGELOG.md` when a tag or release is published.
+- `ConfigureAwait(false)` on asynchronous library code.
+
+### Removed
+
+- Background services that regenerated authorization policies, replaced by the dynamic policy provider.
+- Central package management through `Directory.Packages.props`.
+
+## 2025-08
+
+### Added
+
+- **E-mail outbox** (`EmailManager`): entities for e-mails, types and statuses with seed data, `MailKit` sender, background sender that processes pending messages on a schedule, `SmtpOptions`, and the initial migration.
+- **User profiles** (`ProfileManager`): create, edit, enable and disable profiles, with models, validators and endpoints.
+- E-mail confirmation and callback URL generation.
+- **Feature flags** to enable or disable the license and module features, with Swagger document filters that follow the flags.
+- Migrations project for SQL Server, and support for MySQL, PostgreSQL and SQLite.
+- `SwaggerExtensions` for the OpenAPI configuration.
+- `EndpointGenerator`, `MessagesApi` and `MessagesExceptions` that centralize route constants and response messages.
+- Documentation of the authentication, account, claims and policy endpoints.
+- Workflows that publish `Identity.Module.EmailManager` and `Identity.Module.ProfileManager` to NuGet.
+
+### Changed
+
+- Exception handling and service messages unified through `MessagesApi` and `MessagesExceptions`.
+- `JwtOptions` extended with the password, lockout and e-mail options.
+- NuGet package versions managed centrally for a short time.
+
+## 2025-07
+
+### Added
+
+- **Password reset** flow: `ResetPassword` endpoint, model, validator and service method.
+- **Policy management** (`PolicyManager`): policies built from permissions, `PermissionHandler` and `PermissionRequirement`, with endpoints and validators.
+- **License** endpoints and `LicenseService`.
+- `EmailManager` project.
+- `CancellationToken` support in the services and endpoints.
+- CORS policy and Swagger endpoint configuration.
+- Invariant culture support when parsing `TimeSpan` values.
+- `ConstantsConfiguration` and `PolicyMapper`.
+- Workflows to publish `Identity.Module.Core` and `Identity.Module.API` to NuGet, to lint the code with super-linter, and to analyze it with SonarQube.
+- GitHub Copilot instructions and a stricter `.editorconfig`.
+
+### Changed
+
+- `Identity.Module.Core` consumed as a NuGet package instead of a project reference.
+- Exception classes simplified, and the exception middleware reworked to handle each case.
+- Service registration and configuration option retrieval refactored.
+
+## 2025-06
+
+### Added
+
+- First version of the solution, on .NET 8: ASP.NET Core Identity with Entity Framework Core (`MinimalApiAuthDbContext`), user and role entities, claims, JWT permission handling, Minimal API endpoints, validators and the exception middleware.
+- Custom exception types for bad request, conflict, not found, validation and user errors.
+- Service registration extensions and endpoint mapping by assembly.
+- Licenses feature.
+- NuGet publishing and code linting workflows.
+
+### Changed
+
+- Project renamed from `Modular.Identity.*` to `Identity.Module.*`; the main package is `Identity.Module.API`.
+
+[Unreleased]: https://github.com/AngeloDotNet/MinimalApi.Identity/commits/main
